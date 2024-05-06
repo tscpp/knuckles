@@ -8,7 +8,11 @@ import {
   type AnalyzerSeverity,
   type AnalyzerPlugin,
 } from "@knuckles/analyzer";
-import { findConfigFile, readConfigFile, defaultConfig } from "@knuckles/config";
+import {
+  findConfigFile,
+  readConfigFile,
+  defaultConfig,
+} from "@knuckles/config";
 import { readFile } from "node:fs/promises";
 
 export default command({

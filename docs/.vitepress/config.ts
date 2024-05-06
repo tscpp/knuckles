@@ -105,7 +105,9 @@ const config: UserConfig<ThemeConfig> = {
       ],
     },
 
-    socialLinks: [{ icon: "github", link: "https://github.com/tscpp/knuckles" }],
+    socialLinks: [
+      { icon: "github", link: "https://github.com/tscpp/knuckles" },
+    ],
 
     footer: {
       links: [
