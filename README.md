@@ -6,7 +6,7 @@
 
 <!-- @include docs/parts/packages/analyzer/description.md -->
 
-Code analyzer that can detect common issues in the code. The linter can also spit out type-checking errors provided by [TypeScript](https://www.typescriptlang.org/).
+The analyzer is a tool in the [toolchain] that can check [Knockout] views for issue. It can utilize existing tools like [TypeScript] and [ESLint], while also providing a set of standard rules to help catch common issue or styling.
 
 <!-- /include -->
 
@@ -31,7 +31,7 @@ Argument of type 'number' is not assignable to parameter of type 'boolean'.
 
 <!-- @include docs/parts/packages/ssr/description.md -->
 
-Pre-render knockout views on the server to optimize runtime performance and SEO.
+The tool designed to enhance Knockout v3 applications by enabling server-side rendering (SSR) and Static Site Generation (SSG). It integrates easily into any build process and allows for gradual implementation without requiring a complete overhaul of your existing application.
 
 <!-- /include -->
 
@@ -58,7 +58,7 @@ Pre-render knockout views on the server to optimize runtime performance and SEO.
 
 <!-- @include docs/parts/packages/analyzer/description.md -->
 
-Code analyzer that can detect common issues in the code. The linter can also spit out type-checking errors provided by [TypeScript](https://www.typescriptlang.org/).
+The analyzer is a tool in the [toolchain] that can check [Knockout] views for issue. It can utilize existing tools like [TypeScript] and [ESLint], while also providing a set of standard rules to help catch common issue or styling.
 
 <!-- /include -->
 
