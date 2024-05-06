@@ -5,7 +5,7 @@ import type {
   AnalyzerSnapshots,
 } from "./plugin.js";
 import standard from "./standard/plugin.js";
-import { parse } from "@kolint/parser";
+import { parse } from "@knuckles/parser";
 
 export interface AnalyzerOptions {
   plugins?: readonly AnalyzerPlugin[];

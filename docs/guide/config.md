@@ -4,24 +4,24 @@ The toolchain shares the same configuration file. The tools will automatically d
 
 ## Installation
 
-If you want to check types or get smarter suggestions while coding, you need to add the `@kolint/config` package.
+If you want to check types or get smarter suggestions while coding, you need to add the `@knuckles/config` package.
 
 ::: code-group
 
 ```sh [npm]
-$ npm add -D @kolint/config
+$ npm add -D @knuckles/config
 ```
 
 ```sh [pnpm]
-$ pnpm add -D @kolint/config
+$ pnpm add -D @knuckles/config
 ```
 
 ```sh [yarn]
-$ yarn add -D @kolint/config
+$ yarn add -D @knuckles/config
 ```
 
 ```sh [bun]
-$ bun add -D @kolint/config
+$ bun add -D @knuckles/config
 ```
 
 ## Usage
@@ -36,7 +36,7 @@ Create the file `ko.config.js` and copy the below contents as a placeholder. The
 
 ```js
 /**
- * @type {import('@kolint/config').Config}
+ * @type {import('@knuckles/config').Config}
  */
 export default {
   ...

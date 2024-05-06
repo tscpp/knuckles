@@ -1,5 +1,5 @@
 {
-  "name": "@kolint/language-server",
+  "name": "@knuckles/language-server",
   "projectType": "library",
   "sourceRoot": "{projectRoot}/src",
   "targets": {

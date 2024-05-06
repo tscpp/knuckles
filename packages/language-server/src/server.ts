@@ -1,11 +1,11 @@
-import { Snapshot } from "@kolint/analyzer";
+import { Snapshot } from "@knuckles/analyzer";
 import {
   defaultConfig,
   discoverConfigFile,
   readConfigFile,
-} from "@kolint/config";
-import { Position, Range } from "@kolint/location";
-import { Transpiler } from "@kolint/typescript";
+} from "@knuckles/config";
+import { Position, Range } from "@knuckles/location";
+import { Transpiler } from "@knuckles/typescript";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   type SourceFile,

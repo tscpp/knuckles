@@ -1,5 +1,5 @@
 import Scaffold from "./scaffold.js";
-import type { Chunk } from "@kolint/fabricator";
+import type { Chunk } from "@knuckles/fabricator";
 import { type Project, type SourceFile, ts } from "ts-morph";
 
 export default class Renderer {

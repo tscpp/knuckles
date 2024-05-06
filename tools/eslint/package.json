@@ -1,5 +1,5 @@
 {
-  "name": "@kolint-dev/eslint",
+  "name": "@dev/eslint",
   "version": "0.0.0",
   "private": true,
   "type": "module",

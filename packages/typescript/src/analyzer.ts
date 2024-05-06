@@ -3,8 +3,8 @@ import {
   AnalyzerSeverity,
   Snapshot,
   type AnalyzerPlugin,
-} from "@kolint/analyzer";
-import { Position } from "@kolint/location";
+} from "@knuckles/analyzer";
+import { Position } from "@knuckles/location";
 import { ts } from "ts-morph";
 
 export type Options = {

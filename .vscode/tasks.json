@@ -4,7 +4,7 @@
     {
       "label": "Build VSCode Extension",
       "command": "pnpm",
-      "args": ["nx", "build", "@kolint/vscode"]
+      "args": ["nx", "build", "@knuckles/vscode"]
     }
   ]
 }

@@ -1,11 +1,11 @@
 import { type Binding } from "./binding.js";
-import { Position, Range } from "@kolint/location";
+import { Position, Range } from "@knuckles/location";
 import {
   parse5,
   parse5LocationToRange,
   type parse5TreeAdapter,
-} from "@kolint/parser";
-import { Element, type VirtualElement } from "@kolint/syntax-tree";
+} from "@knuckles/parser";
+import { Element, type VirtualElement } from "@knuckles/syntax-tree";
 import inlineStyleParser from "inline-style-parser";
 import * as ko from "knockout";
 import type MagicString from "magic-string";

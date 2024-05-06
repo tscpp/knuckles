@@ -1,4 +1,4 @@
-import { type AnalyzerIssue } from "@kolint/analyzer";
+import { type AnalyzerIssue } from "@knuckles/analyzer";
 import { Chalk, supportsColor } from "chalk";
 import { relative } from "node:path";
 

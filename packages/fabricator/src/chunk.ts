@@ -1,4 +1,4 @@
-import { Position } from "@kolint/location";
+import { Position } from "@knuckles/location";
 import { SourceMapGenerator } from "source-map";
 
 const UNIVERSAL_NEWLINE_REGEX = /\r\n|\n\r|\n|\r/g;

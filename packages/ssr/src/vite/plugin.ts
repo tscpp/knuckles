@@ -15,7 +15,7 @@ export function knockoutSSR(options?: KnockoutSSRPluginOptions): Plugin {
   const filter = createFilter(options?.include ?? /\.html?$/, options?.exclude);
 
   return {
-    name: "@kolint/ssr",
+    name: "@knuckles/ssr",
     async transform(code, id) {
       if (!filter(id)) return null;
 

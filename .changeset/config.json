@@ -3,7 +3,7 @@
   "changelog": "@changesets/cli/changelog",
   "commit": "./commit.cjs",
   "fixed": [],
-  "linked": [["@kolint/parser", "@kolint/syntax-tree"]],
+  "linked": [["@knuckles/parser", "@knuckles/syntax-tree"]],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",

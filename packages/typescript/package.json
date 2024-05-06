@@ -1,5 +1,5 @@
 {
-  "name": "@kolint/typescript",
+  "name": "@knuckles/typescript",
   "version": "0.0.0",
   "type": "module",
   "exports": {
@@ -13,18 +13,18 @@
     }
   },
   "dependencies": {
-    "@kolint/fabricator": "workspace:^",
-    "@kolint/location": "workspace:^",
-    "@kolint/syntax-tree": "workspace:^",
+    "@knuckles/fabricator": "workspace:^",
+    "@knuckles/location": "workspace:^",
+    "@knuckles/syntax-tree": "workspace:^",
     "source-map": "~0.7.4",
     "ts-morph": "^22.0.0"
   },
   "devDependencies": {
-    "@kolint/parser": "workspace:^",
+    "@knuckles/parser": "workspace:^",
     "knockout": "3.5.1"
   },
   "peerDependencies": {
-    "@kolint/analyzer": "workspace:^"
+    "@knuckles/analyzer": "workspace:^"
   },
   "engines": {
     "node": ">=20.0.0"

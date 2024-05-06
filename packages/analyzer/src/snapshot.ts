@@ -1,4 +1,4 @@
-import { Position } from "@kolint/location";
+import { Position } from "@knuckles/location";
 import { SourceMapConsumer, type RawSourceMap } from "source-map";
 
 export interface SnapshotInit {

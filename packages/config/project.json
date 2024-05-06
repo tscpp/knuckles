@@ -1,5 +1,5 @@
 {
-  "name": "@kolint/config",
+  "name": "@knuckles/config",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "{projectRoot}/src",

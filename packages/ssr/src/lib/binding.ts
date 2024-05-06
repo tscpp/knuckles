@@ -1,11 +1,11 @@
 import { transform } from "./eval.js";
 import { invertQuote } from "./utils.js";
-import type { Range } from "@kolint/location";
+import type { Range } from "@knuckles/location";
 import {
   type Attribute,
   Element,
   type VirtualElement,
-} from "@kolint/syntax-tree";
+} from "@knuckles/syntax-tree";
 
 export class Binding {
   constructor(

@@ -12,7 +12,7 @@ Shared command-line interface for the tools in the [toolchain] for [Knockout]. I
 
 <!-- @include docs/parts/package-nav.md -->
 
-[**Documentation**](https://kolint.github.io/next) | [Package (npm)](https://npmjs.com/package/@kolint/cli) | [Repository](https://github.com/kolint/next) | [Source Code](https://github.com/kolint/next/tree/main/packages/cli)
+[**Documentation**](https://tscpp.github.io/knuckles) | [Package (npm)](https://npmjs.com/package/@knuckles/cli) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/cli)
 
 <!-- /include -->
 
@@ -21,6 +21,6 @@ Shared command-line interface for the tools in the [toolchain] for [Knockout]. I
 [TypeScript]: https://typescriptlang.org
 [ESLint]: https://eslint.org
 [Knockout]: https://knockoutjs.com
-[toolchain]: https://kolint.github.io/next
+[toolchain]: https://tscpp.github.io/knuckles
 
 <!-- /include -->

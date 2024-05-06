@@ -5,19 +5,19 @@ The package supports NodeJS compatible runtimes.
 ::: code-group
 
 ```sh [npm]
-$ npm add -D @kolint/analyzer
+$ npm add -D @knuckles/analyzer
 ```
 
 ```sh [pnpm]
-$ pnpm add -D @kolint/analyzer
+$ pnpm add -D @knuckles/analyzer
 ```
 
 ```sh [yarn]
-$ yarn add -D @kolint/analyzer
+$ yarn add -D @knuckles/analyzer
 ```
 
 ```sh [bun]
-$ bun add -D @kolint/analyzer
+$ bun add -D @knuckles/analyzer
 ```
 
 :::
@@ -48,28 +48,28 @@ $ bun add -D typescript
 
 ## Usage
 
-After you have [linked a viewmodel](#viewmodels) to a view, you can lint the file. You can choose to pass a directory or file to `kolint`.
+After you have [linked a viewmodel](#viewmodels) to a view, you can lint the file. You can choose to pass a directory or file to `knuckles analyze`.
 
 :::tip
-See `kolint --help` for all flags. You can also choose to [create a config file](/linting/config).
+See `knuckles analyze --help` for all flags. You can also choose to [create a config file](/linting/config).
 :::
 
 ::: code-group
 
 ```sh [npm]
-$ npx kolint [options] [...paths]
+$ npx knuckles analyze [options] [...paths]
 ```
 
 ```sh [pnpm]
-$ pnpm kolint [options] [...paths]
+$ pnpm knuckles analyze [options] [...paths]
 ```
 
 ```sh [yarn]
-$ yarn kolint [options] [...paths]
+$ yarn knuckles analyze [options] [...paths]
 ```
 
 ```sh [bun]
-$ bun kolint [options] [...paths]
+$ bun knuckles analyze [options] [...paths]
 ```
 
 :::

@@ -1,10 +1,10 @@
 {
-  "name": "@kolint/vscode",
+  "name": "@knuckles/vscode",
   "projectType": "library",
   "sourceRoot": "{projectRoot}/src",
   "targets": {
     "build-base": {
-      "executor": "@kolint-dev/nx:build",
+      "executor": "@dev/nx:build",
       "options": {
         "entry": [
           "{projectRoot}/src/extension.ts",

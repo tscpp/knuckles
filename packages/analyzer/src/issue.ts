@@ -1,4 +1,4 @@
-import type { Position } from "@kolint/location";
+import type { Position } from "@knuckles/location";
 
 export enum AnalyzerSeverity {
   Error = "error",

@@ -7,7 +7,7 @@
     "test": "bun --bun ko analyze view.html --ts"
   },
   "devDependencies": {
-    "@kolint/cli": "workspace:^",
-    "@kolint/typescript": "workspace:^"
+    "@knuckles/cli": "workspace:^",
+    "@knuckles/typescript": "workspace:^"
   }
 }

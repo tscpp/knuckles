@@ -1,23 +1,19 @@
 {
-  "name": "@kolint/language-server",
+  "name": "@knuckles/language-server",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [
-    "kolint"
-  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kolint/source",
+    "url": "https://github.com/tscpp/knuckles",
     "directory": "packages/ssr"
   },
   "license": "MIT",
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
-    "@kolint/analyzer": "workspace:~",
-    "@kolint/config": "workspace:~",
-    "@kolint/location": "workspace:~",
-    "@kolint/typescript": "workspace:~",
+    "@knuckles/analyzer": "workspace:~",
+    "@knuckles/config": "workspace:~",
+    "@knuckles/location": "workspace:~",
+    "@knuckles/typescript": "workspace:~",
     "minimatch": "^9.0.4",
     "ts-morph": "^22.0.0",
     "vscode-languageserver": "^9.0.1",

@@ -7,8 +7,8 @@ import {
   type AnalyzerOptions,
   type AnalyzerSeverity,
   type AnalyzerPlugin,
-} from "@kolint/analyzer";
-import { findConfigFile, readConfigFile, defaultConfig } from "@kolint/config";
+} from "@knuckles/analyzer";
+import { findConfigFile, readConfigFile, defaultConfig } from "@knuckles/config";
 import { readFile } from "node:fs/promises";
 
 export default command({
@@ -76,13 +76,13 @@ export default command({
     };
     if (args.typeCheck) {
       // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-      let exports: typeof import("@kolint/typescript/analyzer");
+      let exports: typeof import("@knuckles/typescript/analyzer");
       try {
-        exports = await import("@kolint/typescript/analyzer");
+        exports = await import("@knuckles/typescript/analyzer");
       } catch (error) {
         logger.debug(error);
         logger.error(
-          'You need to install "@kolint/typescript" to run type checking.',
+          'You need to install "@knuckles/typescript" to run type checking.',
         );
         process.exit(1);
       }

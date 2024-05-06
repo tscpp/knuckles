@@ -1,11 +1,11 @@
 {
-  "name": "@kolint/parser",
+  "name": "@knuckles/parser",
   "version": "0.0.0",
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
-    "@kolint/location": "workspace:^",
-    "@kolint/syntax-tree": "workspace:^",
+    "@knuckles/location": "workspace:^",
+    "@knuckles/syntax-tree": "workspace:^",
     "acorn": "^8.11.3",
     "parse5": "^7.1.2"
   },

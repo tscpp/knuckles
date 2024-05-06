@@ -1,6 +1,6 @@
-# [KOLint](https://kolint.github.io/next/)
+# [Knuckles](https://tscpp.github.io/knuckles/)
 
-**The modern toolchain for enhancing usage of Knockout.js and improving runtime performance. [Read more ›](https://kolint.github.io/next/)**
+**The modern toolchain for enhancing usage of Knockout.js and improving runtime performance. [Read more ›](https://tscpp.github.io/knuckles/)**
 
 ## Analyzer
 
@@ -12,7 +12,7 @@ The analyzer is a tool in the [toolchain] that can check [Knockout] views for is
 
 <div align="center">
 
-[Read more ›](https://kolint.github.io/next/analyzer/intro)
+[Read more ›](https://tscpp.github.io/knuckles/analyzer/intro)
 
 </div>
 
@@ -37,7 +37,7 @@ The tool designed to enhance Knockout v3 applications by enabling server-side re
 
 <div align="center">
 
-[Read more ›](https://kolint.github.io/next/ssr/intro)
+[Read more ›](https://tscpp.github.io/knuckles/ssr/intro)
 
 </div>
 
@@ -64,6 +64,6 @@ The analyzer is a tool in the [toolchain] that can check [Knockout] views for is
 
 <div align="center">
 
-[Read more ›](https://kolint.github.io/next/ssr/intro)
+[Read more ›](https://tscpp.github.io/knuckles/ssr/intro)
 
 </div>

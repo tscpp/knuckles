@@ -1,4 +1,4 @@
-import type { Range } from "@kolint/location";
+import type { Range } from "@knuckles/location";
 
 export abstract class Node {
   constructor(public range: Range) {}

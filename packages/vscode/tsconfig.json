@@ -1,5 +1,5 @@
 {
-  "extends": ["@kolint-dev/tsconfig/node.json"],
+  "extends": ["@dev/tsconfig/node.json"],
   "compilerOptions": {
     "sourceMap": true,
     "verbatimModuleSyntax": false

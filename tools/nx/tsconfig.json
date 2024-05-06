@@ -1,5 +1,5 @@
 {
-  "extends": ["@kolint-dev/tsconfig/base.json"],
+  "extends": ["@dev/tsconfig/base.json"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "CommonJS",

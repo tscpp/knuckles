@@ -2,7 +2,7 @@
   "defaultBase": "main",
   "targetDefaults": {
     "build": {
-      "executor": "@kolint-dev/nx:build",
+      "executor": "@dev/nx:build",
       "dependsOn": ["^build"],
       "inputs": ["default", "^default", "{workspaceRoot}/tools/nx/**"],
       "options": {
@@ -21,7 +21,7 @@
       "cache": true
     },
     "test": {
-      "executor": "@kolint-dev/nx:test",
+      "executor": "@dev/nx:test",
       "cache": true
     },
     "e2e": {
@@ -58,7 +58,7 @@
     }
   ],
   "release": {
-    "projects": ["@kolint/*"],
+    "projects": ["@knuckles/*"],
     "projectsRelationship": "independent"
   }
 }

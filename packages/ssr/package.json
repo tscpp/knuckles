@@ -1,9 +1,8 @@
 {
-  "name": "@kolint/ssr",
+  "name": "@knuckles/ssr",
   "version": "0.0.0",
   "description": "Server-side rendering for Knockout.js",
   "keywords": [
-    "kolint",
     "knockout",
     "ssr"
   ],
@@ -16,9 +15,9 @@
     "./runtime": "./src/runtime/index.ts"
   },
   "dependencies": {
-    "@kolint/location": "workspace:^",
-    "@kolint/parser": "workspace:^",
-    "@kolint/syntax-tree": "workspace:^",
+    "@knuckles/location": "workspace:^",
+    "@knuckles/parser": "workspace:^",
+    "@knuckles/syntax-tree": "workspace:^",
     "@rollup/pluginutils": "^5.1.0",
     "acorn": "^8.11.3",
     "import-meta-resolve": "^4.0.0",

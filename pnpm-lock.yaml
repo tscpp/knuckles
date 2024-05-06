@@ -29,13 +29,13 @@ importers:
       '@eslint/js':
         specifier: ^9.0.0
         version: 9.0.0
-      '@kolint-dev/eslint':
+      '@dev/eslint':
         specifier: workspace:*
         version: link:tools/eslint
-      '@kolint-dev/nx':
+      '@dev/nx':
         specifier: workspace:*
         version: link:tools/nx
-      '@kolint-dev/tsconfig':
+      '@dev/tsconfig':
         specifier: workspace:*
         version: link:tools/tsconfig
       '@microsoft/api-extractor':
@@ -128,16 +128,16 @@ importers:
 
   packages/analyzer:
     dependencies:
-      '@kolint/fabricator':
+      '@knuckles/fabricator':
         specifier: workspace:^
         version: link:../fabricator
-      '@kolint/location':
+      '@knuckles/location':
         specifier: workspace:^
         version: link:../location
-      '@kolint/parser':
+      '@knuckles/parser':
         specifier: workspace:^
         version: link:../parser
-      '@kolint/syntax-tree':
+      '@knuckles/syntax-tree':
         specifier: workspace:^
         version: link:../syntax-tree
       '@types/yargs':
@@ -158,16 +158,16 @@ importers:
 
   packages/cli:
     dependencies:
-      '@kolint/analyzer':
+      '@knuckles/analyzer':
         specifier: workspace:^
         version: link:../analyzer
-      '@kolint/config':
+      '@knuckles/config':
         specifier: workspace:^
         version: link:../config
-      '@kolint/ssr':
+      '@knuckles/ssr':
         specifier: workspace:^
         version: link:../ssr
-      '@kolint/typescript':
+      '@knuckles/typescript':
         specifier: workspace:^
         version: link:../typescript
       chalk:
@@ -195,29 +195,29 @@ importers:
 
   packages/config:
     dependencies:
-      '@kolint/analyzer':
+      '@knuckles/analyzer':
         specifier: workspace:~
         version: link:../analyzer
 
   packages/eslint:
     dependencies:
-      '@kolint/analyzer':
+      '@knuckles/analyzer':
         specifier: workspace:^
         version: link:../analyzer
-      '@kolint/location':
+      '@knuckles/location':
         specifier: workspace:^
         version: link:../location
       eslint:
         specifier: ^9.2.0
         version: 9.2.0
     devDependencies:
-      '@kolint/typescript':
+      '@knuckles/typescript':
         specifier: workspace:^
         version: link:../typescript
 
   packages/fabricator:
     dependencies:
-      '@kolint/location':
+      '@knuckles/location':
         specifier: workspace:^
         version: link:../location
       source-map:
@@ -226,16 +226,16 @@ importers:
 
   packages/language-server:
     dependencies:
-      '@kolint/analyzer':
+      '@knuckles/analyzer':
         specifier: workspace:~
         version: link:../analyzer
-      '@kolint/config':
+      '@knuckles/config':
         specifier: workspace:~
         version: link:../config
-      '@kolint/location':
+      '@knuckles/location':
         specifier: workspace:~
         version: link:../location
-      '@kolint/typescript':
+      '@knuckles/typescript':
         specifier: workspace:~
         version: link:../typescript
       minimatch:
@@ -263,10 +263,10 @@ importers:
 
   packages/parser:
     dependencies:
-      '@kolint/location':
+      '@knuckles/location':
         specifier: workspace:^
         version: link:../location
-      '@kolint/syntax-tree':
+      '@knuckles/syntax-tree':
         specifier: workspace:^
         version: link:../syntax-tree
       acorn:
@@ -278,13 +278,13 @@ importers:
 
   packages/ssr:
     dependencies:
-      '@kolint/location':
+      '@knuckles/location':
         specifier: workspace:^
         version: link:../location
-      '@kolint/parser':
+      '@knuckles/parser':
         specifier: workspace:^
         version: link:../parser
-      '@kolint/syntax-tree':
+      '@knuckles/syntax-tree':
         specifier: workspace:^
         version: link:../syntax-tree
       '@rollup/pluginutils':
@@ -363,22 +363,22 @@ importers:
 
   packages/syntax-tree:
     dependencies:
-      '@kolint/location':
+      '@knuckles/location':
         specifier: workspace:^
         version: link:../location
 
   packages/typescript:
     dependencies:
-      '@kolint/analyzer':
+      '@knuckles/analyzer':
         specifier: workspace:^
         version: link:../analyzer
-      '@kolint/fabricator':
+      '@knuckles/fabricator':
         specifier: workspace:^
         version: link:../fabricator
-      '@kolint/location':
+      '@knuckles/location':
         specifier: workspace:^
         version: link:../location
-      '@kolint/syntax-tree':
+      '@knuckles/syntax-tree':
         specifier: workspace:^
         version: link:../syntax-tree
       source-map:
@@ -388,7 +388,7 @@ importers:
         specifier: ^22.0.0
         version: 22.0.0
     devDependencies:
-      '@kolint/parser':
+      '@knuckles/parser':
         specifier: workspace:^
         version: link:../parser
       knockout:
@@ -399,7 +399,7 @@ importers:
 
   packages/vscode:
     dependencies:
-      '@kolint/language-server':
+      '@knuckles/language-server':
         specifier: workspace:~
         version: link:../language-server
       source-map:
@@ -433,10 +433,10 @@ importers:
 
   samples/analyzer:
     devDependencies:
-      '@kolint/cli':
+      '@knuckles/cli':
         specifier: workspace:^
         version: link:../../packages/cli
-      '@kolint/typescript':
+      '@knuckles/typescript':
         specifier: workspace:^
         version: link:../../packages/typescript
 

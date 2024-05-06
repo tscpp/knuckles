@@ -1,6 +1,6 @@
 import { AnalyzerSeverity } from "../../issue.js";
 import type { Rule } from "../rule.js";
-import { VirtualElement, visit } from "@kolint/syntax-tree";
+import { VirtualElement, visit } from "@knuckles/syntax-tree";
 import escapeStringRegexp from "escape-string-regexp";
 
 export default {

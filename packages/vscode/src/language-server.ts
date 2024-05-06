@@ -1,3 +1,3 @@
-import { startLanguageServer } from "@kolint/language-server";
+import { startLanguageServer } from "@knuckles/language-server";
 
 startLanguageServer();

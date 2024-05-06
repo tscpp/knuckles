@@ -1,5 +1,5 @@
 {
-  "name": "@kolint/parser",
+  "name": "@knuckles/parser",
   "projectType": "library",
   "sourceRoot": "{projectRoot}/src",
   "targets": {

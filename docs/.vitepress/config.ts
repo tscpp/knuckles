@@ -8,7 +8,7 @@ import footnote from "markdown-it-footnote";
 
 // https://vitepress.dev/reference/site-config
 const config: UserConfig<ThemeConfig> = {
-  title: "Kolint",
+  title: "Knuckles",
   base: "/next/",
   lastUpdated: true,
 
@@ -23,7 +23,7 @@ const config: UserConfig<ThemeConfig> = {
     logo: "/logo.png",
     search: { provider: "local" },
     editLink: {
-      pattern: "https://github.com/kolint/next/edit/main/docs/:path",
+      pattern: "https://github.com/tscpp/knuckles/edit/main/docs/:path",
     },
 
     nav: [
@@ -105,17 +105,17 @@ const config: UserConfig<ThemeConfig> = {
       ],
     },
 
-    socialLinks: [{ icon: "github", link: "https://github.com/kolint/next" }],
+    socialLinks: [{ icon: "github", link: "https://github.com/tscpp/knuckles" }],
 
     footer: {
       links: [
         {
           text: "Repository",
-          link: "https://github.com/kolint/next",
+          link: "https://github.com/tscpp/knuckles",
         },
         {
           text: "Releases",
-          link: "https://github.com/kolint/next/releases",
+          link: "https://github.com/tscpp/knuckles/releases",
         },
         {
           text: "Documentation",
