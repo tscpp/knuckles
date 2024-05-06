@@ -2,8 +2,8 @@ import {
   type AnalyzerPlugin,
   type Snapshot,
   AnalyzerSeverity,
-} from "@kolint/analyzer";
-import { Position } from "@kolint/location";
+} from "@knuckles/analyzer";
+import { Position } from "@knuckles/location";
 import { Linter } from "eslint";
 
 enum ESLintSeverity {

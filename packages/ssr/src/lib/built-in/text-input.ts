@@ -1,6 +1,6 @@
 import { type Plugin } from "../plugin.js";
 import value from "./value.js";
-import { Element } from "@kolint/syntax-tree";
+import { Element } from "@knuckles/syntax-tree";
 
 const textInput: Plugin = {
   filter: (binding) =>

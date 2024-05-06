@@ -13,7 +13,7 @@ const generator: Generator<PackageGeneratorSchema> = async (
   options,
 ) => {
   const directory = options.type === "development" ? "tools" : "packages";
-  const scope = options.type === "development" ? "@kolint-dev" : "@kolint";
+  const scope = options.type === "development" ? "@dev" : "@knuckles";
   const projectRoot = `${directory}/${options.name}`;
   const name = `${scope}/${options.name}`;
   addProjectConfiguration(tree, name, {

@@ -1,5 +1,5 @@
 import type * as parse5TreeAdapter from "../node_modules/parse5/dist/tree-adapters/default.js";
-import { Range, Position } from "@kolint/location";
+import { Range, Position } from "@knuckles/location";
 import * as parse5 from "parse5";
 
 export function parse5LocationToRange(location: parse5.Token.Location): Range {

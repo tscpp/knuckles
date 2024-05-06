@@ -1,5 +1,5 @@
 import command from "../../command.js";
-import { render } from "@kolint/ssr";
+import { render } from "@knuckles/ssr";
 import { resolve as importMetaResolve } from "import-meta-resolve";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { basename, dirname, resolve } from "node:path";

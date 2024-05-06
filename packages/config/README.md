@@ -12,7 +12,7 @@ Manages the [toolchain] config file for [Knockout]. It exports utillities and de
 
 <!-- @include docs/parts/package-nav.md -->
 
-[**Documentation**](https://kolint.github.io/next) | [Package (npm)](https://npmjs.com/package/@kolint/config) | [Repository](https://github.com/kolint/next) | [Source Code](https://github.com/kolint/next/tree/main/packages/config)
+[**Documentation**](https://tscpp.github.io/knuckles) | [Package (npm)](https://npmjs.com/package/@knuckles/config) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/config)
 
 <!-- /include -->
 
@@ -21,6 +21,6 @@ Manages the [toolchain] config file for [Knockout]. It exports utillities and de
 [TypeScript]: https://typescriptlang.org
 [ESLint]: https://eslint.org
 [Knockout]: https://knockoutjs.com
-[toolchain]: https://kolint.github.io/next
+[toolchain]: https://tscpp.github.io/knuckles
 
 <!-- /include -->

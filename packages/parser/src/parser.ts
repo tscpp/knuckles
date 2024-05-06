@@ -6,7 +6,7 @@ import {
   parse5LocationToRange,
   type parse5TreeAdapter,
 } from "./parse5-utils.js";
-import { Range, Position } from "@kolint/location";
+import { Range, Position } from "@knuckles/location";
 import {
   Document,
   type Node,
@@ -17,7 +17,7 @@ import {
   Attribute,
   Binding,
   Scope,
-} from "@kolint/syntax-tree";
+} from "@knuckles/syntax-tree";
 import * as acorn from "acorn";
 
 const virtualElementStart = /^(\s*(#?)ko\s+)([^\s]+)(\s*:\s*)([^]*?)(\s*)$/;

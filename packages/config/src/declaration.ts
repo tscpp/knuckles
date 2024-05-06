@@ -1,4 +1,4 @@
-import type { AnalyzerPlugin } from "@kolint/analyzer";
+import type { AnalyzerPlugin } from "@knuckles/analyzer";
 
 export interface AnalyzerConfig {
   include?: string | readonly string[] | undefined;

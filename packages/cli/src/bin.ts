@@ -34,7 +34,7 @@ function resolveLocalModule() {
 
   let localModulePath: string | undefined;
   try {
-    localModulePath = require.resolve("@kolint/cli", {
+    localModulePath = require.resolve("@knuckles/cli", {
       paths: [process.cwd()],
     });
   } catch {}

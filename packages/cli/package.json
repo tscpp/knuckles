@@ -1,5 +1,5 @@
 {
-  "name": "@kolint/cli",
+  "name": "@knuckles/cli",
   "version": "0.0.0",
   "type": "module",
   "exports": "./src/index.ts",
@@ -18,13 +18,13 @@
     "@types/yargs": "^17.0.32"
   },
   "peerDependencies": {
-    "@kolint/analyzer": "workspace:^",
-    "@kolint/config": "workspace:^",
-    "@kolint/ssr": "workspace:^",
-    "@kolint/typescript": "workspace:^"
+    "@knuckles/analyzer": "workspace:^",
+    "@knuckles/config": "workspace:^",
+    "@knuckles/ssr": "workspace:^",
+    "@knuckles/typescript": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@kolint/typescript": {
+    "@knuckles/typescript": {
       "optional": true
     }
   },

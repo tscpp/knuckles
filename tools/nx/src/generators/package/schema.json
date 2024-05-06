@@ -3,7 +3,7 @@
   "$id": "Package",
   "title": "Package",
   "type": "object",
-  "description": "Generates the basics for a '@kolint' package under 'packages/'.",
+  "description": "Generates the basics for a '@knuckles' package under 'packages/'.",
   "properties": {
     "name": {
       "type": "string",

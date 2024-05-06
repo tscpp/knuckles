@@ -1,5 +1,5 @@
 {
-  "name": "@kolint-dev/eslint",
+  "name": "@dev/eslint",
   "projectType": "library",
   "sourceRoot": "{projectRoot}/src"
 }

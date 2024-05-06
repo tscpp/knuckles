@@ -1,4 +1,4 @@
 {
-  "extends": ["@kolint-dev/tsconfig/web.json"],
+  "extends": ["@dev/tsconfig/web.json"],
   "include": ["src/runtime"]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@kolint/eslint",
+  "name": "@knuckles/eslint",
   "version": "0.0.0",
   "type": "module",
   "exports": {
@@ -7,13 +7,13 @@
     "./analyzer": "./src/analyzer.ts"
   },
   "dependencies": {
-    "@kolint/location": "workspace:^"
+    "@knuckles/location": "workspace:^"
   },
   "devDependencies": {
-    "@kolint/typescript": "workspace:^"
+    "@knuckles/typescript": "workspace:^"
   },
   "peerDependencies": {
-    "@kolint/analyzer": "workspace:^",
+    "@knuckles/analyzer": "workspace:^",
     "eslint": "^9.2.0"
   },
   "engines": {

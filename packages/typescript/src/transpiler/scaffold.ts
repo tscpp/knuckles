@@ -1,6 +1,6 @@
 import { TYPES_MODULE, ns, quote } from "./utils.js";
-import { Chunk } from "@kolint/fabricator";
-import { parse } from "@kolint/parser";
+import { Chunk } from "@knuckles/fabricator";
+import { parse } from "@knuckles/parser";
 import {
   type Node,
   Element,
@@ -8,7 +8,7 @@ import {
   Binding,
   type Document,
   Scope,
-} from "@kolint/syntax-tree";
+} from "@knuckles/syntax-tree";
 
 export default class Scaffold {
   #mode: "strict" | "loose";

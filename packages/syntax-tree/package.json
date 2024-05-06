@@ -1,10 +1,10 @@
 {
-  "name": "@kolint/syntax-tree",
+  "name": "@knuckles/syntax-tree",
   "version": "0.0.0",
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
-    "@kolint/location": "workspace:^"
+    "@knuckles/location": "workspace:^"
   },
   "engines": {
     "node": ">=20.0.0"

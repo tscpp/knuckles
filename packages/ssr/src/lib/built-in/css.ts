@@ -1,6 +1,6 @@
 import { type Plugin } from "../plugin.js";
 import * as utils from "../utils.js";
-import { Element } from "@kolint/syntax-tree";
+import { Element } from "@knuckles/syntax-tree";
 
 const css: Plugin = {
   filter: (binding) =>

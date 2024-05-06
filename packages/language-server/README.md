@@ -12,7 +12,7 @@ Implements a language server according to the [Language Server Protocol] (LSP) t
 
 <!-- @include docs/parts/package-nav.md -->
 
-[**Documentation**](https://kolint.github.io/next) | [Package (npm)](https://npmjs.com/package/@kolint/language-server) | [Repository](https://github.com/kolint/next) | [Source Code](https://github.com/kolint/next/tree/main/packages/language-server)
+[**Documentation**](https://tscpp.github.io/knuckles) | [Package (npm)](https://npmjs.com/package/@knuckles/language-server) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/language-server)
 
 <!-- /include -->
 
@@ -21,6 +21,6 @@ Implements a language server according to the [Language Server Protocol] (LSP) t
 [TypeScript]: https://typescriptlang.org
 [ESLint]: https://eslint.org
 [Knockout]: https://knockoutjs.com
-[toolchain]: https://kolint.github.io/next
+[toolchain]: https://tscpp.github.io/knuckles
 
 <!-- /include -->

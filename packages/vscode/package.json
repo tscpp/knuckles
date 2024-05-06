@@ -1,6 +1,6 @@
 {
-  "name": "@kolint/vscode",
-  "displayName": "kolint",
+  "name": "@knuckles/vscode",
+  "displayName": "Knuckles",
   "version": "0.0.0",
   "private": true,
   "description": "",
@@ -9,19 +9,12 @@
   ],
   "type": "module",
   "main": "./out/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "kolint.helloWorld",
-        "title": "Hello World"
-      }
-    ]
-  },
+  "contributes": {},
   "activationEvents": [
     "*"
   ],
   "dependencies": {
-    "@kolint/language-server": "workspace:~",
+    "@knuckles/language-server": "workspace:~",
     "source-map": "^0.7.4",
     "vscode-languageclient": "^9.0.1"
   },

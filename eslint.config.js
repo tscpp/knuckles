@@ -1,5 +1,5 @@
+import { config, references } from "@dev/eslint";
 import js from "@eslint/js";
-import { config, references } from "@kolint-dev/eslint";
 import nx from "@nx/eslint-plugin";
 import prettier from "eslint-config-prettier";
 import imprt from "eslint-plugin-import";

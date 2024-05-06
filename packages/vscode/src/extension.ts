@@ -40,8 +40,8 @@ export function activate(context: ExtensionContext) {
   };
 
   client = new LanguageClient(
-    "kolintLanguageServer",
-    "Kolint Language Server",
+    "knucklesLanguageServer",
+    "Knuckles Language Server",
     serverOptions,
     clientOptions,
   );

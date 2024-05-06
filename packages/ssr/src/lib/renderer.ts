@@ -12,18 +12,18 @@ import {
 import { evaluateBinding, evaluateInlineData } from "./eval.js";
 import type { Plugin, Self, Sibling } from "./plugin.js";
 import { getInnerRange } from "./utils.js";
-import { type Range } from "@kolint/location";
+import { type Range } from "@knuckles/location";
 import {
   parse,
   formatParse5Error,
   parse5LocationToRange,
-} from "@kolint/parser";
+} from "@knuckles/parser";
 import {
   Element,
   type ParentNode,
   VirtualElement,
   isParentNode,
-} from "@kolint/syntax-tree";
+} from "@knuckles/syntax-tree";
 import { resolve as importMetaResolve } from "import-meta-resolve";
 import ko from "knockout";
 import MagicString from "magic-string";

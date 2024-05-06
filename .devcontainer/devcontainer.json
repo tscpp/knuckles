@@ -1,6 +1,6 @@
 // https://aka.ms/devcontainer.json
 {
-  "name": "Kolint Workspace",
+  "name": "Knuckles Workspace",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},

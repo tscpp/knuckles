@@ -1,6 +1,6 @@
 import type { AnalyzerIssue } from "./issue.js";
 import type { Snapshot } from "./snapshot.js";
-import type { Document } from "@kolint/syntax-tree";
+import type { Document } from "@knuckles/syntax-tree";
 
 export interface AnalyzerSnapshots {
   [name: string]: Snapshot | undefined;

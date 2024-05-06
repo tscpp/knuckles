@@ -15,7 +15,7 @@ Run `kossr --help` to see all available flags.
 The API is written in node.js-flavoured javascript. The main module exports the function `render` which takes an input document and renders bindings into it.
 
 ```js
-import { render } from '@kolint/ssr';
+import { render } from '@knuckles/ssr';
 
 const document = `
   <!-- ko ssr: ./viewmodel.js -->

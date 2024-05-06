@@ -1,11 +1,11 @@
-import { Chunk } from "@kolint/fabricator";
+import { Chunk } from "@knuckles/fabricator";
 import {
   type Document,
   visit,
   Element,
   type Binding,
   VirtualElement,
-} from "@kolint/syntax-tree";
+} from "@knuckles/syntax-tree";
 
 export function transpile(document: Document) {
   const chunk = new Chunk();

@@ -2,31 +2,31 @@
 
 The library runs in [Node.JS](https://nodejs.org/) which is required to be installed prior.
 
-The library is shipped as a package on [npm](https://www.npmjs.com/package/@kolint/ssr). You can add the library as a dev-dependency by running the below command.
+The library is shipped as a package on [npm](https://www.npmjs.com/package/@knuckles/ssr). You can add the library as a dev-dependency by running the below command.
 
 ::: code-group
 
 ```sh [npm]
-$ npm add -D @kolint/ssr
+$ npm add -D @knuckles/ssr
 ```
 
 ```sh [pnpm]
-$ pnpm add -D @kolint/ssr
+$ pnpm add -D @knuckles/ssr
 ```
 
 ```sh [yarn]
-$ yarn add -D @kolint/ssr
+$ yarn add -D @knuckles/ssr
 ```
 
 ```sh [bun]
-$ bun add -D @kolint/ssr
+$ bun add -D @knuckles/ssr
 ```
 
 :::
 
 ## Integration
 
-`@kolint/ssr` strives to integrate easily into any application, with as little modifications and tweaking as possible. `@kolint/ssr` will scan the document for "ssr" virtual elements. These special elements indicates to `@kolint/ssr` to start server-side rendering, as well as providing the data used for the decendants.
+`@knuckles/ssr` strives to integrate easily into any application, with as little modifications and tweaking as possible. `@knuckles/ssr` will scan the document for "ssr" virtual elements. These special elements indicates to `@knuckles/ssr` to start server-side rendering, as well as providing the data used for the decendants.
 
 ```html
 <!-- ko ssr: { message: "Hello world!" } -->
@@ -36,10 +36,10 @@ $ bun add -D @kolint/ssr
 
 ### Hydrating Server-side Rendered Views
 
-The server-side rendered views requires custom hydration for some bindings. Import the `@kolint/ssr/runtime` module globally in your applications. The module will register all ssr binding handlers once it is loaded.
+The server-side rendered views requires custom hydration for some bindings. Import the `@knuckles/ssr/runtime` module globally in your applications. The module will register all ssr binding handlers once it is loaded.
 
 ```js
-import "@kolint/ssr/runtime";
+import "@knuckles/ssr/runtime";
 ```
 
 Once the binding handlers are registered, you can run `applyBindings` as normally.
@@ -65,8 +65,8 @@ The module specified should be capable of running server-side. You have two opti
 
 ### Build tools
 
-`@kolint/ssr` is pre-equipped with integrations for various build tools. See below for the complete list of supported build tools. For other tools or custom build processes, use either the [CLI](#cli) or [API](#api).
+`@knuckles/ssr` is pre-equipped with integrations for various build tools. See below for the complete list of supported build tools. For other tools or custom build processes, use either the [CLI](#cli) or [API](#api).
 
-- [Rollup](https://rollupjs.org/) - `@kolint/ssr/rollup`
-- [Vite](https://vitejs.dev/) - `@kolint/ssr/vite`
-- [Webpack](https://webpack.js.org/) - `@kolint/ssr/`
+- [Rollup](https://rollupjs.org/) - `@knuckles/ssr/rollup`
+- [Vite](https://vitejs.dev/) - `@knuckles/ssr/vite`
+- [Webpack](https://webpack.js.org/) - `@knuckles/ssr/`

@@ -1,5 +1,5 @@
 {
-  "name": "@kolint/analyzer",
+  "name": "@knuckles/analyzer",
   "version": "0.0.0",
   "type": "module",
   "exports": {
@@ -7,10 +7,10 @@
     "./cli": "./src/cli/cli.ts"
   },
   "dependencies": {
-    "@kolint/fabricator": "workspace:^",
-    "@kolint/location": "workspace:^",
-    "@kolint/parser": "workspace:^",
-    "@kolint/syntax-tree": "workspace:^",
+    "@knuckles/fabricator": "workspace:^",
+    "@knuckles/location": "workspace:^",
+    "@knuckles/parser": "workspace:^",
+    "@knuckles/syntax-tree": "workspace:^",
     "@types/yargs": "^17.0.32",
     "chalk": "^5.3.0",
     "source-map": "~0.7.4",

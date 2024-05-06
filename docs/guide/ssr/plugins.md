@@ -27,7 +27,7 @@ Plugins are written as modules, which can either be imported, or passed to the `
 For example, you can integrate your i18n framework by creating a plugin similar to the below.
 
 ```ts
-import { Plugin, utils } from "@kolint/ssr";
+import { Plugin, utils } from "@knuckles/ssr";
 
 const i18n: Plugin = {
   // Look for bindings with name "i18n". Once the plugin claims the bindings,

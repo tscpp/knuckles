@@ -1,6 +1,6 @@
 # Contributing
 
-[![Open in Dev Container](https://img.shields.io/static/v1?style=for-the-badge&label=Dev+Container&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/kolint/next)
+[![Open in Dev Container](https://img.shields.io/static/v1?style=for-the-badge&label=Dev+Container&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/tscpp/knuckles)
 
 ## Getting Started
 
@@ -15,13 +15,13 @@ This repository has a configured [Dev Container](https://containers.dev/) for de
 
 Tasks are managed by the [Nx](#build-system) build system, which automatically handles dependencies between packages, ensuring that prerequisites are run as needed. Only execute the task you actually intend to complete.
 
-Tasks are defined in the `project.json` file for each package and inherit from the workspace's nx.json file. The project name should begin with `@kolint/` followed by the directory name, as specified in the `project.json` file.
+Tasks are defined in the `project.json` file for each package and inherit from the workspace's nx.json file. The project name should begin with `@knuckles/` followed by the directory name, as specified in the `project.json` file.
 
 ```sh
 nx <task> <project>
 
 # Example:
-nx build @kolint/analyzer
+nx build @knuckles/analyzer
 ```
 
 #### Defined Tasks
@@ -72,8 +72,8 @@ Samples are small project used to manually test the workspace packages. Visit ea
 
 ### Workspace Structure
 
-- `packages/` - Source code for all public `@kolint` packages.
-- `tools/` - Development (private) packages such as `@kolint-dev/nx` and `@kolint-dev/tsconfig`
+- `packages/` - Source code for all public `@knuckles` packages.
+- `tools/` - Development (private) packages such as `@dev/nx` and `@dev/tsconfig`
 
 ## Toolchain
 
@@ -91,7 +91,7 @@ Our packages are designed to work with [NodeJS](https://nodejs.org/). During dev
 
 ```sh
 # Build single project
-nx build @kolint/compiler
+nx build @knuckles/compiler
 
 # Build all projects
 nx run-many -t build

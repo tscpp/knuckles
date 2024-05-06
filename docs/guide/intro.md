@@ -1,11 +1,9 @@
-# KOLint
+# Knuckles
 
 :::warning EXPERIMENTAL
 Many features in the toolchain is still under development and may be unstable.
 The documentation is still unfinished and may be missing crutial parts or be out of date.
 :::
-
-KOLint, despite its name, is not only a linter. The toolchain has grown to provide many useful tools for developing knockout views.
 
 ## Analyzer
 

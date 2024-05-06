@@ -1,5 +1,5 @@
 {
-  "extends": ["@kolint-dev/tsconfig/bun.json"],
+  "extends": ["@dev/tsconfig/bun.json"],
   "include": [
     "test",
     "spec",

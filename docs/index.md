@@ -2,19 +2,18 @@
 layout: home
 
 hero:
-  # name: KOLint
   text: The Modern Toolchain for Knockout.js
   tagline: Enhancing developer experience with Knockout and delivering essential modern tools.
   image:
     src: /logo.png
-    alt: KOLint Shield
+    alt: Knuckles Shield
   actions:
     - theme: brand
       text: Introduction
       link: /guide/intro
     - theme: alt
       text: View on GitHub
-      link: https://github.com/kolint/next
+      link: https://github.com/tscpp/knuckles
 ---
 
 <style>
