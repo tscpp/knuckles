@@ -1,6 +1,6 @@
 # Configuration
 
-The toolchain shares the same configuration file. The tools will automatically detect and import the `ko.config.js` module if it exists. You can also pass the `--config` flag to use a custom path or enforce loading the module.
+The toolchain shares the same configuration file. The tools will automatically detect and import the `knuckles.config.js` module if it exists. You can also pass the `--config` flag to use a custom path or enforce loading the module.
 
 ## Installation
 
@@ -32,7 +32,7 @@ $ bun add -D @knuckles/config
 You need to use module syntax according to the [detected module system](https://nodejs.org/api/packages.html#packages_determining_module_system). If you want to use ESM syntax, you may need to use the `.mjs` extension.
 :::
 
-Create the file `ko.config.js` and copy the below contents as a placeholder. The file will be automatically detected.
+Create the file `knuckles.config.js` and copy the below contents as a placeholder. The file will be automatically detected.
 
 ```js
 /**

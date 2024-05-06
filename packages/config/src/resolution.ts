@@ -11,12 +11,12 @@ export async function findConfigFile(
   const fileNames = fileName
     ? [fileName]
     : [
-        "ko.config.js",
-        "ko.config.mjs",
-        "ko.config.cjs",
-        "ko.config.ts",
-        "ko.config.mts",
-        "ko.config.cts",
+        "knuckles.config.js",
+        "knuckles.config.mjs",
+        "knuckles.config.cjs",
+        "knuckles.config.ts",
+        "knuckles.config.mts",
+        "knuckles.config.cts",
       ];
 
   for (const fileName of fileNames) {
