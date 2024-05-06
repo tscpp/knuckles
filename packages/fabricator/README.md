@@ -21,6 +21,6 @@ The fabricator package is a utillity to generate source code with mapping.
 [TypeScript]: https://typescriptlang.org
 [ESLint]: https://eslint.org
 [Knockout]: https://knockoutjs.com
-[toolchain]: https://knuckles.elsk.dev
+[toolkit]: https://knuckles.elsk.dev
 
 <!-- /include -->

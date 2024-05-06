@@ -1,12 +1,12 @@
 # [Knuckles](https://knuckles.elsk.dev/)
 
-**The modern toolchain for enhancing usage of Knockout.js and improving runtime performance. [Read more ›](https://knuckles.elsk.dev/)**
+**The modern toolkit for enhancing usage of Knockout.js and improving runtime performance. [Read more ›](https://knuckles.elsk.dev/)**
 
 ## Analyzer
 
 <!-- @include docs/parts/packages/analyzer/description.md -->
 
-The analyzer is a tool in the [toolchain] that can check [Knockout] views for issue. It can utilize existing tools like [TypeScript] and [ESLint], while also providing a set of standard rules to help catch common issue or styling.
+The analyzer is a tool in the [toolkit] that can check [Knockout] views for issue. It can utilize existing tools like [TypeScript] and [ESLint], while also providing a set of standard rules to help catch common issue or styling.
 
 <!-- /include -->
 
@@ -58,7 +58,7 @@ The tool designed to enhance Knockout v3 applications by enabling server-side re
 
 <!-- @include docs/parts/packages/analyzer/description.md -->
 
-The analyzer is a tool in the [toolchain] that can check [Knockout] views for issue. It can utilize existing tools like [TypeScript] and [ESLint], while also providing a set of standard rules to help catch common issue or styling.
+The analyzer is a tool in the [toolkit] that can check [Knockout] views for issue. It can utilize existing tools like [TypeScript] and [ESLint], while also providing a set of standard rules to help catch common issue or styling.
 
 <!-- /include -->
 

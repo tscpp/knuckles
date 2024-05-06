@@ -2,8 +2,9 @@
 layout: home
 
 hero:
-  text: The Modern Toolchain for Knockout.js
-  tagline: Enhancing developer experience with Knockout and delivering essential modern tools.
+  name: Knuckles
+  text: The Modern Toolkit for Knockout.js
+  tagline: The ultimate toolkit for developing Knockout.js applications in 2024. Practially cheats.
   image:
     src: /logo.png
     alt: Knuckles Shield
@@ -14,89 +15,53 @@ hero:
     - theme: alt
       text: View on GitHub
       link: https://github.com/tscpp/knuckles
+features:
+  - icon: ⚠️
+    title: Find context-aware issues
+    details: The analyzer finds context-aware issues in Knockout bindings and enables you to run external tools on views using snapshots.
+    link: /guide/analyzer/intro
+    linkText: Learn about analyzer
+  - icon:
+      src: /assets/icons/typescript.svg
+      width: 32
+      height: 32
+      wrap: true
+    title: Extensive TypeScript support
+    details: The analyzer plugin allows for type-checking and type-aware linting. The language server supports TypeScript language features.
+    # link:
+    linkText: Missing documentation # How to enable TypeScript
+  - icon: 🌠
+    title: Boost performance using SSR
+    details: The server-side renderer improves runtime performance by deferring client-side rendering and improves SEO.
+    link: /guide/ssr/intro
+    linkText: How does it work?
+  - icon:
+      src: /assets/icons/eslint.svg
+      width: 32
+      height: 32
+      wrap: true
+    title: Analyze using external tools
+    details: The server-side renderer improves runtime performance by deferring client-side rendering and improves SEO.
+    # link:
+    linkText: Missing documentation # Learn how to setup tools
+  - icon:
+      src: /assets/icons/vscode.svg
+      width: 32
+      height: 32
+      wrap: true
+    title: Language support for editors
+    details: The language server implementation allows you to have Knockout language features as an extension for editors.
+    # link:
+    linkText: Missing documentation # How to use code-splitting
+  - icon: ✒️
+    title: Formatting (comming soon)
+    details: Provides the correct indentation for virtual elements and formats bindings over multiple lines.
+    # link:
+    linkText: Comming soon
 ---
 
-<style>
-:root {
-  /* from rollupjs.org */
-	--vp-home-hero-image-background-image: linear-gradient(
-		-45deg,
-		hsl(0 100% 60% / 80%),
-		hsl(15 100% 60% / 80%) 40%,
-		hsl(23 96% 62% / 80%) 45%,
-		hsl(0 100% 60% / 80%) 60%,
-		hsl(358 58% 47% / 80%)
-	);
-	--vp-home-hero-image-filter: blur(40px) opacity(0.5);
-}
+:::warning EXPERIMENTAL!
 
-@media (min-width: 640px) {
-  :root {
-    --vp-home-hero-image-filter: blur(56px) opacity(0.5);
-  }
-}
+Our toolkit is currently in active development, which means it's evolving rapidly with frequent changes. If you come across any bugs or have suggestions, please report them on [GitHub](https://github.com/tscpp/knuckles). If you'd like to further support its development, please consider [sponsoring](https://github.com/sponsors/tscpp) the project. Thank you!
 
-@media (min-width: 960px) {
-  :root {
-    --vp-home-hero-image-filter: blur(68px) opacity(0.5);
-  }
-}
-
-.image-src {
-  scale: 0.8;
-  transform-origin: top left;
-}
-
-.index-content {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 32px;
-}
-
-.index-content h2:first-child {
-  border: none;
-}
-
-</style>
-
-<hr />
-
-<div class="index-content">
-
-## Analyzer
-
-<!-- @include: @/parts/packages/analyzer/description.md -->
-
-<div align="center">
-
-[Read more ›](/guide/analyzer/intro)
-
-</div>
-
-<!-- @include: @/parts/features/analyzer/vp-example.md -->
-
-## Server-side Render {#ssr}
-
-<!-- @include: @/parts/packages/ssr/description.md -->
-
-<div align="center">
-
-[Read more ›](/guide/ssr/intro)
-
-</div>
-
-<!-- @include: @/parts/features/ssr/vp-example.md -->
-
-## Language Support
-
-<!-- @include: @/parts/packages/language-support/description.md -->
-
-<div align="center">
-
-[Read more ›](/guide/language-support/intro)
-
-</div>
-
-</div>
-
-<!-- @include: @/parts/reference.md -->
+:::

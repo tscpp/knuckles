@@ -75,7 +75,7 @@ Samples are small project used to manually test the workspace packages. Visit ea
 - `packages/` - Source code for all public `@knuckles` packages.
 - `tools/` - Development (private) packages such as `@dev/nx` and `@dev/tsconfig`
 
-## Toolchain
+## Toolkit
 
 ### Package Manager
 
@@ -83,7 +83,7 @@ Samples are small project used to manually test the workspace packages. Visit ea
 
 ### Javascript Runtime
 
-Our packages are designed to work with [NodeJS](https://nodejs.org/). During development, [Bun](https://bun.sh/) is used, which is a fast JavaScript runtime that's (almost) fully NodeJS backwards compatible. Bun provides a great development toolchain and nativly supports TypeScript.
+Our packages are designed to work with [NodeJS](https://nodejs.org/). During development, [Bun](https://bun.sh/) is used, which is a fast JavaScript runtime that's (almost) fully NodeJS backwards compatible. Bun provides a great development toolkit and nativly supports TypeScript.
 
 ### Build System
 

@@ -31,6 +31,6 @@ Leveraging Knockout's MVVM pattern, which relies on underlying data models, the 
 [TypeScript]: https://typescriptlang.org
 [ESLint]: https://eslint.org
 [Knockout]: https://knockoutjs.com
-[toolchain]: https://knuckles.elsk.dev
+[toolkit]: https://knuckles.elsk.dev
 
 <!-- /include -->

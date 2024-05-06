@@ -35,7 +35,7 @@ const config: UserConfig<ThemeConfig> = {
     sidebar: {
       "/guide/": [
         {
-          text: "Toolchain",
+          text: "Toolkit",
           base: "/guide/",
           items: [
             //
@@ -122,6 +122,10 @@ const config: UserConfig<ThemeConfig> = {
         {
           text: "Documentation",
           link: "/intro",
+        },
+        {
+          text: "Sponsor ❤️",
+          link: "https://github.com/sponsors/tscpp",
         },
       ],
       disclaimer:

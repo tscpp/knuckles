@@ -6,7 +6,7 @@ name: config
 
 <!-- @include docs/parts/packages/config/description.md-->
 
-Manages the [toolchain] config file for [Knockout]. It exports utillities and declarations.
+Manages the [toolkit] config file for [Knockout]. It exports utillities and declarations.
 
 <!-- /include -->
 
@@ -21,6 +21,6 @@ Manages the [toolchain] config file for [Knockout]. It exports utillities and de
 [TypeScript]: https://typescriptlang.org
 [ESLint]: https://eslint.org
 [Knockout]: https://knockoutjs.com
-[toolchain]: https://knuckles.elsk.dev
+[toolkit]: https://knuckles.elsk.dev
 
 <!-- /include -->

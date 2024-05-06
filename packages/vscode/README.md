@@ -6,7 +6,7 @@ name: vscode
 
 <!-- @include docs/parts/packages/vscode/description.md-->
 
-This extension is a part of the [toolchain] for [Knockout]. It provides language features and syntax highlighting for Knockout views (HTML files).
+This extension is a part of the [toolkit] for [Knockout]. It provides language features and syntax highlighting for Knockout views (HTML files).
 
 <!-- /include -->
 
@@ -21,6 +21,6 @@ This extension is a part of the [toolchain] for [Knockout]. It provides language
 [TypeScript]: https://typescriptlang.org
 [ESLint]: https://eslint.org
 [Knockout]: https://knockoutjs.com
-[toolchain]: https://knuckles.elsk.dev
+[toolkit]: https://knuckles.elsk.dev
 
 <!-- /include -->

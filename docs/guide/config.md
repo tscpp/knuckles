@@ -1,6 +1,6 @@
 # Configuration
 
-The toolchain shares the same configuration file. The tools will automatically detect and import the `knuckles.config.js` module if it exists. You can also pass the `--config` flag to use a custom path or enforce loading the module.
+The toolkit shares the same configuration file. The tools will automatically detect and import the `knuckles.config.js` module if it exists. You can also pass the `--config` flag to use a custom path or enforce loading the module.
 
 ## Installation
 

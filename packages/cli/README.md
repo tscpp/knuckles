@@ -6,7 +6,7 @@ name: cli
 
 <!-- @include docs/parts/packages/cli/description.md-->
 
-Shared command-line interface for the tools in the [toolchain] for [Knockout]. Installs the aliases `ko` and `kotools` for the binary. See `ko --help` for available commands.
+Shared command-line interface for the tools in the [toolkit] for [Knockout]. Installs the aliases `ko` and `kotools` for the binary. See `ko --help` for available commands.
 
 <!-- /include -->
 
@@ -21,6 +21,6 @@ Shared command-line interface for the tools in the [toolchain] for [Knockout]. I
 [TypeScript]: https://typescriptlang.org
 [ESLint]: https://eslint.org
 [Knockout]: https://knockoutjs.com
-[toolchain]: https://knuckles.elsk.dev
+[toolkit]: https://knuckles.elsk.dev
 
 <!-- /include -->

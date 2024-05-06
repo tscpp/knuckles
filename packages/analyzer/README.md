@@ -6,7 +6,7 @@ name: analyzer
 
 <!-- @include docs/parts/packages/analyzer/description.md-->
 
-The analyzer is a tool in the [toolchain] that can check [Knockout] views for issue. It can utilize existing tools like [TypeScript] and [ESLint], while also providing a set of standard rules to help catch common issue or styling.
+The analyzer is a tool in the [toolkit] that can check [Knockout] views for issue. It can utilize existing tools like [TypeScript] and [ESLint], while also providing a set of standard rules to help catch common issue or styling.
 
 <!-- /include -->
 
@@ -21,6 +21,6 @@ The analyzer is a tool in the [toolchain] that can check [Knockout] views for is
 [TypeScript]: https://typescriptlang.org
 [ESLint]: https://eslint.org
 [Knockout]: https://knockoutjs.com
-[toolchain]: https://knuckles.elsk.dev
+[toolkit]: https://knuckles.elsk.dev
 
 <!-- /include -->

@@ -1,1 +1,1 @@
-The analyzer is a tool in the [toolchain] that can check [Knockout] views for issue. It can utilize existing tools like [TypeScript] and [ESLint], while also providing a set of standard rules to help catch common issue or styling.
+The analyzer is a tool in the [toolkit] that can check [Knockout] views for issue. It can utilize existing tools like [TypeScript] and [ESLint], while also providing a set of standard rules to help catch common issue or styling.
