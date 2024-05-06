@@ -69,7 +69,7 @@ hero:
 
 <div align="center">
 
-[Read more ›](/analyzer/intro)
+[Read more ›](/guide/analyzer/intro)
 
 </div>
 
@@ -81,7 +81,7 @@ hero:
 
 <div align="center">
 
-[Read more ›](/ssr/intro)
+[Read more ›](/guide/ssr/intro)
 
 </div>
 
@@ -93,7 +93,7 @@ hero:
 
 <div align="center">
 
-[Read more ›](/ssr/intro)
+[Read more ›](/guide/language-support/intro)
 
 </div>
 

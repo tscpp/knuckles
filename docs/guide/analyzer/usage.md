@@ -3,7 +3,7 @@
 ## Syntax
 
 :::warning Subject to change!
-The current syntax is experimental and subject to change. It differs from the syntax used by the [server-side renderer](/ssr/intro).
+The current syntax is experimental and subject to change. It differs from the syntax used by the [server-side renderer](/guide/ssr/intro).
 :::
 
 The linter utilizes HTML comments to convey information. These comments are referred to as "directives".

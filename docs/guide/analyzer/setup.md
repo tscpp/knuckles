@@ -51,7 +51,7 @@ $ bun add -D typescript
 After you have [linked a viewmodel](#viewmodels) to a view, you can lint the file. You can choose to pass a directory or file to `knuckles analyze`.
 
 :::tip
-See `knuckles analyze --help` for all flags. You can also choose to [create a config file](/linting/config).
+See `knuckles analyze --help` for all flags. You can also choose to [create a config file](/guide/config).
 :::
 
 ::: code-group

@@ -1,1 +1,1 @@
-[**Documentation**](https://tscpp.github.io/knuckles) | [Package (npm)](https://npmjs.com/package/@knuckles/{{name}}) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/{{name}})
+[**Documentation**](https://elsk.dev/knuckles) | [Package (npm)](https://npmjs.com/package/@knuckles/{{name}}) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/{{name}})

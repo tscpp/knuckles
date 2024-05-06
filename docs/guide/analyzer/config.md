@@ -22,7 +22,7 @@ export default {
 You can configure the severity for every diagnostic, including TypeScript errors. The severity field is a map with the diagnostic code or name, and the severity `"off"`, `"warn"`, or `"error"`.
 
 :::tip
-If you have [the vscode extention](/package/readme/vscode) installed, the diagnostic code is shown when hovering the error in the editor.
+If you have [the vscode extention](/packages/readme/vscode) installed, the diagnostic code is shown when hovering the error in the editor.
 :::
 
 ```js

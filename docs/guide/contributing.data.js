@@ -1,5 +1,5 @@
 import { createContentLoader } from "vitepress";
 
-export default createContentLoader("../contributing.md", {
+export default createContentLoader("../CONTRIBUTING.md", {
   render: true,
 });
