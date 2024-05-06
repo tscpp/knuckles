@@ -12,7 +12,7 @@ The "location" package offers utility functions for managing ranges and position
 
 <!-- @include docs/parts/package-nav.md -->
 
-[**Documentation**](https://elsk.dev/knuckles) | [Package (npm)](https://npmjs.com/package/@knuckles/location) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/location)
+[**Documentation**](https://knuckles.elsk.dev) | [Package (npm)](https://npmjs.com/package/@knuckles/location) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/location)
 
 <!-- /include -->
 
@@ -21,6 +21,6 @@ The "location" package offers utility functions for managing ranges and position
 [TypeScript]: https://typescriptlang.org
 [ESLint]: https://eslint.org
 [Knockout]: https://knockoutjs.com
-[toolchain]: https://elsk.dev/knuckles
+[toolchain]: https://knuckles.elsk.dev
 
 <!-- /include -->

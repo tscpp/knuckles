@@ -1,6 +1,6 @@
-# [Knuckles](https://elsk.dev/knuckles/)
+# [Knuckles](https://knuckles.elsk.dev/)
 
-**The modern toolchain for enhancing usage of Knockout.js and improving runtime performance. [Read more ›](https://elsk.dev/knuckles/)**
+**The modern toolchain for enhancing usage of Knockout.js and improving runtime performance. [Read more ›](https://knuckles.elsk.dev/)**
 
 ## Analyzer
 
@@ -12,7 +12,7 @@ The analyzer is a tool in the [toolchain] that can check [Knockout] views for is
 
 <div align="center">
 
-[Read more ›](https://elsk.dev/knuckles/analyzer/intro)
+[Read more ›](https://knuckles.elsk.dev/analyzer/intro)
 
 </div>
 
@@ -37,7 +37,7 @@ The tool designed to enhance Knockout v3 applications by enabling server-side re
 
 <div align="center">
 
-[Read more ›](https://elsk.dev/knuckles/guide/ssr/intro)
+[Read more ›](https://knuckles.elsk.dev/guide/ssr/intro)
 
 </div>
 
@@ -64,6 +64,6 @@ The analyzer is a tool in the [toolchain] that can check [Knockout] views for is
 
 <div align="center">
 
-[Read more ›](https://elsk.dev/knuckles/guide/ssr/intro)
+[Read more ›](https://knuckles.elsk.dev/guide/ssr/intro)
 
 </div>

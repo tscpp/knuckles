@@ -12,7 +12,7 @@ The fabricator package is a utillity to generate source code with mapping.
 
 <!-- @include docs/parts/package-nav.md -->
 
-[**Documentation**](https://elsk.dev/knuckles) | [Package (npm)](https://npmjs.com/package/@knuckles/fabricator) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/fabricator)
+[**Documentation**](https://knuckles.elsk.dev) | [Package (npm)](https://npmjs.com/package/@knuckles/fabricator) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/fabricator)
 
 <!-- /include -->
 
@@ -21,6 +21,6 @@ The fabricator package is a utillity to generate source code with mapping.
 [TypeScript]: https://typescriptlang.org
 [ESLint]: https://eslint.org
 [Knockout]: https://knockoutjs.com
-[toolchain]: https://elsk.dev/knuckles
+[toolchain]: https://knuckles.elsk.dev
 
 <!-- /include -->

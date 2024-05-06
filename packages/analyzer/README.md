@@ -12,7 +12,7 @@ The analyzer is a tool in the [toolchain] that can check [Knockout] views for is
 
 <!-- @include docs/parts/package-nav.md -->
 
-[**Documentation**](https://elsk.dev/knuckles) | [Package (npm)](https://npmjs.com/package/@knuckles/analyzer) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/analyzer)
+[**Documentation**](https://knuckles.elsk.dev) | [Package (npm)](https://npmjs.com/package/@knuckles/analyzer) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/analyzer)
 
 <!-- /include -->
 
@@ -21,6 +21,6 @@ The analyzer is a tool in the [toolchain] that can check [Knockout] views for is
 [TypeScript]: https://typescriptlang.org
 [ESLint]: https://eslint.org
 [Knockout]: https://knockoutjs.com
-[toolchain]: https://elsk.dev/knuckles
+[toolchain]: https://knuckles.elsk.dev
 
 <!-- /include -->
