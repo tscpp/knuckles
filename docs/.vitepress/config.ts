@@ -20,7 +20,7 @@ const config: UserConfig<ThemeConfig> = {
   ],
 
   themeConfig: {
-    logo: "/logo.png",
+    logo: "/logo.svg",
     search: { provider: "local" },
     editLink: {
       pattern: "https://github.com/tscpp/knuckles/edit/main/docs/:path",

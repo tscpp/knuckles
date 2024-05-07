@@ -36,6 +36,14 @@
   }
 }
 
+.VPButton {
+  user-select: none;
+}
+
+.VPHero .image-bg {
+  opacity: 0.65;
+}
+
 .VPFeatures div.VPLink .link-text .link-text-value {
   user-select: none;
   cursor: not-allowed;
@@ -44,11 +52,6 @@
 
 .VPFeatures div.VPLink .link-text .link-text-icon {
   display: none;
-}
-
-.VPHome .image-src {
-  scale: 0.8;
-  transform-origin: top left;
 }
 
 a.footnote-backref {

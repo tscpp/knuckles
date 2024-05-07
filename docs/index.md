@@ -3,10 +3,10 @@ layout: home
 
 hero:
   name: Knuckles
-  text: The Modern Toolkit for Knockout.js
+  text: Toolkit for <u>Knockout.js</u>
   tagline: The ultimate toolkit for developing Knockout.js applications in 2024. Practially cheats.
   image:
-    src: /logo.png
+    src: /logo.svg
     alt: Knuckles Shield
   actions:
     - theme: brand
@@ -22,7 +22,7 @@ features:
     link: /guide/analyzer/intro
     linkText: Learn about analyzer
   - icon:
-      src: /assets/icons/typescript.svg
+      src: /typescript.svg
       width: 32
       height: 32
       wrap: true
@@ -36,7 +36,7 @@ features:
     link: /guide/ssr/intro
     linkText: How does it work?
   - icon:
-      src: /assets/icons/eslint.svg
+      src: /eslint.svg
       width: 32
       height: 32
       wrap: true
@@ -45,7 +45,7 @@ features:
     # link:
     linkText: Missing documentation # Learn how to setup tools
   - icon:
-      src: /assets/icons/vscode.svg
+      src: /vscode.svg
       width: 32
       height: 32
       wrap: true
