@@ -5,6 +5,17 @@
       "label": "Build VSCode Extension",
       "command": "pnpm",
       "args": ["nx", "build", "@knuckles/vscode"]
+    },
+    {
+      "type": "typescript",
+      "tsconfig": "tsconfig.json",
+      "option": "watch",
+      "problemMatcher": ["$tsc-watch"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "label": "tsc: watch - tsconfig.json"
     }
   ]
 }
