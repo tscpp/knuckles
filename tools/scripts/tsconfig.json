@@ -1,5 +1,0 @@
-{
-  "extends": ["@dev/tsconfig/bun.json"],
-  "compilerOptions": {},
-  "files": ["./prepare", "./publish", "./run-many"]
-}
