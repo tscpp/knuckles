@@ -1,11 +1,7 @@
 import { transform } from "./eval.js";
 import { invertQuote } from "./utils.js";
 import type { Range } from "@knuckles/location";
-import {
-  type Attribute,
-  Element,
-  type VirtualElement,
-} from "@knuckles/syntax-tree";
+import { Element, type VirtualElement } from "@knuckles/syntax-tree";
 
 export class Binding {
   constructor(
@@ -27,7 +23,7 @@ export function parseBindings(node: Element | VirtualElement) {
 
 function parseFromElement(node: Element) {
   return node.bindings.map((binding) => {
-    const quote = invertQuote((binding.parent as Attribute).quote ?? '"');
+    const quote = invertQuote(binding.attribute!.quote ?? '"');
     return new Binding(
       binding.name.text,
       transform(binding.param.text, quote),

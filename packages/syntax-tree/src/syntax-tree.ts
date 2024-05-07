@@ -1,105 +1,253 @@
-import type { Range } from "@knuckles/location";
+import { Range } from "@knuckles/location";
+
+export interface NodeInit {
+  range: Range;
+}
 
 export abstract class Node {
-  constructor(public range: Range) {}
+  range: Range;
+
+  constructor(init: NodeInit) {
+    this.range = init.range;
+  }
+}
+
+export interface TextInit {
+  content: string;
+  range: Range;
 }
 
 export class Text extends Node {
-  constructor(
-    public readonly content: string,
-    range: Range,
-  ) {
-    super(range);
+  content: string;
+
+  constructor(init: TextInit) {
+    super(init);
+    this.content = init.content;
   }
+}
+
+export interface CommentInit {
+  content: string;
+  range: Range;
 }
 
 export class Comment extends Node {
-  constructor(
-    public readonly content: string,
-    range: Range,
-  ) {
-    super(range);
+  content: string;
+
+  constructor(init: CommentInit) {
+    super(init);
+    this.content = init.content;
   }
+}
+
+export interface ScopeInit {
+  text: string;
+  range: Range;
 }
 
 export class Scope {
-  constructor(
-    public readonly text: string,
-    public readonly range: Range,
-  ) {}
+  text: string;
+  range: Range;
+
+  constructor(init: ScopeInit) {
+    this.text = init.text;
+    this.range = init.range;
+  }
+}
+
+export interface AttributeInit {
+  name: Scope;
+  value: Scope;
+  namespace?: string | null | undefined;
+  prefix?: string | null | undefined;
+  quote: "'" | '"' | null;
+  range: Range;
 }
 
 export class Attribute {
-  constructor(
-    public readonly name: Scope,
-    public readonly value: Scope,
-    public readonly namespace: string | undefined,
-    public readonly prefix: string | undefined,
-    public readonly quote: "'" | '"' | null,
-    public readonly range: Range,
-  ) {}
+  name: Scope;
+  value: Scope;
+  namespace: string | null;
+  prefix: string | null;
+  quote: "'" | '"' | null;
+  range: Range;
+
+  constructor(init: AttributeInit) {
+    this.name = init.name;
+    this.value = init.value;
+    this.namespace = init.namespace ?? null;
+    this.prefix = init.prefix ?? null;
+    this.quote = init.quote;
+    this.range = init.range;
+  }
+}
+
+export interface BindingInit {
+  name: Scope;
+  param: Scope;
+  attribute?: Attribute | null | undefined;
 }
 
 export class Binding {
-  constructor(
-    public readonly name: Scope,
-    public readonly param: Scope,
-    public readonly parent: Attribute | VirtualElement,
-    public readonly range: Range,
-  ) {}
+  name: Scope;
+  param: Scope;
+  attribute: Attribute | null;
+  range: Range;
+
+  constructor(init: BindingInit) {
+    this.name = init.name;
+    this.param = init.param;
+    this.attribute = init.attribute ?? null;
+    this.range = new Range(init.name.range.start, init.param.range.end);
+  }
+}
+
+export interface ElementInit {
+  tagName: string;
+  attributes: Iterable<Attribute>;
+  bindings: Iterable<Binding>;
+  children: Iterable<Node>;
+  range: Range;
 }
 
 export class Element extends Node {
-  constructor(
-    public readonly tagName: string,
-    public readonly attributes: readonly Attribute[],
-    public readonly bindings: readonly Binding[],
-    public readonly children: readonly Node[],
-    range: Range,
-  ) {
-    super(range);
+  tagName: string;
+  attributes: Attribute[];
+  bindings: Binding[];
+  children: Node[];
+
+  constructor(init: ElementInit) {
+    super(init);
+    this.tagName = init.tagName;
+    this.attributes = Array.from(init.attributes);
+    this.bindings = Array.from(init.bindings);
+    this.children = Array.from(init.children);
   }
+}
+
+export interface VirtualElementInit {
+  binding: Binding;
+  children: Iterable<Node>;
+  startComment: Comment;
+  endComment: Comment;
 }
 
 export class VirtualElement extends Node {
-  constructor(
-    public readonly binding: Binding,
-    public readonly hidden: boolean,
-    public readonly children: readonly Node[],
-    public readonly start: Comment,
-    public readonly end: Comment,
-    range: Range,
-  ) {
-    super(range);
+  binding: Binding;
+  children: Node[];
+  startComment: Comment;
+  endComment: Comment;
+
+  constructor(init: VirtualElementInit) {
+    super({
+      range: new Range(
+        init.startComment.range.start,
+        init.endComment.range.end,
+      ),
+    });
+    this.binding = init.binding;
+    this.children = Array.from(init.children);
+    this.startComment = init.startComment;
+    this.endComment = init.endComment;
   }
+}
+
+export enum DirectiveKind {
+  With,
+  Arbitrary,
+}
+
+export type Directive = WithDirective | ArbitraryDirective;
+
+export type WithDirective = {
+  kind: DirectiveKind.With;
+  name: Scope;
+  param: Scope;
+} & (
+  | {
+      import: {
+        specifier: string;
+        module: string;
+      };
+      inline: undefined;
+    }
+  | {
+      import: undefined;
+      inline: string;
+    }
+);
+
+export type ArbitraryDirective = {
+  kind: DirectiveKind.Arbitrary;
+  name: Scope;
+  param: Scope | null;
+};
+
+export interface DirectiveElementInit {
+  directive: Directive;
+  children: Iterable<Node>;
+  startComment: Comment;
+  endComment: Comment;
+}
+
+export class DirectiveElement extends Node {
+  directive: Directive;
+  children: Node[];
+  startComment: Comment;
+  endComment: Comment;
+
+  constructor(init: DirectiveElementInit) {
+    super({
+      range: new Range(
+        init.startComment.range.start,
+        init.endComment.range.end,
+      ),
+    });
+    this.directive = init.directive;
+    this.children = Array.from(init.children);
+    this.startComment = init.startComment;
+    this.endComment = init.endComment;
+  }
+}
+
+export interface DocumentInit {
+  children: Iterable<Node>;
+  range: Range;
 }
 
 export class Document extends Node {
-  constructor(
-    public readonly children: readonly Node[],
-    range: Range,
-  ) {
-    super(range);
+  children: Node[];
+
+  constructor(init: DocumentInit) {
+    super(init);
+    this.children = Array.from(init.children);
   }
 }
 
-export type ChildNode = Element | VirtualElement | Text | Comment;
+export type ChildNode =
+  | Element
+  | VirtualElement
+  | DirectiveElement
+  | Text
+  | Comment;
 
 export function isChildNode(node: Node): node is ChildNode {
   return (
     node instanceof Element ||
     node instanceof VirtualElement ||
+    node instanceof DirectiveElement ||
     node instanceof Text ||
     node instanceof Comment
   );
 }
 
-export type ParentNode = Element | VirtualElement | Document;
+export type ParentNode = Element | VirtualElement | DirectiveElement | Document;
 
 export function isParentNode(node: Node): node is ParentNode {
   return (
     node instanceof Element ||
     node instanceof VirtualElement ||
+    node instanceof DirectiveElement ||
     node instanceof Document
   );
 }

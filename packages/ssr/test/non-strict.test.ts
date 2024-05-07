@@ -10,7 +10,7 @@ describe("non-strict", () => {
   test("handles non-existent viewmodel", async () => {
     const { document, errors } = await render(
       html`
-        <!-- ko ssr: ./does-not-exist.js -->
+        <!-- #ko with: default from "./does-not-exist.js" -->
         <div data-bind="text: text"></div>
         <!-- /ko -->
       `,
@@ -27,7 +27,7 @@ describe("non-strict", () => {
 
   test.todo("handles invalid binding expression", async () => {
     const source = html`
-      <!-- ko ssr: {} -->
+      <!-- #ko with: {} -->
       <div data-bind="text: ???"></div>
       <!-- /ko -->
     `;
@@ -49,7 +49,7 @@ describe("non-strict", () => {
 
   test("handle error when evaluating binding", async () => {
     const source = html`
-      <!-- ko ssr: {} -->
+      <!-- #ko with: {} -->
       <div data-bind="text: window.foo.bar.baz"></div>
       <!-- /ko -->
     `;

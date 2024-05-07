@@ -1,4 +1,4 @@
-import { TYPES_MODULE, ns, quote } from "./utils.js";
+import { TYPES_MODULE, ns, quote, rmnl } from "./utils.js";
 import { Chunk } from "@knuckles/fabricator";
 import { parse } from "@knuckles/parser";
 import {
@@ -7,7 +7,9 @@ import {
   VirtualElement,
   Binding,
   type Document,
+  DirectiveElement,
   Scope,
+  DirectiveKind,
 } from "@knuckles/syntax-tree";
 
 export default class Scaffold {
@@ -41,7 +43,11 @@ export default class Scaffold {
     if (node instanceof Element) {
       let closure: Chunk | undefined;
       for (const binding of node.bindings) {
-        closure = this.#renderBindingClosure(binding, closure);
+        closure = this.#renderBindingClosure(
+          binding,
+          this.#renderBindingComment(binding),
+          closure,
+        );
       }
 
       const decendants = this.#renderNodes(node.children);
@@ -62,21 +68,49 @@ export default class Scaffold {
     }
 
     if (node instanceof VirtualElement) {
-      let binding = node.binding;
+      const closure = this.#renderBindingClosure(
+        node.binding,
+        this.#renderBindingComment(node.binding),
+      );
+      const decendants = this.#renderNodes(node.children);
 
-      if (node.hidden && node.binding.name.text === "use") {
-        binding = new Binding(
-          new Scope("with", node.binding.name.range),
-          new Scope(
-            `undefined! as ${ns}.Interop<typeof import(${quote(binding.param.text.trim())})>`,
-            node.binding.param.range,
+      if (decendants.length > 0) {
+        return this.#renderDecendantClosure(closure, decendants)
+          .write(";")
+          .nl(2);
+      } else {
+        return closure //
+          .write(";")
+          .nl(2);
+      }
+    }
+
+    if (node instanceof DirectiveElement) {
+      let closure = new Chunk().write("$context");
+
+      if (node.directive.kind === DirectiveKind.With) {
+        const param =
+          "undefined! as " +
+          (node.directive.inline ??
+            `${ns}.Interop<(typeof import(${quote(node.directive.import.module)}))[${quote(node.directive.import.specifier)}]>`);
+
+        closure = this.#renderBindingClosure(
+          new Binding({
+            name: new Scope({
+              text: "with",
+              range: node.directive.name.range,
+            }),
+            param: new Scope({
+              text: param,
+              range: node.directive.param.range,
+            }),
+          }),
+          new Chunk().write(
+            `// "${rmnl(node.directive.name.text)}: ${rmnl(node.directive.param.text)}" (${node.directive.name.range.start.format()})`,
           ),
-          node.binding.parent,
-          binding.range,
         );
       }
 
-      const closure = this.#renderBindingClosure(binding);
       const decendants = this.#renderNodes(node.children);
 
       if (decendants.length > 0) {
@@ -109,11 +143,15 @@ export default class Scaffold {
       .write(")");
   }
 
-  #renderBindingClosure(binding: Binding, context?: Chunk) {
+  #renderBindingComment(binding: Binding) {
+    return new Chunk().write(
+      `// "${rmnl(binding.name.text)}: ${rmnl(binding.param.text)}" (${binding.range.start.format()})`,
+    );
+  }
+
+  #renderBindingClosure(binding: Binding, comment: Chunk, context?: Chunk) {
     const chunk = new Chunk()
-      .write(
-        `// "${binding.name.text.replace(/[\n\r]/g, "")}: ${binding.param.text.replace(/[\n\r]/g, "")}" (${binding.range.start.line}:${binding.range.start.column})`,
-      )
+      .add(comment)
       .nl()
       .write("(($context) => {")
       .nl()

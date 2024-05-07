@@ -5,6 +5,7 @@ Document {
   "children": [
     VirtualElement {
       "binding": Binding {
+        "attribute": null,
         "name": Scope {
           "range": Range {
             "end": Position {
@@ -35,23 +36,23 @@ Document {
           },
           "text": "foo",
         },
-        "parent": [Circular],
         "range": Range {
           "end": Position {
-            "column": 20,
+            "column": 16,
             "line": 0,
-            "offset": 20,
+            "offset": 16,
           },
           "start": Position {
-            "column": 0,
+            "column": 8,
             "line": 0,
-            "offset": 0,
+            "offset": 8,
           },
         },
       },
       "children": [
         VirtualElement {
           "binding": Binding {
+            "attribute": null,
             "name": Scope {
               "range": Range {
                 "end": Position {
@@ -82,22 +83,21 @@ Document {
               },
               "text": "bar",
             },
-            "parent": [Circular],
             "range": Range {
               "end": Position {
-                "column": 40,
+                "column": 36,
                 "line": 0,
-                "offset": 40,
+                "offset": 36,
               },
               "start": Position {
-                "column": 20,
+                "column": 28,
                 "line": 0,
-                "offset": 20,
+                "offset": 28,
               },
             },
           },
           "children": [],
-          "end": Comment {
+          "endComment": Comment {
             "content": " /ko ",
             "range": Range {
               "end": Position {
@@ -112,7 +112,6 @@ Document {
               },
             },
           },
-          "hidden": false,
           "range": Range {
             "end": Position {
               "column": 52,
@@ -125,7 +124,7 @@ Document {
               "offset": 20,
             },
           },
-          "start": Comment {
+          "startComment": Comment {
             "content": " ko bar: bar ",
             "range": Range {
               "end": Position {
@@ -142,7 +141,7 @@ Document {
           },
         },
       ],
-      "end": Comment {
+      "endComment": Comment {
         "content": " /ko ",
         "range": Range {
           "end": Position {
@@ -157,7 +156,6 @@ Document {
           },
         },
       },
-      "hidden": false,
       "range": Range {
         "end": Position {
           "column": 64,
@@ -170,7 +168,7 @@ Document {
           "offset": 0,
         },
       },
-      "start": Comment {
+      "startComment": Comment {
         "content": " ko foo: foo ",
         "range": Range {
           "end": Position {
@@ -205,8 +203,10 @@ Document {
 exports[`parser Hidden virtual element 1`] = `
 Document {
   "children": [
-    VirtualElement {
-      "binding": Binding {
+    DirectiveElement {
+      "children": [],
+      "directive": {
+        "kind": 1,
         "name": Scope {
           "range": Range {
             "end": Position {
@@ -237,22 +237,8 @@ Document {
           },
           "text": "foo",
         },
-        "parent": [Circular],
-        "range": Range {
-          "end": Position {
-            "column": 21,
-            "line": 0,
-            "offset": 21,
-          },
-          "start": Position {
-            "column": 0,
-            "line": 0,
-            "offset": 0,
-          },
-        },
       },
-      "children": [],
-      "end": Comment {
+      "endComment": Comment {
         "content": " /ko ",
         "range": Range {
           "end": Position {
@@ -267,7 +253,6 @@ Document {
           },
         },
       },
-      "hidden": true,
       "range": Range {
         "end": Position {
           "column": 33,
@@ -280,7 +265,7 @@ Document {
           "offset": 0,
         },
       },
-      "start": Comment {
+      "startComment": Comment {
         "content": " #ko foo: foo ",
         "range": Range {
           "end": Position {
@@ -333,8 +318,8 @@ Document {
             },
             "text": "data-bind",
           },
-          "namespace": undefined,
-          "prefix": undefined,
+          "namespace": null,
+          "prefix": null,
           "quote": "'",
           "range": Range {
             "end": Position {
@@ -356,9 +341,9 @@ Document {
                 "offset": 23,
               },
               "start": Position {
-                "column": 16,
+                "column": 15,
                 "line": 0,
-                "offset": 16,
+                "offset": 15,
               },
             },
             "text": "0: bar",
@@ -367,6 +352,53 @@ Document {
       ],
       "bindings": [
         Binding {
+          "attribute": Attribute {
+            "name": Scope {
+              "range": Range {
+                "end": Position {
+                  "column": 14,
+                  "line": 0,
+                  "offset": 14,
+                },
+                "start": Position {
+                  "column": 5,
+                  "line": 0,
+                  "offset": 5,
+                },
+              },
+              "text": "data-bind",
+            },
+            "namespace": null,
+            "prefix": null,
+            "quote": "'",
+            "range": Range {
+              "end": Position {
+                "column": 23,
+                "line": 0,
+                "offset": 23,
+              },
+              "start": Position {
+                "column": 5,
+                "line": 0,
+                "offset": 5,
+              },
+            },
+            "value": Scope {
+              "range": Range {
+                "end": Position {
+                  "column": 23,
+                  "line": 0,
+                  "offset": 23,
+                },
+                "start": Position {
+                  "column": 15,
+                  "line": 0,
+                  "offset": 15,
+                },
+              },
+              "text": "0: bar",
+            },
+          },
           "name": Scope {
             "range": Range {
               "end": Position {
@@ -396,53 +428,6 @@ Document {
               },
             },
             "text": "bar",
-          },
-          "parent": Attribute {
-            "name": Scope {
-              "range": Range {
-                "end": Position {
-                  "column": 14,
-                  "line": 0,
-                  "offset": 14,
-                },
-                "start": Position {
-                  "column": 5,
-                  "line": 0,
-                  "offset": 5,
-                },
-              },
-              "text": "data-bind",
-            },
-            "namespace": undefined,
-            "prefix": undefined,
-            "quote": "'",
-            "range": Range {
-              "end": Position {
-                "column": 23,
-                "line": 0,
-                "offset": 23,
-              },
-              "start": Position {
-                "column": 5,
-                "line": 0,
-                "offset": 5,
-              },
-            },
-            "value": Scope {
-              "range": Range {
-                "end": Position {
-                  "column": 23,
-                  "line": 0,
-                  "offset": 23,
-                },
-                "start": Position {
-                  "column": 16,
-                  "line": 0,
-                  "offset": 16,
-                },
-              },
-              "text": "0: bar",
-            },
           },
           "range": Range {
             "end": Position {

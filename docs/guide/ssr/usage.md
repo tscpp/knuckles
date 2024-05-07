@@ -18,7 +18,7 @@ The API is written in node.js-flavoured javascript. The main module exports the 
 import { render } from '@knuckles/ssr';
 
 const document = `
-  <!-- ko ssr: ./viewmodel.js -->
+  <!-- #ko with: default from "./viewmodel.js" -->
     <p data-bind="text: message"></p>
   <!-- /ko -->
 `;

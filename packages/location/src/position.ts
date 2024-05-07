@@ -75,6 +75,10 @@ export default class Position {
     public offset: number,
   ) {}
 
+  format() {
+    return `${this.line + 1}:${this.column + 1}`;
+  }
+
   clone() {
     return new Position(this.line, this.column, this.offset);
   }

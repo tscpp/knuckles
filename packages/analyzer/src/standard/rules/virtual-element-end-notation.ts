@@ -13,13 +13,13 @@ export default {
         `\\/ko\\s+${escapeStringRegexp(node.binding.name.text)}`,
       );
 
-      if (!regex.test(node.end.content)) {
+      if (!regex.test(node.endComment.content)) {
         report({
           name: this.name,
           message: "Missing notation on virtual element end comment.",
           severity: this.severity,
-          start: node.end.range.start,
-          end: node.end.range.end,
+          start: node.endComment.range.start,
+          end: node.endComment.range.end,
         });
       }
     });
