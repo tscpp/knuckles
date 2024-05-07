@@ -1,4 +1,3 @@
-import { parseImportDeclaration } from "./import.js";
 import { TYPES_MODULE, ns, quote, rmnl } from "./utils.js";
 import { Chunk } from "@knuckles/fabricator";
 import { parse } from "@knuckles/parser";
@@ -8,8 +7,9 @@ import {
   VirtualElement,
   Binding,
   type Document,
-  Directive,
+  DirectiveElement,
   Scope,
+  DirectiveKind,
 } from "@knuckles/syntax-tree";
 
 export default class Scaffold {
@@ -85,29 +85,28 @@ export default class Scaffold {
       }
     }
 
-    if (node instanceof Directive) {
+    if (node instanceof DirectiveElement) {
       let closure = new Chunk().write("$context");
 
-      if (node.name.text === "with" && node.param) {
-        let declaration = node.param.text;
-
-        const importDeclaration = parseImportDeclaration(node.param.text);
-        if (importDeclaration) {
-          declaration = `${ns}.Interop<(typeof import(${quote(importDeclaration.module)}))[${quote(importDeclaration.clause)}]>`;
-        }
-
-        const param = `undefined! as ${declaration}`;
+      if (node.directive.kind === DirectiveKind.With) {
+        const param =
+          "undefined! as " +
+          (node.directive.inline ??
+            `${ns}.Interop<(typeof import(${quote(node.directive.import.module)}))[${quote(node.directive.import.specifier)}]>`);
 
         closure = this.#renderBindingClosure(
           new Binding({
-            name: node.name,
+            name: new Scope({
+              text: "with",
+              range: node.directive.name.range,
+            }),
             param: new Scope({
               text: param,
-              range: node.param.range,
+              range: node.directive.param.range,
             }),
           }),
           new Chunk().write(
-            `// "${rmnl(node.name.text)}: ${rmnl(node.param.text)}" (${node.name.range.start.format()})`,
+            `// "${rmnl(node.directive.name.text)}: ${rmnl(node.directive.param.text)}" (${node.directive.name.range.start.format()})`,
           ),
         );
       }

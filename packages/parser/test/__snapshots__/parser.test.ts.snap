@@ -203,8 +203,41 @@ Document {
 exports[`parser Hidden virtual element 1`] = `
 Document {
   "children": [
-    Directive {
+    DirectiveElement {
       "children": [],
+      "directive": {
+        "kind": 1,
+        "name": Scope {
+          "range": Range {
+            "end": Position {
+              "column": 12,
+              "line": 0,
+              "offset": 12,
+            },
+            "start": Position {
+              "column": 9,
+              "line": 0,
+              "offset": 9,
+            },
+          },
+          "text": "foo",
+        },
+        "param": Scope {
+          "range": Range {
+            "end": Position {
+              "column": 17,
+              "line": 0,
+              "offset": 17,
+            },
+            "start": Position {
+              "column": 14,
+              "line": 0,
+              "offset": 14,
+            },
+          },
+          "text": "foo",
+        },
+      },
       "endComment": Comment {
         "content": " /ko ",
         "range": Range {
@@ -219,36 +252,6 @@ Document {
             "offset": 21,
           },
         },
-      },
-      "name": Scope {
-        "range": Range {
-          "end": Position {
-            "column": 12,
-            "line": 0,
-            "offset": 12,
-          },
-          "start": Position {
-            "column": 9,
-            "line": 0,
-            "offset": 9,
-          },
-        },
-        "text": "foo",
-      },
-      "param": Scope {
-        "range": Range {
-          "end": Position {
-            "column": 17,
-            "line": 0,
-            "offset": 17,
-          },
-          "start": Position {
-            "column": 14,
-            "line": 0,
-            "offset": 14,
-          },
-        },
-        "text": "foo",
       },
       "range": Range {
         "end": Position {

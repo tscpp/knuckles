@@ -5,20 +5,24 @@ import {
   parse5LocationToRange,
   type parse5TreeAdapter,
 } from "@knuckles/parser";
-import { Element, type VirtualElement } from "@knuckles/syntax-tree";
+import {
+  type DirectiveElement,
+  Element,
+  type VirtualElement,
+} from "@knuckles/syntax-tree";
 import inlineStyleParser from "inline-style-parser";
 import * as ko from "knockout";
 import type MagicString from "magic-string";
 import { createHash } from "node:crypto";
 
 export function getInnerRange(
-  node: Element | VirtualElement,
+  node: Element | VirtualElement | DirectiveElement,
   document: string,
 ): Range {
   if (node instanceof Element) {
     return getInnerRangeOfElement(node, document);
   } else {
-    return getInnerRangeOfVirtualElement(node, document);
+    return getInnerRangeOfVirtualOrDirectiveElement(node, document);
   }
 }
 
@@ -60,8 +64,8 @@ function getInnerRangeOfElement(node: Element, document: string): Range {
   );
 }
 
-function getInnerRangeOfVirtualElement(
-  node: VirtualElement,
+function getInnerRangeOfVirtualOrDirectiveElement(
+  node: VirtualElement | DirectiveElement,
   _document: string,
 ): Range {
   return new Range(node.startComment.range.end, node.endComment.range.start);

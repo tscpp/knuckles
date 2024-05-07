@@ -29,7 +29,7 @@ $ bun add -D @knuckles/ssr
 `@knuckles/ssr` strives to integrate easily into any application, with as little modifications and tweaking as possible. `@knuckles/ssr` will scan the document for "ssr" virtual elements. These special elements indicates to `@knuckles/ssr` to start server-side rendering, as well as providing the data used for the decendants.
 
 ```html
-<!-- ko ssr: { message: "Hello world!" } -->
+<!-- #ko with: { message: "Hello world!" } -->
 <p data-bind="text: message"></p>
 <!-- /ko -->
 ```
@@ -53,7 +53,7 @@ ko.applyBindings(...);
 The special "ssr" virtual element allows for a module path to be provided. It will import the module and try to interoperate the data from the module.
 
 ```html
-<!-- ko ssr: ./my-viewmodel.js -->
+<!-- #ko with: default from "./my-viewmodel.js" -->
 ...
 <!-- /ko -->
 ```

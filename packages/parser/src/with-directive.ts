@@ -1,20 +1,51 @@
-export function parseImportDeclaration(string: string) {
+export function parseWithDirective(string: string):
+  | {
+      import: {
+        specifier: string;
+        module: string;
+      };
+      inline: undefined;
+    }
+  | {
+      import: undefined;
+      inline: string;
+    } {
+  const importInfo = parseImport(string);
+  if (importInfo) {
+    return {
+      import: importInfo,
+      inline: undefined,
+    };
+  } else {
+    return {
+      import: undefined,
+      inline: string,
+    };
+  }
+}
+
+function parseImport(string: string):
+  | {
+      specifier: string;
+      module: string;
+    }
+  | undefined {
   const chars = Array.from(string);
   let i = 0;
   let char = chars[i];
   const advance = () => (char = chars[++i]);
 
-  let clause: string;
+  let specifier: string;
 
   if (char === "*") {
-    clause = char;
+    specifier = char;
     advance();
   } else if (char && /[a-z$_]/i.test(char)) {
-    clause = char;
+    specifier = char;
     advance();
 
     while (char && /[a-z0-9$_]/i.test(char)) {
-      clause += char;
+      specifier += char;
       advance();
     }
   } else {
@@ -69,7 +100,7 @@ export function parseImportDeclaration(string: string) {
   }
 
   return {
-    clause,
+    specifier,
     module,
   };
 }

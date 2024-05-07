@@ -152,30 +152,58 @@ export class VirtualElement extends Node {
   }
 }
 
-export interface DirectiveInit {
+export enum DirectiveKind {
+  With,
+  Arbitrary,
+}
+
+export type Directive = WithDirective | ArbitraryDirective;
+
+export type WithDirective = {
+  kind: DirectiveKind.With;
   name: Scope;
-  param?: Scope | null | undefined;
+  param: Scope;
+} & (
+  | {
+      import: {
+        specifier: string;
+        module: string;
+      };
+      inline: undefined;
+    }
+  | {
+      import: undefined;
+      inline: string
+    }
+);
+
+export type ArbitraryDirective = {
+  kind: DirectiveKind.Arbitrary;
+  name: Scope;
+  param: Scope | null;
+};
+
+export interface DirectiveElementInit {
+  directive: Directive;
   children: Iterable<Node>;
   startComment: Comment;
   endComment: Comment;
 }
 
-export class Directive extends Node {
-  name: Scope;
-  param: Scope | null;
+export class DirectiveElement extends Node {
+  directive: Directive;
   children: Node[];
   startComment: Comment;
   endComment: Comment;
 
-  constructor(init: DirectiveInit) {
+  constructor(init: DirectiveElementInit) {
     super({
       range: new Range(
         init.startComment.range.start,
         init.endComment.range.end,
       ),
     });
-    this.name = init.name;
-    this.param = init.param ?? null;
+    this.directive = init.directive;
     this.children = Array.from(init.children);
     this.startComment = init.startComment;
     this.endComment = init.endComment;
@@ -196,25 +224,30 @@ export class Document extends Node {
   }
 }
 
-export type ChildNode = Element | VirtualElement | Directive | Text | Comment;
+export type ChildNode =
+  | Element
+  | VirtualElement
+  | DirectiveElement
+  | Text
+  | Comment;
 
 export function isChildNode(node: Node): node is ChildNode {
   return (
     node instanceof Element ||
     node instanceof VirtualElement ||
-    node instanceof Directive ||
+    node instanceof DirectiveElement ||
     node instanceof Text ||
     node instanceof Comment
   );
 }
 
-export type ParentNode = Element | VirtualElement | Directive | Document;
+export type ParentNode = Element | VirtualElement | DirectiveElement | Document;
 
 export function isParentNode(node: Node): node is ParentNode {
   return (
     node instanceof Element ||
     node instanceof VirtualElement ||
-    node instanceof Directive ||
+    node instanceof DirectiveElement ||
     node instanceof Document
   );
 }

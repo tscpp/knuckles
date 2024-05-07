@@ -23,6 +23,9 @@ import {
   type ParentNode,
   VirtualElement,
   isParentNode,
+  DirectiveElement,
+  DirectiveKind,
+  type WithDirective,
 } from "@knuckles/syntax-tree";
 import { resolve as importMetaResolve } from "import-meta-resolve";
 import ko from "knockout";
@@ -226,8 +229,11 @@ class Renderer {
   }
 
   async scan(node: ParentNode) {
-    if (node instanceof VirtualElement && node.binding.name.text === "ssr") {
-      await this.renderRoot(node);
+    if (
+      node instanceof DirectiveElement &&
+      node.directive.kind === DirectiveKind.With
+    ) {
+      await this.renderRoot(node, node.directive);
       return;
     }
 
@@ -308,17 +314,7 @@ class Renderer {
         });
       }
     } else {
-      if (
-        typeof exports === "object" &&
-        exports !== null &&
-        "default" in exports
-      ) {
-        if (typeof exports.default === "function") {
-          return exports.default();
-        } else {
-          return exports.default;
-        }
-      } else if (typeof exports === "function") {
+      if (typeof exports === "function") {
         return exports();
       } else {
         return exports;
@@ -326,21 +322,13 @@ class Renderer {
     }
   }
 
-  async loadSsrData(param: string) {
-    if (param.startsWith("{")) {
+  async loadSsrData(directive: WithDirective) {
+    if (directive.import) {
+      const resolved = await this.resolve(directive.import.module);
+      // TODO: improve error handling
       try {
-        return evaluateInlineData(param);
-      } catch (cause) {
-        throw this.error({
-          code: "invalid-inline-data",
-          message: `Invalid inline data: ${toMessage(cause)}`,
-          cause,
-        });
-      }
-    } else {
-      const resolved = await this.resolve(param);
-      try {
-        return this.interop(await this.load(resolved));
+        const exports = this.interop(await this.load(resolved)) as any;
+        return exports[directive.import.specifier];
       } catch (cause) {
         throw this.error({
           code: "cannot-find-module",
@@ -348,12 +336,26 @@ class Renderer {
           cause,
         });
       }
+    } else {
+      try {
+        return evaluateInlineData(directive.inline);
+      } catch (cause) {
+        throw this.error({
+          code: "invalid-inline-data",
+          message: `Invalid inline data: ${toMessage(cause)}`,
+          cause,
+        });
+      }
     }
   }
 
-  async renderRoot(node: VirtualElement, document = this.document) {
+  async renderRoot(
+    node: DirectiveElement,
+    directive: WithDirective,
+    document = this.document,
+  ) {
     try {
-      const data = await this.loadSsrData(node.binding.param.text);
+      const data = await this.loadSsrData(directive);
       const context = new BindingContext(data);
 
       // Remove virtual element start and end comments.
@@ -381,10 +383,10 @@ class Renderer {
   ) {
     for (const child of node.children) {
       if (
-        child instanceof VirtualElement &&
-        child.binding.name.text === "ssr"
+        child instanceof DirectiveElement &&
+        child.directive.kind === DirectiveKind.With
       ) {
-        await this.renderRoot(child, document);
+        await this.renderRoot(child, child.directive, document);
         continue;
       }
 

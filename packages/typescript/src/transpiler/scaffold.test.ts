@@ -8,7 +8,7 @@ describe("Scaffold", () => {
     expect(chunk.content).toContain("bar");
   });
 
-  test("renders with directive", () => {
+  test("renders 'with' directive", () => {
     const chunk = new Scaffold().render(
       "<!-- #ko with: default from 'viewmodel' --><div data-bind='text: text'></div><!-- /ko -->",
     );

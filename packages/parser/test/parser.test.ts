@@ -1,5 +1,5 @@
 import { parse } from "../src/parser.js";
-import { Directive } from "@knuckles/syntax-tree";
+import { DirectiveElement } from "@knuckles/syntax-tree";
 import { describe, test, expect } from "bun:test";
 import assert from "node:assert/strict";
 
@@ -14,7 +14,7 @@ describe("parser", () => {
   test("Hidden virtual element", () => {
     const document = parse("<!-- #ko foo: foo --><!-- /ko -->");
     expect(document).toMatchSnapshot();
-    assert(document.children[0] instanceof Directive);
+    assert(document.children[0] instanceof DirectiveElement);
   });
 
   test("Element bindings", () => {

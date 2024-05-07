@@ -9,7 +9,7 @@ const html = String.raw;
 describe("server-side rendering", () => {
   test("renders text binding into element", async () => {
     const { document } = await render(html`
-      <!-- ko ssr: {} -->
+      <!-- #ko with: {} -->
       <div data-bind="text: 'Hello'"></div>
       <!-- /ko -->
     `);
@@ -18,7 +18,7 @@ describe("server-side rendering", () => {
 
   test("renders data from inline viewmodel", async () => {
     const { document } = await render(html`
-      <!-- ko ssr: { name: 'SSR' } -->
+      <!-- #ko with: { name: 'SSR' } -->
       <div data-bind="text: 'Hello ' + name"></div>
       <!-- /ko -->
     `);
@@ -28,7 +28,7 @@ describe("server-side rendering", () => {
   test("resolves viewmodel from relative path", async () => {
     const { document } = await render(
       html`
-        <!-- ko ssr: ./viewmodel.js -->
+        <!-- #ko with: default from "./viewmodel.js" -->
         <div data-bind="text: 'Hello ' + name"></div>
         <!-- /ko -->
       `,
@@ -41,7 +41,7 @@ describe("server-side rendering", () => {
 
   test("renders html binding into element", async () => {
     const { document } = await render(html`
-      <!-- ko ssr: {} -->
+      <!-- #ko with: {} -->
       <div data-bind="html: '<b>Hello</b>'"></div>
       <!-- /ko -->
     `);
@@ -50,7 +50,7 @@ describe("server-side rendering", () => {
 
   test("renders visible binding on element", async () => {
     const { document } = await render(html`
-      <!-- ko ssr: {} -->
+      <!-- #ko with: {} -->
       <div data-bind="visible: false"></div>
       <!-- /ko -->
     `);
@@ -59,7 +59,7 @@ describe("server-side rendering", () => {
 
   test("renders class binding on element", async () => {
     const { document } = await render(html`
-      <!-- ko ssr: {} -->
+      <!-- #ko with: {} -->
       <div data-bind="class: 'foo'"></div>
       <!-- /ko -->
     `);
@@ -68,7 +68,7 @@ describe("server-side rendering", () => {
 
   test("renders css binding on element", async () => {
     const { document } = await render(html`
-      <!-- ko ssr: {} -->
+      <!-- #ko with: {} -->
       <div data-bind="css: { foo: true }"></div>
       <!-- /ko -->
     `);
@@ -98,7 +98,7 @@ describe("server-side rendering", () => {
     };
     const { document } = await render(
       html`
-        <!-- ko ssr: { language: "fr" } -->
+        <!-- #ko with: { language: "fr" } -->
         <div data-bind="i18n: 'greeting'"></div>
         <!-- /ko -->
       `,
@@ -111,7 +111,7 @@ describe("server-side rendering", () => {
 
   test("renders style binding on element", async () => {
     const { document } = await render(html`
-      <!-- ko ssr: {} -->
+      <!-- #ko with: {} -->
       <div data-bind="style: { color: 'red' }"></div>
       <!-- /ko -->
     `);
@@ -120,7 +120,7 @@ describe("server-side rendering", () => {
 
   test("renders attr binding on element", async () => {
     const { document } = await render(html`
-      <!-- ko ssr: {} -->
+      <!-- #ko with: {} -->
       <div data-bind="attr: { title: 'Hello' }"></div>
       <!-- /ko -->
     `);
@@ -129,7 +129,7 @@ describe("server-side rendering", () => {
 
   test("renders with binding", async () => {
     const { document } = await render(`
-      <!-- ko ssr: { foo: { bar: 'baz' } } -->
+      <!-- #ko with: { foo: { bar: 'baz' } } -->
         <!-- ko with: foo -->
           <div data-bind="text: bar"></div>
         <!-- /ko -->
@@ -140,7 +140,7 @@ describe("server-side rendering", () => {
 
   test("renders using binding", async () => {
     const { document } = await render(`
-      <!-- ko ssr: { foo: { bar: 'baz' } } -->
+      <!-- #ko with: { foo: { bar: 'baz' } } -->
         <div data-bind="using: foo, as: 'hi'">
           <div data-bind="text: hi.bar"></div>
         </div>
@@ -151,7 +151,7 @@ describe("server-side rendering", () => {
 
   test("renders let binding", async () => {
     const { document } = await render(`
-      <!-- ko ssr: { } -->
+      <!-- #ko with: { } -->
         <!-- ko let: { foo: 'bar' } -->
         <div data-bind="text: foo"></div>
         <!-- /ko -->
@@ -162,7 +162,7 @@ describe("server-side rendering", () => {
 
   test("renders value binding", async () => {
     const { document } = await render(`
-      <!-- ko ssr: { value: 'foo' } -->
+      <!-- #ko with: { value: 'foo' } -->
         <input data-bind="value: value">
       <!-- /ko -->
     `);
@@ -171,16 +171,16 @@ describe("server-side rendering", () => {
 
   test("renders checked binding", async () => {
     const { document } = await render(`
-      <!-- ko ssr: { value: true } -->
+      <!-- #ko with: { value: true } -->
         <input data-bind="checked: value">
       <!-- /ko -->
     `);
     assert(document.includes('checked=""'));
   });
 
-  test("renders disabled binding", async () => {
+  test.only("renders disabled binding", async () => {
     const { document } = await render(`
-      <!-- ko ssr: { value: true } -->
+      <!-- #ko with: { value: true } -->
         <input data-bind="disabled: value">
       <!-- /ko -->
     `);

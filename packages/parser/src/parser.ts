@@ -6,6 +6,7 @@ import {
   parse5LocationToRange,
   type parse5TreeAdapter as p5t,
 } from "./parse5-utils.js";
+import { parseWithDirective } from "./with-directive.js";
 import { Range, Position } from "@knuckles/location";
 import {
   Document,
@@ -18,7 +19,9 @@ import {
   Scope,
   VirtualElement,
   type ChildNode,
-  Directive,
+  DirectiveElement,
+  type Directive,
+  DirectiveKind,
 } from "@knuckles/syntax-tree";
 import * as acorn from "acorn";
 
@@ -103,7 +106,7 @@ class Parser {
   #parseVirtualElementOrDirective(
     node: p5t.CommentNode,
     iter: Iterator<p5t.Node>,
-  ): VirtualElement | Directive {
+  ): VirtualElement | DirectiveElement {
     const [paddingStart, prefix, nameText, paramText, paddingEnd] =
       VIRTUAL_ELEMENT_OR_DIRECTIVE_START_REGEX.exec(node.data)!.slice(1) as [
         string,
@@ -175,9 +178,31 @@ class Parser {
     const internal = prefix === "#";
 
     if (internal) {
-      return new Directive({
-        name,
-        param,
+      let directive: Directive;
+
+      switch (name.text) {
+        case "with":
+          if (!param) {
+            throw new Error("'with' directive is missing param.");
+          }
+          directive = {
+            kind: DirectiveKind.With,
+            name,
+            param,
+            ...parseWithDirective(param.text),
+          };
+          break;
+
+        default:
+          directive = {
+            kind: DirectiveKind.Arbitrary,
+            name,
+            param,
+          };
+      }
+
+      return new DirectiveElement({
+        directive,
         children,
         startComment,
         endComment,
