@@ -109,7 +109,7 @@ export default command({
 
     for (const fileName of files) {
       // Analyze file
-      logger.debug("File:", fileName);
+      logger.debug("File: " + fileName);
       const content = await readFile(fileName, "utf-8");
       const issues = await analyzer.analyze(fileName, content);
       logger.debug("Issues:", issues);
