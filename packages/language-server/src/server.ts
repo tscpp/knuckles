@@ -90,7 +90,6 @@ async function updateDocumentState(
     generated,
     sourceMap,
   });
-  console.log(snapshot.generated);
 
   const project = sourceFile.getProject();
   const service = project.getLanguageService();
