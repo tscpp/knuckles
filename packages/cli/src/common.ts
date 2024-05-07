@@ -30,5 +30,6 @@ export default (argv: readonly string[], cwd: string) =>
         logger.add(createDebugFile());
       }
       logger.debug(`Log level: ${logger.level}`);
+      logger.debug(`CWD: ${process.cwd()}`);
     })
     .demandCommand();
