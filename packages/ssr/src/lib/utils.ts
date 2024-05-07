@@ -64,7 +64,7 @@ function getInnerRangeOfVirtualElement(
   node: VirtualElement,
   _document: string,
 ): Range {
-  return new Range(node.start.range.end, node.end.range.start);
+  return new Range(node.startComment.range.end, node.endComment.range.start);
 }
 
 export function escapeHtml(string: string) {

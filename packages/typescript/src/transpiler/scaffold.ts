@@ -5,9 +5,9 @@ import {
   type Node,
   Element,
   VirtualElement,
-  Binding,
+  type Binding,
   type Document,
-  Scope,
+  Directive,
 } from "@knuckles/syntax-tree";
 
 export default class Scaffold {
@@ -62,21 +62,7 @@ export default class Scaffold {
     }
 
     if (node instanceof VirtualElement) {
-      let binding = node.binding;
-
-      if (node.hidden && node.binding.name.text === "use") {
-        binding = new Binding(
-          new Scope("with", node.binding.name.range),
-          new Scope(
-            `undefined! as ${ns}.Interop<typeof import(${quote(binding.param.text.trim())})>`,
-            node.binding.param.range,
-          ),
-          node.binding.parent,
-          binding.range,
-        );
-      }
-
-      const closure = this.#renderBindingClosure(binding);
+      const closure = this.#renderBindingClosure(node.binding);
       const decendants = this.#renderNodes(node.children);
 
       if (decendants.length > 0) {
@@ -87,6 +73,18 @@ export default class Scaffold {
         return closure //
           .write(";")
           .nl(2);
+      }
+    }
+
+    if (node instanceof Directive) {
+      if (node.name.text === 'use') {
+
+      }
+    }
+
+    if (node instanceof VirtualElement) {
+      if (node.binding.name.text === "use") {
+        // TODO:
       }
     }
 
