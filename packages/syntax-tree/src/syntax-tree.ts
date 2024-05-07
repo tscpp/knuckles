@@ -173,7 +173,7 @@ export type WithDirective = {
     }
   | {
       import: undefined;
-      inline: string
+      inline: string;
     }
 );
 
