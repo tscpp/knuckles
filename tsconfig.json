@@ -14,8 +14,7 @@
     { "path": "packages/typescript-plugin/tsconfig.json" },
     { "path": "packages/typescript/tsconfig.json" },
     { "path": "packages/vscode/tsconfig.json" },
-    { "path": "tools/nx/tsconfig.json" },
-    { "path": "tools/scripts/tsconfig.json" }
+    { "path": "tools/nx/tsconfig.json" }
 ],
 "include": []
 }

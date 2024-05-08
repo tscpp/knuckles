@@ -12,7 +12,7 @@ The analyzer is a tool in the [toolkit] that can check [Knockout] views for issu
 
 <div align="center">
 
-[Read more ›](https://knuckles.elsk.dev/analyzer/intro)
+[Read more ›](https://knuckles.elsk.dev/analyzer/overview)
 
 </div>
 
@@ -27,7 +27,7 @@ Argument of type 'number' is not assignable to parameter of type 'boolean'.
 
 <!-- /include -->
 
-## Server-Side Rendering
+## Server-side Rendering
 
 <!-- @include docs/parts/packages/ssr/description.md -->
 
@@ -37,7 +37,7 @@ The tool designed to enhance Knockout v3 applications by enabling server-side re
 
 <div align="center">
 
-[Read more ›](https://knuckles.elsk.dev/guide/ssr/intro)
+[Read more ›](https://knuckles.elsk.dev/guide/ssr/overview)
 
 </div>
 
@@ -64,6 +64,6 @@ The analyzer is a tool in the [toolkit] that can check [Knockout] views for issu
 
 <div align="center">
 
-[Read more ›](https://knuckles.elsk.dev/guide/ssr/intro)
+[Read more ›](https://knuckles.elsk.dev/guide/ssr/overview)
 
 </div>

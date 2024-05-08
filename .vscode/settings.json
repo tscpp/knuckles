@@ -40,5 +40,10 @@
   "eslint.experimental.useFlatConfig": true,
   "[dockerfile]": {
     "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "[markdown]": {
+    "editor.wordWrap": "bounded",
+    "editor.wordWrapColumn": 100,
+    "editor.rulers": [100]
   }
 }

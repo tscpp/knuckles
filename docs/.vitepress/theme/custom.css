@@ -1,8 +1,21 @@
-:root {
-  --vp-c-brand-1: #ec661d;
-  --vp-c-brand-2: #d38054;
-  --vp-c-brand-3: #bd5c28;
+/* COLORS */
 
+:root {
+  --vp-c-brand-1: #b33300;
+  --vp-c-brand-2: #d45929;
+  --vp-c-brand-3: #e06332;
+  --vp-c-brand-soft: rgba(3, 158, 40, 0.14);
+}
+
+.dark {
+  --vp-c-brand-1: #ee4f10;
+  --vp-c-brand-2: #c55d33;
+  --vp-c-brand-3: #bd4719;
+}
+
+/* HOME PAGE COLORS */
+
+:root {
   /* Taken from rollupjs.org 🙏 */
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: -webkit-linear-gradient(
@@ -36,14 +49,48 @@
   }
 }
 
+/* COMMON */
+
 .VPButton {
   user-select: none;
 }
 
+/* CONTENT */
+
+.content .vp-doc a {
+  color: var(--vp-c-indigo-1);
+  text-decoration: none;
+}
+
+.content .vp-doc a:hover {
+  color: var(--vp-c-indigo-2);
+  text-decoration: underline;
+}
+
+.content .vp-doc dl {
+  margin: 1em 0;
+}
+
+.content .vp-doc dt {
+  margin-bottom: 0.25em;
+}
+
+.content .vp-doc dd {
+  margin-bottom: 1em;
+}
+
+a.footnote-backref {
+  text-decoration: none;
+}
+
+/* HOME PAGE */
+
+/* reduce glow */
 .VPHero .image-bg {
   opacity: 0.65;
 }
 
+/* desaturate */
 .dark .VPHero .image-src {
   filter: saturate(0.9);
 }
@@ -56,20 +103,4 @@
 
 .VPFeatures div.VPLink .link-text .link-text-icon {
   display: none;
-}
-
-a.footnote-backref {
-  text-decoration: none;
-}
-
-dl {
-  margin: 1em 0;
-}
-
-dt {
-  margin-bottom: 0.25em;
-}
-
-dd {
-  margin-bottom: 1em;
 }

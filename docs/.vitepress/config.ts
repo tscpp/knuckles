@@ -28,7 +28,7 @@ const config: UserConfig<ThemeConfig> = {
 
     nav: [
       //
-      { text: "Guide", link: "/guide/intro" },
+      { text: "Guide", link: "/guide/introduction" },
       { text: "Packages", link: "/packages/index" },
     ],
 
@@ -36,50 +36,93 @@ const config: UserConfig<ThemeConfig> = {
       "/guide/": [
         {
           text: "Toolkit",
+          collapsed: false,
           base: "/guide/",
           items: [
             //
-            { text: "Introduction", link: "intro" },
-            { text: "Configuration", link: "config" },
+            { text: "What is Knuckles?", link: "introduction" },
+            { text: "Getting started", link: "getting-started" },
           ],
         },
         {
-          text: "Analyzer 🛡️",
+          text: "Configuration",
+          collapsed: true,
+          base: "/guide/",
+          items: [
+            //
+            { text: "Overview", link: "config" },
+            { text: "Analyer", link: "analyzer/config" },
+          ],
+        },
+        {
+          text: "Hints",
+          collapsed: true,
+          base: "/guide/",
+          items: [
+            //
+            { text: "Overview", link: "hints/overview" },
+            { text: "View Model", link: "hints/view-model" },
+          ],
+        },
+        {
+          text: "Analyzer",
+          collapsed: true,
           base: "/guide/analyzer/",
           items: [
             //
-            { text: "Introduction", link: "intro" },
-            { text: "Getting Started", link: "setup" },
-            { text: "Usage", link: "usage" },
+            { text: "Overview", link: "overview" },
+            { text: "Setup", link: "setup" },
             { text: "Configuration", link: "config" },
+            { text: "TypeScript", link: "typescript" },
+            { text: "ESLint", link: "eslint" },
           ],
         },
         {
-          text: "Server-Side Rendering",
+          text: "Server-side Rendering",
+          collapsed: true,
           base: "/guide/ssr/",
           items: [
             //
-            { text: "Introduction", link: "intro" },
-            { text: "Getting Started", link: "setup" },
-            { text: "Usage", link: "usage" },
+            { text: "Overview", link: "overview" },
+            { text: "Setup", link: "setup" },
             { text: "Support", link: "support" },
             { text: "Plugins", link: "plugins" },
           ],
         },
         {
           text: "Editors",
+          collapsed: true,
           items: [
-            {
-              text: "VSCode Extension",
-              link: "/guide/editors/vscode",
-            },
+            //
+            { text: "VSCode Extension", link: "/guide/editors/vscode" },
+          ],
+        },
+        {
+          text: "Migration",
+          collapsed: true,
+          base: "/guide/migration/",
+          items: [
+            //
+            { text: "From knockout-lint", link: "knockout-lint" },
+            { text: "From knockout-ssr", link: "knockout-ssr" },
           ],
         },
         {
           text: "Development",
+          collapsed: true,
           items: [
             //
-            { text: "Contributing", link: "/guide/contributing" },
+            { text: "Contributing", link: "/guide/development/contributing" },
+            { text: "Repository", link: "https://github.com/tscpp/knuckles" },
+          ],
+        },
+        {
+          items: [
+            //
+            {
+              text: "Feedback",
+              link: "https://github.com/tscpp/knuckles/discussions",
+            },
           ],
         },
       ],
@@ -121,7 +164,7 @@ const config: UserConfig<ThemeConfig> = {
         },
         {
           text: "Documentation",
-          link: "/intro",
+          link: "/overview",
         },
         {
           text: "Sponsor ❤️",
