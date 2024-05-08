@@ -1,6 +1,6 @@
 # VSCode Extension
 
-<!-- @include: @/parts/do-not-use.md -->
+<!-- @include: @/parts/work-in-progress.md -->
 
 <!-- @include: @/parts/packages/vscode/description.md -->
 

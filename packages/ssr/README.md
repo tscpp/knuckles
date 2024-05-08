@@ -2,7 +2,7 @@
 name: ssr
 ---
 
-# Server-Side Rendering (SSR)
+# Server-side Rendering (SSR)
 
 <!-- @include docs/parts/packages/ssr/description.md-->
 

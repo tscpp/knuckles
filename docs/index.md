@@ -3,15 +3,15 @@ layout: home
 
 hero:
   name: Knuckles
-  text: Toolkit for <u>Knockout.js</u>
-  tagline: The ultimate toolkit for developing Knockout.js applications in 2024. Practially cheats.
+  text: Development Toolkit for Knockout.js
+  tagline: A cool set of development tools to enhance the usage of Knockout.js. Practically cheats.
   image:
     src: /logo.svg
     alt: Knuckles Shield
   actions:
     - theme: brand
       text: Introduction
-      link: /guide/intro
+      link: /guide/introduction
     - theme: alt
       text: View on GitHub
       link: https://github.com/tscpp/knuckles
@@ -19,7 +19,7 @@ features:
   - icon: ⚠️
     title: Find context-aware issues
     details: The analyzer finds context-aware issues in Knockout bindings and enables you to run external tools on views using snapshots.
-    link: /guide/analyzer/intro
+    link: /guide/analyzer/overview
     linkText: Learn about analyzer
   - icon:
       src: /typescript.svg
@@ -33,7 +33,7 @@ features:
   - icon: 🌠
     title: Boost performance using SSR
     details: The server-side renderer improves runtime performance by deferring client-side rendering and improves SEO.
-    link: /guide/ssr/intro
+    link: /guide/ssr/overview
     linkText: How does it work?
   - icon:
       src: /eslint.svg

@@ -1,28 +1,10 @@
 # Plugins
 
-## Using plugins
-
-### CLI
-
-```sh
-kossr --plugin ./my-ssr-plugin.js ...
-```
-
-### API
-
-```js
-import ssrPlugin from './my-ssr-plugin.js'; // [!code ++]
-
-await render(..., {
-  plugins: [
-    ssrPlugin // [!code ++]
-  ],
-});
-```
+:::warning Work in progress
+Documentation is unfinished.
+:::
 
 ## Writing plugins
-
-Plugins are written as modules, which can either be imported, or passed to the `--plugin` flag in the CLI. The module should export a `Plugin` object as the default export.
 
 For example, you can integrate your i18n framework by creating a plugin similar to the below.
 

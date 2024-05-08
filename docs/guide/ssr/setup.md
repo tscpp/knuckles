@@ -1,8 +1,4 @@
-# Installation
-
-The library runs in [Node.JS](https://nodejs.org/) which is required to be installed prior.
-
-The library is shipped as a package on [npm](https://www.npmjs.com/package/@knuckles/ssr). You can add the library as a dev-dependency by running the below command.
+# Setup
 
 ::: code-group
 
@@ -24,13 +20,35 @@ $ bun add -D @knuckles/ssr
 
 :::
 
-## Integration
+## Usage
 
-`@knuckles/ssr` strives to integrate easily into any application, with as little modifications and tweaking as possible. `@knuckles/ssr` will scan the document for "ssr" virtual elements. These special elements indicates to `@knuckles/ssr` to start server-side rendering, as well as providing the data used for the decendants.
+:::warning
+The command-line interface for SSR is subject change. Expect to see updates ([#10]) soon 👀
+:::
 
+```sh
+$ ko ssr -i view.html -o out/
+```
+
+## Adding Hints
+
+You need to add hints to the view so the renderer know what data to render. This can be done trough the `with` binding, or by using the [view model hint](/guide/hints/view-model)
+
+<!-- prettier-ignore -->
 ```html
-<!-- #ko with: { message: "Hello world!" } -->
-<p data-bind="text: message"></p>
+<!-- #ko with: default from './viewmodel' --> // [!code ++]
+  <p data-bind="text: message"></p>
+<!-- /ko --> // [!code ++]
+```
+
+To enable rendering, you either need to explicitly specify the "ssr" hint in the view, or configure SSR to render by default
+
+<!-- prettier-ignore -->
+```html
+<!-- #ko with: default from './viewmodel' -->
+  <!-- #ko ssr: --> // [!code ++]
+    <p data-bind="text: message"></p>
+  <!-- /ko --> // [!code ++]
 <!-- /ko -->
 ```
 
@@ -48,25 +66,12 @@ Once the binding handlers are registered, you can run `applyBindings` as normall
 ko.applyBindings(...);
 ```
 
-### Using Data From Modules (View Models)
-
-The special "ssr" virtual element allows for a module path to be provided. It will import the module and try to interoperate the data from the module.
-
-```html
-<!-- #ko with: default from "./my-viewmodel.js" -->
-...
-<!-- /ko -->
-```
-
-The module specified should be capable of running server-side. You have two options for this:
-
-1. Isomorphic Modules: The module is designed to run both on the browser and server-side. You should opt for isomorphic modules when possible.
-2. Exclusive Modules: Alternatively, modules can be created to exclusively run server-side.
-
 ### Build tools
 
-`@knuckles/ssr` is pre-equipped with integrations for various build tools. See below for the complete list of supported build tools. For other tools or custom build processes, use either the [CLI](#cli) or [API](#api).
+`@knuckles/ssr` is pre-equipped with integrations for various build tools. See below for the complete list of supported build tools. For other tools or custom build processes, use the API (undocumented).
 
 - [Rollup](https://rollupjs.org/) - `@knuckles/ssr/rollup`
 - [Vite](https://vitejs.dev/) - `@knuckles/ssr/vite`
 - [Webpack](https://webpack.js.org/) - `@knuckles/ssr/`
+
+[#10]: https://github.com/tscpp/knuckles/issues/10
