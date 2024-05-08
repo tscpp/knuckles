@@ -29,7 +29,7 @@ Knuckles introduces an universal way to link view models to the decendants bindi
 
 ### Toggle Rendering
 
-You can [configure](/guide/ssr/config) the SSR to render by default, or by explicitly enabling for certain parts of the project.
+<!-- You can [configure](/guide/ssr/config) the SSR to render by default, or by explicitly enabling for certain parts of the project. -->
 
 <!-- prettier-ignore -->
 ```
