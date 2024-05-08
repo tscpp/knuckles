@@ -2,8 +2,11 @@
   "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": "./commit.cjs",
-  "fixed": [],
-  "linked": [["@knuckles/parser", "@knuckles/syntax-tree"]],
+  "fixed": [["@knuckles/parser", "@knuckles/syntax-tree"]],
+  "linked": [
+    ["@knuckles/analyzer", "@knuckles/typescript", "@knuckles/eslint"]
+  ],
+  "ignore": ["@knuckles/vscode"],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
