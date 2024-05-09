@@ -49,7 +49,6 @@ const config: UserConfig<ThemeConfig> = {
           items: [
             //
             { text: "What is Knuckles?", link: "introduction" },
-            { text: "Navigating the docs", link: "navigation" },
             { text: "Getting started", link: "getting-started" },
           ],
         },
