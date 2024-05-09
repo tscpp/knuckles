@@ -46,7 +46,7 @@ export default class Scaffold {
         closure = new Chunk()
           .add(this.#renderBindingComment(binding))
           .add(this.#renderBindingClosure(binding))
-          .write("($context);");
+          .write("($context)");
       }
 
       const decendants = this.#renderNodes(node.children);
@@ -69,8 +69,7 @@ export default class Scaffold {
     if (node instanceof VirtualElement) {
       const closure = new Chunk()
         .add(this.#renderBindingComment(node.binding))
-        .add(this.#renderBindingClosure(node.binding))
-        .write("($context);");
+        .add(this.#renderBindingClosure(node.binding));
       const decendants = this.#renderNodes(node.children);
 
       if (decendants.length > 0) {
@@ -109,7 +108,8 @@ export default class Scaffold {
             `// "${rmnl(node.directive.name.text)}: ${rmnl(node.directive.param.text)}" (${node.directive.name.range.start.format()})`,
           )
           .nl()
-          .add(this.#renderBindingClosure(mock));
+          .add(this.#renderBindingClosure(mock))
+          .write("($context)");
       }
 
       const decendants = this.#renderNodes(node.children);
@@ -145,9 +145,11 @@ export default class Scaffold {
   }
 
   #renderBindingComment(binding: Binding) {
-    return new Chunk().write(
-      `// "${rmnl(binding.name.text)}: ${rmnl(binding.param.text)}" (${binding.range.start.format()})`,
-    );
+    return new Chunk()
+      .write(
+        `// "${rmnl(binding.name.text)}: ${rmnl(binding.param.text)}" (${binding.range.start.format()})`,
+      )
+      .nl();
   }
 
   #renderBindingClosure(binding: Binding) {
