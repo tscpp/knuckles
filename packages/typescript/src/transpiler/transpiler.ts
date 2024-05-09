@@ -1,5 +1,5 @@
-import type { Mapping } from "@knuckles/fabricator";
 import Renderer from "./renderer.js";
+import type { Mapping } from "@knuckles/fabricator";
 import { Project, type SourceFile, type CompilerOptions } from "ts-morph";
 
 export type TranspileOutput = {

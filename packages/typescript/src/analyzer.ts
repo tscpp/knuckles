@@ -28,7 +28,7 @@ export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
         generated: output.generated,
         original: c.text,
         fileName: c.fileName,
-        mappings: output.mappings
+        mappings: output.mappings,
       });
       c.snapshots.typescript = snapshot;
 
