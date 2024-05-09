@@ -1,17 +1,17 @@
 ---
 layout: home
-
+title: Knuckles
 hero:
   name: Knuckles
   text: Development Toolkit for Knockout.js
   tagline: A cool set of development tools to enhance the usage of Knockout.js. Practically cheats.
   image:
-    src: /logo.svg
+    src: /knuckles-glow.svg
     alt: Knuckles Shield
   actions:
     - theme: brand
       text: Introduction
-      link: /guide/introduction
+      link: /docs/introduction
     - theme: alt
       text: View on GitHub
       link: https://github.com/tscpp/knuckles
@@ -19,7 +19,7 @@ features:
   - icon: ⚠️
     title: Find context-aware issues
     details: The analyzer finds context-aware issues in Knockout bindings and enables you to run external tools on views using snapshots.
-    link: /guide/analyzer/overview
+    link: /docs/analyzer/overview
     linkText: Learn about analyzer
   - icon:
       src: /typescript.svg
@@ -28,12 +28,12 @@ features:
       wrap: true
     title: Extensive TypeScript support
     details: The analyzer plugin allows for type-checking and type-aware linting. The language server supports TypeScript language features.
-    # link:
-    linkText: Missing documentation # How to enable TypeScript
+    link: /docs/analyzer/typescript
+    linkText: Add TypeScript to analyzer
   - icon: 🌠
     title: Boost performance using SSR
     details: The server-side renderer improves runtime performance by deferring client-side rendering and improves SEO.
-    link: /guide/ssr/overview
+    link: /docs/ssr/overview
     linkText: How does it work?
   - icon:
       src: /eslint.svg
@@ -42,8 +42,8 @@ features:
       wrap: true
     title: Analyze using external tools
     details: The server-side renderer improves runtime performance by deferring client-side rendering and improves SEO.
-    # link:
-    linkText: Missing documentation # Learn how to setup tools
+    link: /docs/analyzer/eslint
+    linkText: Add ESLint to analyzer
   - icon:
       src: /vscode.svg
       width: 32
@@ -60,8 +60,110 @@ features:
     linkText: Comming soon
 ---
 
-:::warning EXPERIMENTAL!
+<script setup>
+import { 
+  VPTeamPage,
+  VPTeamPageTitle,
+  VPTeamMembers,
+  VPSponsors
+} from 'vitepress/theme'
 
-Our toolkit is currently in active development, which means it's evolving rapidly with frequent changes. If you come across any bugs or have suggestions, please report them on [GitHub](https://github.com/tscpp/knuckles). If you'd like to further support its development, please consider [sponsoring](https://github.com/sponsors/tscpp) the project. Thank you!
+const members = [
+  {
+    avatar: 'https://www.github.com/yyx990803.png',
+    name: 'Evan You',
+    title: 'Creator',
+    links: [
+      { icon: 'github', link: 'https://github.com/yyx990803' },
+      { icon: 'twitter', link: 'https://twitter.com/youyuxi' },
+    ],
+  },
+];
 
-:::
+const sponsors = [
+  {
+    tier: 'Sponsors',
+    size: 'big',
+    items: [
+      {
+        name: "Placeholder",
+        img: "/heart.svg",
+        url: "https://github.com/sponsors/tscpp",
+      },
+      {
+        name: "Placeholder",
+        img: "/heart.svg",
+        url: "https://github.com/sponsors/tscpp",
+      },
+      {
+        name: "Placeholder",
+        img: "/heart.svg",
+        url: "https://github.com/sponsors/tscpp",
+      },
+    ],
+  }
+];
+</script>
+
+<!-- <section>
+
+<hgroup>
+
+## Sponsors
+
+Big thanks to our sponsors for keeping the project going!
+
+</hgroup>
+
+<VPSponsors mode='normal' :data="sponsors" />
+
+</section> -->
+
+<style scoped>
+  section {
+    border-top: 1px solid var(--vp-c-divider);
+    margin-top: 5rem;
+    padding-top: 5rem;
+  }
+
+  section .header-anchor {
+    display: none;
+  }
+
+  hgroup {
+    text-align: center;
+    margin: 0;
+    margin-bottom: 2rem;
+    font-weight: 600;
+  }
+
+  hgroup h2 {
+    font-size: 250%;
+    border-top: none;
+    margin: 0;
+    margin-bottom: .5em;
+    padding: 0;
+    color: var(--vp-c-text-1);
+  }
+
+  hgroup p {
+    font-size: 125%;
+    margin: 0;
+    color: var(--vp-c-text-2);
+  }
+
+  :global(.vp-sponsor) {
+    max-width: 65rem;
+    margin: 0 auto;
+  }
+
+  :global(.vp-sponsor-grid.big .vp-sponsor-grid-image) {
+    max-height: 64px;
+  }
+
+  :global(.vp-sponsor-grid.big .vp-sponsor-grid-image[alt="Placeholder"]) {
+    height: 64px;
+    width: 64px;
+    opacity: 0.5;
+  }
+</style>

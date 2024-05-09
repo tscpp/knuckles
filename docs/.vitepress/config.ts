@@ -17,70 +17,58 @@ const config: UserConfig<ThemeConfig> = {
     ['link', { rel: 'apple-touch-icon', sizes: "180x180", href: "/apple-touch-icon.png" }],
     ['link', { rel: 'icon', type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" }],
     ['link', { rel: 'icon', type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" }],
+    ['script', { src: "https://api.pirsch.io/pa.js", defer: "", id: "pianjs", "data-code": "aPZ05TdxBbcnBLbX51IweJNb1Kd7UU78" }]
   ],
 
   themeConfig: {
-    logo: "/logo.svg",
+    logo: "/knuckles-sharp.svg",
     search: { provider: "local" },
     editLink: {
       pattern: "https://github.com/tscpp/knuckles/edit/main/docs/:path",
     },
 
     nav: [
-      //
-      { text: "Guide", link: "/guide/introduction" },
-      { text: "Packages", link: "/packages/index" },
+      {
+        text: "Docs",
+        link: "/docs/introduction",
+        activeMatch: "/docs/",
+      },
+      {
+        text: "Packages",
+        link: "/packages/index",
+        activeMatch: "/packages/",
+      },
     ],
 
     sidebar: {
-      "/guide/": [
+      "/docs/": [
         {
           text: "Toolkit",
           collapsed: false,
-          base: "/guide/",
+          base: "/docs/",
           items: [
             //
             { text: "What is Knuckles?", link: "introduction" },
+            { text: "Navigating the docs", link: "navigation" },
             { text: "Getting started", link: "getting-started" },
           ],
         },
         {
-          text: "Configuration",
-          collapsed: true,
-          base: "/guide/",
-          items: [
-            //
-            { text: "Overview", link: "config" },
-            { text: "Analyer", link: "analyzer/config" },
-          ],
-        },
-        {
-          text: "Hints",
-          collapsed: true,
-          base: "/guide/",
-          items: [
-            //
-            { text: "Overview", link: "hints/overview" },
-            { text: "View Model", link: "hints/view-model" },
-          ],
-        },
-        {
           text: "Analyzer",
-          collapsed: true,
-          base: "/guide/analyzer/",
+          collapsed: false,
+          base: "/docs/analyzer/",
           items: [
             //
             { text: "Overview", link: "overview" },
             { text: "Setup", link: "setup" },
-            { text: "Configuration", link: "config" },
             { text: "TypeScript", link: "typescript" },
             { text: "ESLint", link: "eslint" },
           ],
         },
         {
-          text: "Server-side Rendering",
-          collapsed: true,
-          base: "/guide/ssr/",
+          text: "SSR",
+          collapsed: false,
+          base: "/docs/ssr/",
           items: [
             //
             { text: "Overview", link: "overview" },
@@ -90,17 +78,9 @@ const config: UserConfig<ThemeConfig> = {
           ],
         },
         {
-          text: "Editors",
-          collapsed: true,
-          items: [
-            //
-            { text: "VSCode Extension", link: "/guide/editors/vscode" },
-          ],
-        },
-        {
           text: "Migration",
-          collapsed: true,
-          base: "/guide/migration/",
+          collapsed: false,
+          base: "/docs/migration/",
           items: [
             //
             { text: "From knockout-lint", link: "knockout-lint" },
@@ -108,22 +88,40 @@ const config: UserConfig<ThemeConfig> = {
           ],
         },
         {
-          text: "Development",
-          collapsed: true,
+          text: "Reference",
+          base: "/docs/reference/",
+          collapsed: false,
           items: [
             //
-            { text: "Contributing", link: "/guide/development/contributing" },
+            { text: "Glossary", link: "glossary" },
+            { text: "Hints", link: "hints" },
+            {
+              text: "Configuration",
+              base: "/docs/reference/config/",
+              link: "overview",
+              items: [
+                //
+                { text: "Analyer", link: "analyzer" },
+              ],
+            },
+          ],
+        },
+        {
+          text: "Development",
+          collapsed: false,
+          items: [
+            //
+            { text: "Contributing", link: "/docs/development/contributing" },
             { text: "Repository", link: "https://github.com/tscpp/knuckles" },
           ],
         },
         {
-          items: [
-            //
-            {
-              text: "Feedback",
-              link: "https://github.com/tscpp/knuckles/discussions",
-            },
-          ],
+          text: "Reference & Configuration",
+          link: "/docs/reference/overview",
+        },
+        {
+          text: "Feedback",
+          link: "https://github.com/tscpp/knuckles/discussions",
         },
       ],
       "/package": [

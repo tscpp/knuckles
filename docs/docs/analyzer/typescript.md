@@ -34,7 +34,7 @@ $ ko analyze [paths...] --ts
 
 ### Configuration
 
-Alternativly, you can configure the plugin in the [configuration](/guide/config).
+Alternativly, you can configure the plugin in the [configuration](/docs/reference/config/overview).
 
 <!-- prettier-ignore -->
 ```js
@@ -51,7 +51,7 @@ export default {
 
 ## View Model Types
 
-You have to provide the type declartion for the data used within a view. See the [view model hint guide](/guide/hints/view-model).
+You have to provide the type declartion for the data used within a view. See the [view model hint guide](/docs/reference/hints.html#view-model-hint).
 
 :::tip Examples
 
@@ -74,4 +74,4 @@ Alternativly if the type declaration are not included in the import, you can add
 :::
 
 [TypeScript]: https://typescriptlang.org/
-[analyzer]: /guide/analyzer/overview
+[analyzer]: /docs/analyzer/overview

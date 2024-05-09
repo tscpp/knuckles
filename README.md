@@ -37,7 +37,7 @@ The tool designed to enhance Knockout v3 applications by enabling server-side re
 
 <div align="center">
 
-[Read more ›](https://knuckles.elsk.dev/guide/ssr/overview)
+[Read more ›](https://knuckles.elsk.dev/docs/ssr/overview)
 
 </div>
 
@@ -64,6 +64,6 @@ The analyzer is a tool in the [toolkit] that can check [Knockout] views for issu
 
 <div align="center">
 
-[Read more ›](https://knuckles.elsk.dev/guide/ssr/overview)
+[Read more ›](https://knuckles.elsk.dev/docs/ssr/overview)
 
 </div>

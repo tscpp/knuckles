@@ -23,7 +23,7 @@ $ bun add -D @knuckles/analyzer
 ## Usage
 
 :::tip
-See `ko analyze --help` for all flags. You can also choose to [create a config file](/guide/config).
+See `ko analyze --help` for all flags. You can also choose to [create a config file](/docs/reference/config/overview).
 :::
 
 ```sh

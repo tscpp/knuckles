@@ -3,19 +3,19 @@
 ::: code-group
 
 ```sh [npm]
-$ npm add -D @knuckles/ssr
-```
-
-```sh [pnpm]
-$ pnpm add -D @knuckles/ssr
+$ npm install --save-dev @knuckles/ssr
 ```
 
 ```sh [yarn]
-$ yarn add -D @knuckles/ssr
+$ yarn add --dev @knuckles/ssr
+```
+
+```sh [pnpm]
+$ pnpm add --save-dev @knuckles/ssr
 ```
 
 ```sh [bun]
-$ bun add -D @knuckles/ssr
+$ bun add --save-dev @knuckles/ssr
 ```
 
 :::
@@ -32,7 +32,7 @@ $ ko ssr -i view.html -o out/
 
 ## Adding Hints
 
-You need to add hints to the view so the renderer know what data to render. This can be done trough the `with` binding, or by using the [view model hint](/guide/hints/view-model)
+You need to add hints to the view so the renderer know what data to render. This can be done trough the `with` binding, or by using the [view model hint](/docs/reference/hints.html#view-model-hint)
 
 <!-- prettier-ignore -->
 ```html

@@ -1,11 +1,15 @@
+---
+next: 'Overview | Analyzer'
+---
+
 # Getting Started!
 
 :::tip Migration
 
 See the guides for migrating from other tools:
 
-- [knockout-lint](/guide/migration/knockout-lint)
-- [knockout-ssr](/guide/migration/knockout-ssr)
+- [knockout-lint](/docs/migration/knockout-lint)
+- [knockout-ssr](/docs/migration/knockout-ssr)
 
 :::
 
@@ -74,7 +78,7 @@ $ ko --help
 
 See setup guides for:
 
-- [Analyzer](/guide/analyzer/setup)
-  - [TypeScript](/guide/analyzer/typescript)
-  - [ESLint](/guide/analyzer/eslint)
-- [Server-side Render (SSR)](/guide/analyzer/setup)
+- [Analyzer](/docs/analyzer/setup)
+  - [TypeScript](/docs/analyzer/typescript)
+  - [ESLint](/docs/analyzer/eslint)
+- [Server-side Render (SSR)](/docs/analyzer/setup)
