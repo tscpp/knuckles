@@ -43,11 +43,10 @@ export default class Scaffold {
     if (node instanceof Element) {
       let closure: Chunk | undefined;
       for (const binding of node.bindings) {
-        closure = this.#renderBindingClosure(
-          binding,
-          this.#renderBindingComment(binding),
-          closure,
-        );
+        closure = new Chunk()
+          .add(this.#renderBindingComment(binding))
+          .add(this.#renderBindingClosure(binding))
+          .write("($context);");
       }
 
       const decendants = this.#renderNodes(node.children);
@@ -68,10 +67,10 @@ export default class Scaffold {
     }
 
     if (node instanceof VirtualElement) {
-      const closure = this.#renderBindingClosure(
-        node.binding,
-        this.#renderBindingComment(node.binding),
-      );
+      const closure = new Chunk()
+        .add(this.#renderBindingComment(node.binding))
+        .add(this.#renderBindingClosure(node.binding))
+        .write("($context);");
       const decendants = this.#renderNodes(node.children);
 
       if (decendants.length > 0) {
@@ -94,21 +93,23 @@ export default class Scaffold {
           (node.directive.inline ??
             `${ns}.Interop<(typeof import(${quote(node.directive.import.module)}))[${quote(node.directive.import.specifier)}]>`);
 
-        closure = this.#renderBindingClosure(
-          new Binding({
-            name: new Scope({
-              text: "with",
-              range: node.directive.name.range,
-            }),
-            param: new Scope({
-              text: param,
-              range: node.directive.param.range,
-            }),
+        const mock = new Binding({
+          name: new Scope({
+            text: "with",
+            range: node.directive.name.range,
           }),
-          new Chunk().write(
+          param: new Scope({
+            text: param,
+            range: node.directive.param.range,
+          }),
+        });
+
+        closure = new Chunk()
+          .write(
             `// "${rmnl(node.directive.name.text)}: ${rmnl(node.directive.param.text)}" (${node.directive.name.range.start.format()})`,
-          ),
-        );
+          )
+          .nl()
+          .add(this.#renderBindingClosure(mock));
       }
 
       const decendants = this.#renderNodes(node.children);
@@ -149,10 +150,12 @@ export default class Scaffold {
     );
   }
 
-  #renderBindingClosure(binding: Binding, comment: Chunk, context?: Chunk) {
-    const chunk = new Chunk()
-      .add(comment)
-      .nl()
+  #renderBindingClosure(binding: Binding) {
+    const chunk = new Chunk({
+      mapping: {
+        range: binding.range,
+      },
+    })
       .write("(($context) => {")
       .nl()
       .indent()
@@ -167,38 +170,32 @@ export default class Scaffold {
       .write(`return ${ns}.$`);
 
     if (/^[a-z$_][a-z$_0-9]*$/i.test(binding.name.text)) {
-      chunk
+      chunk //
         .write(".")
-        .map(binding.name.range.start.offset)
-        .write(binding.name.text);
+        .write(binding.name.text, {
+          range: binding.name.range,
+          bidirectional: true,
+        });
     } else {
-      chunk
-        .map(binding.name.range.start.offset)
-        .write(`[${quote(binding.name.text)}]`);
+      chunk //
+        .write("[")
+        .write(binding.name.text, {
+          range: binding.name.range,
+          bidirectional: true,
+        })
+        .write("]");
     }
 
-    chunk //
+    return chunk //
       .write("((")
-      .map(binding.param.range.start.offset)
-      .write(binding.param.text)
+      .write(binding.param.text, {
+        range: binding.param.range,
+        bidirectional: true,
+      })
       .write("), $context)")
-      .map(binding.range.end.offset)
       .write(";")
       .dedent()
       .nl()
-      .write("})(");
-
-    if (context) {
-      chunk //
-        .nl()
-        .indent()
-        .add(context)
-        .dedent()
-        .nl();
-    } else {
-      chunk.write("$context");
-    }
-
-    return chunk.write(")");
+      .write("})");
   }
 }

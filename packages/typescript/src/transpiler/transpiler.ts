@@ -1,10 +1,10 @@
+import type { Mapping } from "@knuckles/fabricator";
 import Renderer from "./renderer.js";
-import { type RawSourceMap } from "source-map";
 import { Project, type SourceFile, type CompilerOptions } from "ts-morph";
 
 export type TranspileOutput = {
   generated: string;
-  sourceMap: RawSourceMap;
+  mappings: Mapping[];
   sourceFile: SourceFile;
 };
 
@@ -39,7 +39,7 @@ export class Transpiler {
 
     return {
       generated: chunk.content,
-      sourceMap: chunk.generateSourceMap(source, original),
+      mappings: chunk.getMappings(original),
       sourceFile: renderer.sourceFile,
     };
   }

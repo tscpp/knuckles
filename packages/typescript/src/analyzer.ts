@@ -24,11 +24,11 @@ export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
       const output = transpiler.transpile(c.fileName, c.text, options.mode);
       const sourceFile = output.sourceFile;
 
-      const snapshot = await new Snapshot({
+      const snapshot = new Snapshot({
         generated: output.generated,
         original: c.text,
         fileName: c.fileName,
-        sourceMap: output.sourceMap,
+        mappings: output.mappings
       });
       c.snapshots.typescript = snapshot;
 

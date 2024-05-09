@@ -307,7 +307,7 @@ export class Chunk {
     return this;
   }
 
-  getMappings(original: string): readonly Mapping[] {
+  getMappings(original: string): Mapping[] {
     return this.#mappings.map(
       (mapping): Mapping => ({
         ...mapping,

@@ -9,11 +9,11 @@ export default function (): AnalyzerPlugin {
 
     async analyze(c) {
       const chunk = transpile(c.document);
-      const snapshot = await new Snapshot({
+      const snapshot = new Snapshot({
         fileName: c.fileName + ".js",
         generated: chunk.content,
         original: c.text,
-        sourceMap: chunk.generateSourceMap(c.fileName + ".js", c.text),
+        mappings: chunk.getMappings(c.text),
       });
       c.snapshots.javascript = snapshot;
 
