@@ -24,7 +24,9 @@
         "Vue.volar",
         "GitHub.vscode-pull-request-github",
         "ms-azuretools.vscode-docker",
-        "bierner.lit-html"
+        "bierner.lit-html",
+        "wayou.vscode-todo-highlight",
+        "Gruntfuggly.todo-tree"
       ],
       "settings": {
         "explorer.fileNesting.enabled": true
