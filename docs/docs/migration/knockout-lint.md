@@ -6,7 +6,7 @@
 
 <!-- @include: @/parts/migration-intro.md -->
 
-This guide will help you migrate your project to using [Knuckles analyzer](/guide/analyzer/overview).
+This guide will help you migrate your project to using [Knuckles analyzer](/docs/analyzer/overview).
 
 ## Improvements
 

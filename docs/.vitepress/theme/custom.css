@@ -60,6 +60,7 @@
 .content .vp-doc a {
   color: var(--vp-c-indigo-1);
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .content .vp-doc a:hover {

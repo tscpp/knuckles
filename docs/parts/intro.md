@@ -1,16 +1,3 @@
-<div align="center">
-
-[![Knuckles: Development Toolkit for Knockout.js](./assets/knuckles-banner.svg)](https://knuckles.elsk.dev)
-
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tscpp/knuckles/checks.yml?style=for-the-badge&logo=github&label=checks)
-![GitHub License](https://img.shields.io/github/license/tscpp/knuckles?style=for-the-badge)
-![NPM Downloads](https://img.shields.io/npm/dm/%40knuckles%2Fcli?style=for-the-badge&logo=npm)
-[![Open in Dev Container](https://img.shields.io/static/v1?style=for-the-badge&label=Dev+Container&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/tscpp/knuckles)
-
-</div>
-
-<!-- @include: ./docs/parts/intro.md -->
-
 ## What is Knuckles?
 
 Knuckles is a development toolkit designed to enhance the developer experience (DX) using Knockout.js. It offers a range of useful tools for analyzing and optimizing Knockout.js applications. Each tool is entirely standalone and can be used independently. [See website ›](https://knuckles.elsk.dev/)
@@ -40,13 +27,3 @@ Server-side rendering (SSR) allows you to render data into the view before handi
 Implementaion currently only exists for [VSCode](/packages/readme/vscode).
 
 The [language server](/packages/readme/language-server) provides language features to Knockout views, such as "go to definition", highlighting, diagnostics (from [analyzer](#analyzer)).
-
-<!-- /include -->
-
-## License
-
-All source code is licensed under the [MIT](https://choosealicense.com/licenses/mit/) license.
-
-## Versioning
-
-Verions adhear to [Semantic Versioning](https://semver.org/) (SemVer) v2.0.0.

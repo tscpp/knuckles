@@ -6,7 +6,7 @@
 
 <!-- @include: @/parts/migration-intro.md -->
 
-This guide will help you migrate your project to using [Knuckles SSR](/guide/ssr/overview).
+This guide will help you migrate your project to using [Knuckles SSR](/docs/ssr/overview).
 
 ## Improvements
 
@@ -29,7 +29,7 @@ Knuckles introduces an universal way to link view models to the decendants bindi
 
 ### Toggle Rendering
 
-<!-- You can [configure](/guide/ssr/config) the SSR to render by default, or by explicitly enabling for certain parts of the project. -->
+<!-- You can [configure](/docs/ssr/config) the SSR to render by default, or by explicitly enabling for certain parts of the project. -->
 
 <!-- prettier-ignore -->
 ```
