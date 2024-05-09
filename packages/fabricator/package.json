@@ -4,8 +4,7 @@
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
-    "@knuckles/location": "workspace:^",
-    "source-map": "~0.7.4"
+    "@knuckles/location": "workspace:^"
   },
   "publishConfig": {
     "access": "public"

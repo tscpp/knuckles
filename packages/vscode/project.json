@@ -3,7 +3,7 @@
   "projectType": "library",
   "sourceRoot": "{projectRoot}/src",
   "targets": {
-    "build-base": {
+    "build": {
       "executor": "@dev/nx:build",
       "options": {
         "entry": [
@@ -19,25 +19,13 @@
         "declaration": false,
         "sourceMap": true,
         "tsup": {
-          "external": ["vscode", "source-map"],
+          "external": ["vscode"],
           "skipNodeModulesBundle": false
         },
         "assets": ["{projectRoot}/README.md", "{workspaceRoot}/LICENSE"],
         "outputPath": "{projectRoot}/dist"
       },
-      "cache": true,
       "outputs": ["{projectRoot}/dist"]
-    },
-    "build": {
-      "dependsOn": ["build-base"],
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "mkdir -p {projectRoot}/dist/node_modules/source-map",
-          "cp -r {projectRoot}/node_modules/source-map/* {projectRoot}/dist/node_modules/source-map/"
-        ],
-        "parallel": false
-      }
     },
     "lint": {}
   }
