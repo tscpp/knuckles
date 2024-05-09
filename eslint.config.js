@@ -24,6 +24,7 @@ export default config([
       "packages/ssr/e2e/frontend/",
       "packages/ssr/scripts/**",
       "packages/internal/",
+      "tools/mapping-visualizer/vite.config.ts",
     ],
   },
   {
@@ -101,7 +102,7 @@ export default config([
     },
   },
   {
-    files: ["tools/nx/src/**/*.ts"],
+    files: ["tools/nx/src/**/*", "tools/mapping-visualizer/**/*"],
     rules: {
       "import/extensions": "off",
     },
