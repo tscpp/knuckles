@@ -42,3 +42,11 @@ Implementaion currently only exists for [VSCode](/packages/readme/vscode).
 The [language server](/packages/readme/language-server) provides language features to Knockout views, such as "go to definition", highlighting, diagnostics (from [analyzer](#analyzer)).
 
 <!-- /include -->
+
+## License
+
+All source code is licensed under the [MIT](https://choosealicense.com/licenses/mit/) license.
+
+## Versioning
+
+Verions adhear to [Semantic Versioning](https://semver.org/) (SemVer) v2.0.0.
