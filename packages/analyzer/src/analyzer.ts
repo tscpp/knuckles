@@ -16,6 +16,11 @@ export interface AnalyzeCache {
   snapshots?: Partial<AnalyzerSnapshots>;
 }
 
+export interface AnalyzeResult {
+  issues: AnalyzerIssue[];
+  snapshots: AnalyzerSnapshots;
+}
+
 export class Analyzer {
   #plugins = new Set<AnalyzerPlugin>();
   #attributes: readonly string[];
@@ -53,7 +58,7 @@ export class Analyzer {
     fileName: string,
     text: string,
     cache?: AnalyzeCache,
-  ): Promise<AnalyzerIssue[]> {
+  ): Promise<AnalyzeResult> {
     const issues: AnalyzerIssue[] = [];
 
     const document = parse(text, {
@@ -77,6 +82,9 @@ export class Analyzer {
       await plugin.analyze(context);
     }
 
-    return issues;
+    return {
+      issues,
+      snapshots: context.snapshots,
+    };
   }
 }
