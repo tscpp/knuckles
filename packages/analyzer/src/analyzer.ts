@@ -1,4 +1,4 @@
-import type { AnalyzerIssue } from "./issue.js";
+import { AnalyzerSeverity, type AnalyzerIssue } from "./issue.js";
 import type {
   AnalyzerPlugin,
   AnalyzeContext,
@@ -6,6 +6,7 @@ import type {
 } from "./plugin.js";
 import standard from "./standard/plugin.js";
 import { parse } from "@knuckles/parser";
+import assert from "node:assert/strict";
 
 export interface AnalyzerOptions {
   plugins?: readonly AnalyzerPlugin[];
@@ -18,7 +19,7 @@ export interface AnalyzeCache {
 
 export interface AnalyzeResult {
   issues: AnalyzerIssue[];
-  snapshots: AnalyzerSnapshots;
+  snapshots: Partial<AnalyzerSnapshots>;
 }
 
 export class Analyzer {
@@ -61,14 +62,31 @@ export class Analyzer {
   ): Promise<AnalyzeResult> {
     const issues: AnalyzerIssue[] = [];
 
-    const document = parse(text, {
+    const result = parse(text, {
       bindingAttributes: this.#attributes,
     });
+
+    if (result.errors.length > 0) {
+      return {
+        issues: result.errors.map(
+          (error): AnalyzerIssue => ({
+            start: error.range.start,
+            end: error.range.end,
+            message: error.description,
+            name: "knuckles/parser",
+            severity: AnalyzerSeverity.Error,
+          }),
+        ),
+        snapshots: {},
+      };
+    } else {
+      assert(result.document);
+    }
 
     const context: AnalyzeContext = {
       fileName,
       text,
-      document,
+      document: result.document,
       snapshots: {
         javascript: undefined!,
         ...cache?.snapshots,

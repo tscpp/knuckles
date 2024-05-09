@@ -13,6 +13,7 @@ describe("server-side rendering", () => {
       <div data-bind="text: 'Hello'"></div>
       <!-- /ko -->
     `);
+    assert(document);
     assert(document.includes(">Hello<"));
   });
 
@@ -22,6 +23,7 @@ describe("server-side rendering", () => {
       <div data-bind="text: 'Hello ' + name"></div>
       <!-- /ko -->
     `);
+    assert(document);
     assert(document.includes(">Hello SSR<"));
   });
 
@@ -36,6 +38,7 @@ describe("server-side rendering", () => {
         filename: resolve(import.meta.dir, "__fixtures__/unnamed.html"),
       },
     );
+    assert(document);
     assert(document.includes(">Hello SSR<"));
   });
 
@@ -45,6 +48,7 @@ describe("server-side rendering", () => {
       <div data-bind="html: '<b>Hello</b>'"></div>
       <!-- /ko -->
     `);
+    assert(document);
     assert(document.includes("><b>Hello</b><"));
   });
 
@@ -54,6 +58,7 @@ describe("server-side rendering", () => {
       <div data-bind="visible: false"></div>
       <!-- /ko -->
     `);
+    assert(document);
     assert(/style=["'][^]*display:\s*none/.test(document));
   });
 
@@ -63,6 +68,7 @@ describe("server-side rendering", () => {
       <div data-bind="class: 'foo'"></div>
       <!-- /ko -->
     `);
+    assert(document);
     assert(/class=["'][^]*foo/.test(document));
   });
 
@@ -72,6 +78,7 @@ describe("server-side rendering", () => {
       <div data-bind="css: { foo: true }"></div>
       <!-- /ko -->
     `);
+    assert(document);
     assert(/class=["'][^]*foo/.test(document));
   });
 
@@ -106,6 +113,7 @@ describe("server-side rendering", () => {
         plugins: [i18nPlugin],
       },
     );
+    assert(document);
     assert(document.includes(`>${translations.fr.greeting}<`));
   });
 
@@ -115,6 +123,7 @@ describe("server-side rendering", () => {
       <div data-bind="style: { color: 'red' }"></div>
       <!-- /ko -->
     `);
+    assert(document);
     assert(/style=["'][^]*color:\s*red/.test(document));
   });
 
@@ -124,6 +133,7 @@ describe("server-side rendering", () => {
       <div data-bind="attr: { title: 'Hello' }"></div>
       <!-- /ko -->
     `);
+    assert(document);
     assert(/title=["'][^]*Hello/.test(document));
   });
 
@@ -135,6 +145,7 @@ describe("server-side rendering", () => {
         <!-- /ko -->
       <!-- /ko -->
     `);
+    assert(document);
     assert(document.includes(">baz<"));
   });
 
@@ -146,6 +157,7 @@ describe("server-side rendering", () => {
         </div>
       <!-- /ko -->
     `);
+    assert(document);
     assert(document.includes(">baz<"));
   });
 
@@ -157,6 +169,7 @@ describe("server-side rendering", () => {
         <!-- /ko -->
       <!-- /ko -->
     `);
+    assert(document);
     assert(document.includes(">bar<"));
   });
 
@@ -166,6 +179,7 @@ describe("server-side rendering", () => {
         <input data-bind="value: value">
       <!-- /ko -->
     `);
+    assert(document);
     assert(/value=["']foo/.test(document));
   });
 
@@ -175,6 +189,7 @@ describe("server-side rendering", () => {
         <input data-bind="checked: value">
       <!-- /ko -->
     `);
+    assert(document);
     assert(document.includes('checked=""'));
   });
 
@@ -184,6 +199,7 @@ describe("server-side rendering", () => {
         <input data-bind="disabled: value">
       <!-- /ko -->
     `);
+    assert(document);
     assert(document.includes('disabled=""'));
   });
 });

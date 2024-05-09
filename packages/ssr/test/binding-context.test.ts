@@ -9,6 +9,7 @@ describe("binding context", () => {
       <div data-bind="text: $context && $data.exists ? 'yes' : 'no'"></div>
       <!-- /ko -->
     `);
+    assert(document);
     assert(document.includes(">yes<"));
   });
 });

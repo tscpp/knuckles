@@ -12,6 +12,7 @@
   "dependencies": {
     "@knuckles/analyzer": "workspace:~",
     "@knuckles/config": "workspace:~",
+    "@knuckles/parser": "workspace:~",
     "@knuckles/location": "workspace:~",
     "@knuckles/typescript": "workspace:~",
     "minimatch": "^9.0.4",

@@ -13,11 +13,7 @@ import { evaluateBinding, evaluateInlineData } from "./eval.js";
 import type { Plugin, Self, Sibling } from "./plugin.js";
 import { getInnerRange } from "./utils.js";
 import { type Range } from "@knuckles/location";
-import {
-  parse,
-  formatParse5Error,
-  parse5LocationToRange,
-} from "@knuckles/parser";
+import { parse } from "@knuckles/parser";
 import {
   Element,
   type ParentNode,
@@ -80,8 +76,8 @@ export interface RenderResult {
   /**
    * The generated document.
    */
-  document: string;
-  sourceMap: string;
+  document: string | null;
+  sourceMap: string | null;
 
   errors: DiagnosticError[];
   warnings: DiagnosticWarning[];
@@ -175,26 +171,9 @@ class Renderer {
   }
 
   async parse() {
-    try {
-      return parse(this.document.original, {
-        onError: (error) => {
-          this.emit(
-            this.error({
-              code: error.code,
-              message: formatParse5Error(error),
-              range: parse5LocationToRange(error),
-            }),
-          );
-        },
-        bindingAttributes: this.options.attributes,
-      });
-    } catch (error) {
-      throw this.error({
-        code: "parse-error",
-        message: "Failed to parse document.",
-        range: undefined,
-      });
-    }
+    return parse(this.document.original, {
+      bindingAttributes: this.options.attributes,
+    });
   }
 
   async render(): Promise<RenderResult> {
@@ -205,7 +184,25 @@ class Renderer {
 
     try {
       const parsed = await this.parse();
-      await this.scan(parsed);
+
+      if (!parsed.document) {
+        return {
+          document: null,
+          sourceMap: null,
+          errors: parsed.errors.map((error) =>
+            createDiagnostic({
+              type: "error",
+              message: error.description,
+              range: error.range,
+              cause: error,
+              filename: this.filename,
+            }),
+          ),
+          warnings: [],
+        };
+      }
+
+      await this.scan(parsed.document);
 
       const document = this.document.toString();
 

@@ -1,5 +1,6 @@
-import { type RenderOptions, render } from "../lib/exports.js";
+import { type RenderOptions, render, type Diagnostic } from "../lib/exports.js";
 import { dataToEsm } from "@rollup/pluginutils";
+import type { RollupLog } from "rollup";
 import { type FilterPattern, type Plugin, createFilter } from "vite";
 
 export interface KnockoutSSRPluginOptions extends RenderOptions {
@@ -8,18 +9,24 @@ export interface KnockoutSSRPluginOptions extends RenderOptions {
    */
   include?: FilterPattern | undefined;
   exclude?: FilterPattern | undefined;
-  transformIndexHtml?: boolean | undefined;
 }
 
 export function knockoutSSR(options?: KnockoutSSRPluginOptions): Plugin {
   const filter = createFilter(options?.include ?? /\.html?$/, options?.exclude);
+
+  const toRollupLog = (diagnostic: Diagnostic): RollupLog => ({
+    message: diagnostic.message,
+    cause: diagnostic.cause,
+    code: diagnostic.code,
+    pos: diagnostic.range?.start.offset,
+  });
 
   return {
     name: "@knuckles/ssr",
     async transform(code, id) {
       if (!filter(id)) return null;
 
-      const generated = await render(code, {
+      const result = await render(code, {
         ...options,
         filename: id,
         resolve: async (specifier) => {
@@ -28,20 +35,23 @@ export function knockoutSSR(options?: KnockoutSSRPluginOptions): Plugin {
         },
       });
 
-      return {
-        code: dataToEsm(generated.document),
-        map: null,
-      };
+      for (const error of result.errors) {
+        this.error(toRollupLog(error));
+      }
+
+      for (const warning of result.warnings) {
+        this.warn(toRollupLog(warning));
+      }
+
+      if (result.document) {
+        return {
+          code: dataToEsm(result.document),
+          map: result.sourceMap,
+        };
+      } else {
+        return null;
+      }
     },
-    ...(options?.transformIndexHtml !== false && {
-      async transformIndexHtml(html, ctx) {
-        const generated = await render(html, {
-          ...options,
-          filename: ctx.filename,
-        });
-        return generated.document;
-      },
-    }),
   };
 }
 

@@ -1,5 +1,6 @@
 import Renderer from "./renderer.js";
 import type { Mapping } from "@knuckles/fabricator";
+import type { Document } from "@knuckles/syntax-tree";
 import { Project, type SourceFile, type CompilerOptions } from "ts-morph";
 
 export type TranspileOutput = {
@@ -27,11 +28,12 @@ export class Transpiler {
   transpile(
     source: string,
     original: string,
+    document: Document,
     mode?: "strict" | "loose",
   ): TranspileOutput {
     const renderer = new Renderer({
       project: this.#project,
-      source: original,
+      document: document,
       fileName: source,
       mode,
     });
