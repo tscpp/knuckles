@@ -1,23 +1,48 @@
-import { Position } from "@knuckles/location";
-import { SourceMapGenerator } from "source-map";
+import { Range } from "@knuckles/location";
 
 const UNIVERSAL_NEWLINE_REGEX = /\r\n|\n\r|\n|\r/g;
 
-export type Mapping = readonly [generated: number, original: number];
-export type Range = {
+export interface OffsetMapping {
+  original: OffsetRange;
+  generated: OffsetRange | undefined;
+  bidirectional: boolean;
+  name: string | undefined;
+}
+
+export interface Mapping {
+  original: Range;
+  generated: Range;
+  bidirectional: boolean;
+  name: string | undefined;
+}
+
+export interface MappingOptions {
+  range?: OffsetRange | Range;
+  bidirectional?: boolean;
+  name?: string;
+}
+
+export interface OffsetRange {
   start: number;
   end: number;
-};
+}
 
-export type ChunkOptions = {
+export interface ChunkOptions {
   indent?: string | number | undefined;
   eol?: string | undefined;
-};
+  mapping?: MappingOptions;
+}
+
+function toOffsetRange(range: OffsetRange | Range): OffsetRange {
+  return range instanceof Range
+    ? { start: range.start.offset, end: range.end.offset }
+    : range;
+}
 
 export class Chunk {
   #content = "";
-  #mappings: Mapping[] = [];
-  #locators = new Map<string, Range[]>();
+  #mappings: OffsetMapping[] = [];
+  #locators = new Map<string, OffsetRange[]>();
   #indentCount = 0;
   #eol: string;
   #indent: string;
@@ -28,6 +53,14 @@ export class Chunk {
       typeof options?.indent === "number"
         ? " ".repeat(options.indent)
         : options?.indent ?? "  ";
+    if (options?.mapping?.range) {
+      this.#mappings.push({
+        generated: undefined,
+        original: toOffsetRange(options.mapping.range),
+        bidirectional: options.mapping.bidirectional ?? false,
+        name: options.mapping.name,
+      });
+    }
   }
 
   /**
@@ -35,13 +68,6 @@ export class Chunk {
    */
   get content(): string {
     return this.#content;
-  }
-
-  /**
-   * Mappings added by {@link map}.
-   */
-  get mappings(): readonly Mapping[] {
-    return this.#mappings;
   }
 
   /**
@@ -72,7 +98,9 @@ export class Chunk {
    *
    * @param content The new content.
    */
-  write(content: string): this {
+  write(content: string, mapping?: MappingOptions): this {
+    const generatedStart = this.length;
+
     const indent = this.#indent.repeat(this.#indentCount);
 
     if (this.#content.endsWith("\n")) {
@@ -85,10 +113,22 @@ export class Chunk {
       line.trim() === "" ? "\n" : "\n" + indent + line,
     );
 
+    if (mapping?.range) {
+      this.#mappings.push({
+        generated: {
+          start: generatedStart,
+          end: this.length,
+        },
+        original: toOffsetRange(mapping.range),
+        bidirectional: mapping.bidirectional ?? false,
+        name: mapping.name,
+      });
+    }
+
     return this;
   }
 
-  #occurrences(locator: string): Range[] {
+  #occurrences(locator: string): OffsetRange[] {
     let occurrences = this.#locators.get(locator);
     if (!occurrences) {
       this.#locators.set(locator, (occurrences = []));
@@ -101,7 +141,9 @@ export class Chunk {
    *
    * @param locator The identifier of the locator. Same as passed to {@link locator}.
    */
-  occurrences(...locators: (string | readonly string[])[]): Iterable<Range> {
+  occurrences(
+    ...locators: (string | readonly string[])[]
+  ): Iterable<OffsetRange> {
     return {
       [Symbol.iterator]: () => {
         let i = 0;
@@ -121,16 +163,6 @@ export class Chunk {
         };
       },
     };
-  }
-
-  /**
-   * Adds mapping to the original content at the current source offset.
-   *
-   * @param original The original content offset.
-   */
-  map(original: number): this {
-    this.#mappings.push([this.length, original]);
-    return this;
   }
 
   /**
@@ -203,12 +235,15 @@ export class Chunk {
    */
   translate(offset: number, length: number) {
     // Translate mappings.
-    for (let i = 0; i < this.#mappings.length; ++i) {
-      if (this.#mappings[i]![0] >= offset) {
-        this.#mappings[i] = [
-          this.#mappings[i]![0] + length,
-          this.#mappings[i]![1],
-        ];
+    for (const mapping of this.#mappings) {
+      if (!mapping.generated) continue;
+
+      if (mapping.generated.start >= offset) {
+        mapping.generated.start += length;
+      }
+
+      if (mapping.generated.end >= offset) {
+        mapping.generated.end += length;
       }
     }
 
@@ -250,7 +285,15 @@ export class Chunk {
       chunk.translate(0, this.length);
 
       // Copy mappings.
-      this.#mappings.push(...chunk.mappings);
+      this.#mappings.push(
+        ...chunk.#mappings.map((mapping) => ({
+          ...mapping,
+          generated: mapping.generated ?? {
+            start: this.length,
+            end: this.length + chunk.length,
+          },
+        })),
+      );
 
       // Copy locators.
       for (const [locator, occurrences] of chunk.#locators) {
@@ -264,33 +307,21 @@ export class Chunk {
     return this;
   }
 
-  /**
-   * Generates a source map adhearing to the
-   * [Source Map v3 Specification](https://sourcemaps.info/spec.html).
-   *
-   * @param original The original content.
-   * @returns Raw source map as json.
-   */
-  generateSourceMap(source: string, original: string) {
-    const generator = new SourceMapGenerator();
-
-    for (const mapping of this.#mappings) {
-      const a = Position.fromOffset(mapping[0], this.#content);
-      const b = Position.fromOffset(mapping[1], original);
-
-      generator.addMapping({
-        source,
-        generated: {
-          line: a.line + 1,
-          column: a.column,
-        },
-        original: {
-          line: b.line + 1,
-          column: b.column,
-        },
-      });
-    }
-
-    return generator.toJSON();
+  getMappings(original: string): readonly Mapping[] {
+    return this.#mappings.map(
+      (mapping): Mapping => ({
+        ...mapping,
+        generated: Range.fromOffset(
+          mapping.generated?.start ?? 0,
+          mapping.generated?.end ?? this.length,
+          this.#content,
+        ),
+        original: Range.fromOffset(
+          mapping.original.start,
+          mapping.original.end,
+          original,
+        ),
+      }),
+    );
   }
 }

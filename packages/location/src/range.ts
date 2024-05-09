@@ -82,4 +82,10 @@ export default class Range {
       this.end.offset,
     );
   }
+
+  contains(position: Position) {
+    return (
+      this.start.offset <= position.offset && position.offset <= this.end.offset
+    );
+  }
 }
