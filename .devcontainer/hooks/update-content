@@ -1,4 +1,4 @@
 #!/bin/bash -i
 
 # --frozen-lockfile so we don't make any unexpected changes.
-pnpm install --frozen-lockfile
+pnpm install --frozen-lockfile || echo failed

@@ -15,8 +15,10 @@ export function transpile(document: Document) {
       .write(`// ${binding.name.text}: ${binding.param.text}`)
       .nl()
       .write("{ ")
-      .map(binding.param.range.start.offset)
-      .write(binding.param.text)
+      .write(binding.param.text, {
+        range: binding.param.range,
+        bidirectional: true,
+      })
       .write(" }");
   };
 

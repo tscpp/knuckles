@@ -23,7 +23,8 @@
         "github.vscode-github-actions",
         "Vue.volar",
         "GitHub.vscode-pull-request-github",
-        "ms-azuretools.vscode-docker"
+        "ms-azuretools.vscode-docker",
+        "bierner.lit-html"
       ],
       "settings": {
         "explorer.fileNesting.enabled": true

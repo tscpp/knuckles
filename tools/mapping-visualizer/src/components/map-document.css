@@ -1,0 +1,6 @@
+.document {
+  padding: 1rem;
+  outline: 0;
+  cursor: default;
+  overflow: auto;
+}

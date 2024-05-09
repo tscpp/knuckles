@@ -1,75 +1,64 @@
-import { Position } from "@knuckles/location";
-import { SourceMapConsumer, type RawSourceMap } from "source-map";
+import { type Range, type Position } from "@knuckles/location";
+
+export interface Mapping {
+  original: Range;
+  generated: Range;
+  bidirectional?: boolean;
+  name?: string | undefined;
+}
 
 export interface SnapshotInit {
   readonly fileName: string;
   readonly original: string;
   readonly generated: string;
-  readonly sourceMap: RawSourceMap;
+  readonly mappings: readonly Mapping[];
 }
 
-export interface Snapshot {
+export class Snapshot {
   readonly fileName: string;
   readonly original: string;
   readonly generated: string;
-  readonly sourceMap: RawSourceMap;
-
-  getOriginalPosition(position: Position): Position | null;
-  getGeneratedPosition(position: Position): Position | null;
-}
-
-export interface SnapshotConstructor {
-  new (init: SnapshotInit): Promise<Snapshot>;
-}
-
-export const Snapshot: SnapshotConstructor = class Snapshot {
-  fileName: string;
-  original: string;
-  generated: string;
-  sourceMap: RawSourceMap;
-  _sourceMapConsumer!: SourceMapConsumer;
+  readonly mappings: readonly Mapping[];
 
   constructor(init: SnapshotInit) {
     this.fileName = init.fileName;
     this.original = init.original;
     this.generated = init.generated;
-    this.sourceMap = init.sourceMap;
+    this.mappings = init.mappings;
+  }
 
-    return Promise.resolve(this).then(async (self) => {
-      self._sourceMapConsumer = await new SourceMapConsumer(self.sourceMap);
-      return self;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }) as any;
+  getOriginalRange(position: Position): Range | null {
+    return (
+      this.mappings.find((mapping) => mapping.original.contains(position))
+        ?.original ?? null
+    );
   }
 
   getOriginalPosition(position: Position): Position | null {
-    const sourceMapPosition = this._sourceMapConsumer.originalPositionFor({
-      line: position.line + 1,
-      column: position.column,
-    });
-    if (sourceMapPosition.line === null || sourceMapPosition.column === null) {
-      return null;
-    }
-    return Position.fromLineAndColumn(
-      sourceMapPosition.line - 1,
-      sourceMapPosition.column,
-      this.original,
+    return this.getOriginalRange(position)?.start ?? null;
+  }
+
+  geBidirectionalOriginalRange(position: Position): Range | null {
+    return (
+      this.mappings.find(
+        (mapping) =>
+          mapping.original.contains(position) && mapping.bidirectional,
+      )?.original ?? null
+    );
+  }
+
+  geBidirectionalOriginalPosition(position: Position): Position | null {
+    return this.geBidirectionalOriginalRange(position)?.start ?? null;
+  }
+
+  getGeneratedRange(position: Position): Range | null {
+    return (
+      this.mappings.find((mapping) => mapping.generated.contains(position))
+        ?.generated ?? null
     );
   }
 
   getGeneratedPosition(position: Position): Position | null {
-    const sourceMapPosition = this._sourceMapConsumer.generatedPositionFor({
-      line: position.line + 1,
-      column: position.column,
-      source: this.fileName,
-    });
-    if (sourceMapPosition.line === null || sourceMapPosition.column === null) {
-      return null;
-    }
-    return Position.fromLineAndColumn(
-      sourceMapPosition.line - 1,
-      sourceMapPosition.column,
-      this.generated,
-    );
+    return this.getGeneratedRange(position)?.start ?? null;
   }
-} as unknown as SnapshotConstructor;
+}

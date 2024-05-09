@@ -16,7 +16,6 @@
     "@knuckles/fabricator": "workspace:^",
     "@knuckles/location": "workspace:^",
     "@knuckles/syntax-tree": "workspace:^",
-    "source-map": "~0.7.4",
     "ts-morph": "^22.0.0"
   },
   "devDependencies": {

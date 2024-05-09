@@ -13,7 +13,7 @@ import {
   readConfigFile,
   defaultConfig,
 } from "@knuckles/config";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 
 export default command({
   command: "analyze [entries...]",
@@ -29,6 +29,10 @@ export default command({
         },
         typeCheck: {
           alias: "ts",
+        },
+        emitMeta: {
+          type: "boolean",
+          default: false,
         },
       }),
   handler: async (args) => {
@@ -111,11 +115,11 @@ export default command({
       // Analyze file
       logger.debug("File: " + fileName);
       const content = await readFile(fileName, "utf-8");
-      const issues = await analyzer.analyze(fileName, content);
-      logger.debug("Issues:", issues);
+      const result = await analyzer.analyze(fileName, content);
+      logger.debug("Issues:", result.issues);
 
       // Report issues
-      for (const issue of issues) {
+      for (const issue of result.issues) {
         const setting = config.analyzer.rules[issue.name] ?? "on";
         if (setting === "off") continue;
 
@@ -131,6 +135,21 @@ export default command({
 
         // Log issue
         process.stderr.write(formatted + "\n");
+      }
+
+      if (args.emitMeta) {
+        const meta = {
+          snapshots: Object.entries(result.snapshots)
+            .filter(([_name, snapshot]) => !!snapshot)
+            .map(([name, snapshot]) => ({
+              name,
+              original: snapshot!.original,
+              generated: snapshot!.generated,
+              mappings: snapshot!.mappings,
+            })),
+        };
+
+        await writeFile(fileName + "-meta.json", JSON.stringify(meta));
       }
     }
   },

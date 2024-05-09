@@ -14,6 +14,7 @@
     { "path": "packages/typescript-plugin/tsconfig.json" },
     { "path": "packages/typescript/tsconfig.json" },
     { "path": "packages/vscode/tsconfig.json" },
+    { "path": "tools/mapping-visualizer/tsconfig.json" },
     { "path": "tools/nx/tsconfig.json" }
 ],
 "include": []
