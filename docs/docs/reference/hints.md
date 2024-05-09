@@ -57,5 +57,4 @@ You can also import only the type by prefixing the identifier with "type".
 <!-- #ko with: type SomeType from './viewmodel.js' -->
 ```
 
-
 [descendants]: /docs/glossary#descendant

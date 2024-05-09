@@ -1,5 +1,5 @@
 ---
-next: 'Overview | SSR'
+next: "Overview | SSR"
 ---
 
 # ESLint

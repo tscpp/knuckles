@@ -1,5 +1,5 @@
 ---
-next: 'Overview | Analyzer'
+next: "Overview | Analyzer"
 ---
 
 # Getting Started!
