@@ -1,6 +1,8 @@
+<!--
 ---
 name: typescript-plugin
 ---
+-->
 
 # TypeScript Plugin
 

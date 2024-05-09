@@ -1,6 +1,8 @@
+<!--
 ---
 name: fabricator
 ---
+-->
 
 # Fabricator Utillity
 

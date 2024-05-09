@@ -1,6 +1,8 @@
+<!--
 ---
 name: ssr
 ---
+-->
 
 # Server-side Rendering (SSR)
 

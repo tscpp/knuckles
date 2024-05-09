@@ -1,6 +1,8 @@
+<!--
 ---
 name: config
 ---
+-->
 
 # Config
 

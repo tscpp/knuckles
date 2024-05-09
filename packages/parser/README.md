@@ -1,6 +1,8 @@
+<!--
 ---
 name: parser
 ---
+-->
 
 # Parser
 

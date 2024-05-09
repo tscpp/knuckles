@@ -1,6 +1,8 @@
+<!--
 ---
 name: typescript
 ---
+-->
 
 # TypeScript Analyzer Plugin
 

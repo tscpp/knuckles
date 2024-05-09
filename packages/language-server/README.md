@@ -1,6 +1,8 @@
+<!--
 ---
 name: language-server
 ---
+-->
 
 # Language Server
 

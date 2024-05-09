@@ -1,6 +1,8 @@
+<!--
 ---
 name: eslint
 ---
+-->
 
 # ESLint Analyzer Plugin
 

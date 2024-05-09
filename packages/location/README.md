@@ -1,6 +1,8 @@
+<!--
 ---
 name: location
 ---
+-->
 
 # Location Utillity
 

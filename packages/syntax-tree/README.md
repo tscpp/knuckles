@@ -1,6 +1,8 @@
+<!--
 ---
 name: syntax-tree
 ---
+-->
 
 # Syntax Tree
 

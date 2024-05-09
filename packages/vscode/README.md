@@ -1,6 +1,8 @@
+<!--
 ---
 name: vscode
 ---
+-->
 
 # Knockout Language Support
 
