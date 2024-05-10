@@ -1,6 +1,7 @@
 import type { HTML } from "./html";
 
-export abstract class Component<Props> {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export abstract class Component<Props = {}> {
   abstract readonly template: HTML;
   components?: Readonly<Record<string, ComponentConstructor>>;
   initialize?(): void;

@@ -1,6 +1,6 @@
 import styles from "./document.module.css";
 import TextRangeComponent from "./text-range";
-import * as ko from "knockout";
+import type * as ko from "knockout";
 import { Component } from "~/lib/component";
 import html from "~/lib/html";
 import type { TextRange } from "~/lib/text-range";

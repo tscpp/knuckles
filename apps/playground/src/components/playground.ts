@@ -5,7 +5,7 @@ import Workspace, {
   type Marker,
   type WorkspaceFile,
 } from "./workspace";
-import { Analyzer, AnalyzerSeverity, Snapshot } from "@knuckles/analyzer";
+import { Analyzer, AnalyzerSeverity, type Snapshot } from "@knuckles/analyzer";
 import { Position, Range } from "@knuckles/location";
 import AnalyzerTypeScriptPlugin from "@knuckles/typescript/analyzer";
 import * as ko from "knockout";
@@ -15,7 +15,7 @@ import { Component } from "~/lib/component";
 import debounce from "~/lib/debounce";
 import html from "~/lib/html";
 
-export default class Playground extends Component<{}> {
+export default class Playground extends Component {
   override readonly components = {
     Workspace,
     Visualizer,
