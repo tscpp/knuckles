@@ -1,4 +1,5 @@
-import type { AnalyzeContext, AnalyzerSeverity } from "../plugin.js";
+import type { AnalyzerSeverity } from "../issue.js";
+import type { AnalyzeContext } from "../plugin.js";
 
 export interface Rule {
   name: string;

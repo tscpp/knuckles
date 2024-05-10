@@ -229,6 +229,9 @@ importers:
       '@knuckles/location':
         specifier: workspace:~
         version: link:../location
+      '@knuckles/parser':
+        specifier: workspace:~
+        version: link:../parser
       '@knuckles/typescript':
         specifier: workspace:~
         version: link:../typescript

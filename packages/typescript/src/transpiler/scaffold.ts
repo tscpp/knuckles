@@ -1,6 +1,5 @@
 import { TYPES_MODULE, ns, quote, rmnl } from "./utils.js";
 import { Chunk } from "@knuckles/fabricator";
-import { parse } from "@knuckles/parser";
 import {
   type Node,
   Element,
@@ -19,8 +18,7 @@ export default class Scaffold {
     this.#mode = mode ?? "loose";
   }
 
-  render(source: string) {
-    const document = parse(source);
+  render(document: Document) {
     return this.#renderDocument(document);
   }
 

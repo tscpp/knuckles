@@ -64,21 +64,27 @@ export default command({
     const filename = basename(args.input);
     const path = resolve(args.input);
 
-    let { document: generated } = await render(document, {
+    const result = await render(document, {
       plugins,
       useBuiltins,
       attributes,
       filename: path,
     });
+    // TODO: graceful error handling
+    if (!result.document) {
+      process.exit(1);
+    }
+
+    let rendered = result.document;
 
     if (args.pretty) {
-      generated = await prettier.format(generated, {
+      rendered = await prettier.format(rendered, {
         parser: "html",
       });
     }
 
     const outdir = args.outdir ?? dirname(args.input);
     await mkdir(outdir, { recursive: true });
-    await writeFile(resolve(outdir, filename), generated);
+    await writeFile(resolve(outdir, filename), rendered);
   },
 });

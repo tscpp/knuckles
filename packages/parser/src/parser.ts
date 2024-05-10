@@ -1,4 +1,5 @@
 import {
+  formatParse5Error,
   isParse5CommentNode,
   isParse5Element,
   isParse5TextNode,
@@ -32,11 +33,28 @@ const VIRTUAL_ELEMENT_OR_DIRECTIVE_END_REGEX = //
   /^\s*\/ko\s[^]*$/;
 
 export interface ParseOptions {
+  fileName?: string;
   bindingAttributes?: readonly string[];
-  onError?: ((error: p5.ParserError) => void) | undefined;
 }
 
-export function parse(document: string, options?: ParseOptions) {
+export class ParserError extends Error {
+  constructor(
+    readonly fileName: string | undefined,
+    readonly range: Range,
+    readonly description: string,
+  ) {
+    super(
+      `${fileName ? `${fileName}(${range.start.format()})` : range.start.format()}: ${description}`,
+    );
+  }
+}
+
+export type ParseResult = {
+  document: Document | null;
+  errors: ParserError[];
+};
+
+export function parse(document: string, options?: ParseOptions): ParseResult {
   const parser = new Parser(document, options);
   return parser.parse();
 }
@@ -47,22 +65,57 @@ function p5Range(node: p5t.Node): Range {
 
 class Parser {
   #bindingAttributes: readonly string[];
-  #onError: ((error: p5.ParserError) => void) | undefined;
   #source: string;
+  #fileName: string | undefined;
+  errors: ParserError[] = [];
 
   constructor(source: string, options?: ParseOptions) {
     this.#source = source;
+    this.#fileName = options?.fileName;
     this.#bindingAttributes = options?.bindingAttributes ?? ["data-bind"];
-    this.#onError = options?.onError;
   }
 
-  parse(): Document {
-    const root = p5.parseFragment(this.#source, {
+  #error(range: Range, description: string) {
+    const error = new ParserError(this.#fileName, range, description);
+    this.errors.push(error);
+    return error;
+  }
+
+  parse(): ParseResult {
+    const fragment = p5.parseFragment(this.#source, {
       sourceCodeLocationInfo: true,
       scriptingEnabled: false,
-      onParseError: this.#onError,
+      onParseError: (error) => {
+        const description = formatParse5Error(error);
+        this.errors.push(
+          this.#error(parse5LocationToRange(error), description),
+        );
+      },
     });
-    const iter = root.childNodes[Symbol.iterator]();
+
+    try {
+      const document = this.#parseDocument(fragment);
+
+      return {
+        document,
+        errors: this.errors,
+      };
+    } catch (error) {
+      if (error instanceof ParserError) {
+        this.errors.push(error);
+
+        return {
+          document: null,
+          errors: this.errors,
+        };
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  #parseDocument(fragment: p5t.DocumentFragment): Document {
+    const iter = fragment.childNodes[Symbol.iterator]();
     const children: Node[] = [];
     let result: IteratorResult<p5t.Node> | undefined;
 
@@ -147,7 +200,7 @@ class Parser {
     }
 
     if (!endComment) {
-      throw new Error(`Unbalanced virtual elements (knockout comments).`);
+      throw this.#error(startComment.range, `Missing end comment.`);
     }
 
     // Calculate the offsets for name...
@@ -167,13 +220,10 @@ class Parser {
       range: Range.fromOffset(nameStartOffset, nameEndOffset, this.#source),
     });
 
-    let param: Scope | null = null;
-    if (paramText.length > 0) {
-      param = new Scope({
-        text: paramText,
-        range: Range.fromOffset(paramStartOffset, paramEndOffset, this.#source),
-      });
-    }
+    const param = new Scope({
+      text: paramText,
+      range: Range.fromOffset(paramStartOffset, paramEndOffset, this.#source),
+    });
 
     const internal = prefix === "#";
 
@@ -182,8 +232,11 @@ class Parser {
 
       switch (name.text) {
         case "with":
-          if (!param) {
-            throw new Error("'with' directive is missing param.");
+          if (param.text.length < 0) {
+            this.#error(
+              new Range(startComment.range.start, endComment.range.end),
+              "'with' directive is missing param.",
+            );
           }
           directive = {
             kind: DirectiveKind.With,
@@ -208,8 +261,11 @@ class Parser {
         endComment,
       });
     } else {
-      if (!param) {
-        throw new Error("Virtual element is missing param.");
+      if (param.text.length < 0) {
+        this.#error(
+          new Range(startComment.range.start, endComment.range.end),
+          "Virtual element is missing param.",
+        );
       }
 
       const binding = new Binding({
@@ -324,11 +380,25 @@ class Parser {
 
     return expression.properties.map((prop) => {
       if (prop.type === "SpreadElement") {
-        throw new Error("Spread syntax is not supported in bindings.");
+        throw this.#error(
+          Range.fromOffset(
+            translate(prop.range![0]),
+            translate(prop.range![1]),
+            this.#source,
+          ),
+          "Spread syntax is not supported in bindings.",
+        );
       }
 
       if (prop.computed) {
-        throw new Error("Computed property as binding is not supported.");
+        throw this.#error(
+          Range.fromOffset(
+            translate(prop.range![0]),
+            translate(prop.range![1]),
+            this.#source,
+          ),
+          "Computed property as binding is not supported.",
+        );
       }
 
       let name: string;
@@ -338,7 +408,14 @@ class Parser {
       } else if (prop.key.type === "Literal" && prop.key.raw) {
         name = prop.key.raw;
       } else {
-        throw new Error("Unsupported property key in binding.");
+        throw this.#error(
+          Range.fromOffset(
+            translate(prop.key.range![0]),
+            translate(prop.key.range![1]),
+            this.#source,
+          ),
+          "Unsupported property key in binding.",
+        );
       }
 
       return new Binding({

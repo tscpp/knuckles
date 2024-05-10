@@ -13,6 +13,7 @@
     "@knuckles/analyzer": "workspace:~",
     "@knuckles/config": "workspace:~",
     "@knuckles/location": "workspace:~",
+    "@knuckles/parser": "workspace:~",
     "@knuckles/typescript": "workspace:~",
     "minimatch": "^9.0.4",
     "ts-morph": "^22.0.0",

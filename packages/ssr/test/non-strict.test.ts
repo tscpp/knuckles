@@ -22,6 +22,7 @@ describe("non-strict", () => {
       errors.some((error) => error.code === "cannot-find-module"),
       "Could not find 'cannot-find-module' error",
     );
+    assert(document);
     assert(document.includes("><"));
   });
 
@@ -44,6 +45,7 @@ describe("non-strict", () => {
       source.at(error!.range!.end.offset) === "?",
       "Error has invalid end offset",
     );
+    assert(document);
     assert(document.includes("><"));
   });
 
@@ -60,6 +62,7 @@ describe("non-strict", () => {
       (error) => error.code === "binding-evaluation-error",
     );
     assert(error, "Could not find 'binding-evaluation-error' error");
+    assert(document);
     assert(document.includes("><"));
   });
 });

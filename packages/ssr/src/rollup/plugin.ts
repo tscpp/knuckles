@@ -1,10 +1,10 @@
-import { type RenderOptions, render } from "../lib/exports.js";
+import { type RenderOptions, render, type Diagnostic } from "../lib/exports.js";
 import {
   type FilterPattern,
   createFilter,
   dataToEsm,
 } from "@rollup/pluginutils";
-import type { Plugin } from "rollup";
+import type { Plugin, RollupLog } from "rollup";
 
 export interface KnockoutSSRPluginOptions extends RenderOptions {
   /**
@@ -17,6 +17,13 @@ export interface KnockoutSSRPluginOptions extends RenderOptions {
 export function knockoutSSR(options?: KnockoutSSRPluginOptions): Plugin {
   const filter = createFilter(options?.include ?? /\.html?$/, options?.exclude);
 
+  const toRollupLog = (diagnostic: Diagnostic): RollupLog => ({
+    message: diagnostic.message,
+    cause: diagnostic.cause,
+    code: diagnostic.code,
+    pos: diagnostic.range?.start.offset,
+  });
+
   return {
     name: "@knuckles/ssr",
     async transform(code, id) {
@@ -24,7 +31,7 @@ export function knockoutSSR(options?: KnockoutSSRPluginOptions): Plugin {
         return;
       }
 
-      const generated = await render(code, {
+      const result = await render(code, {
         ...options,
         filename: id,
         resolve: async (specifier) => {
@@ -33,10 +40,22 @@ export function knockoutSSR(options?: KnockoutSSRPluginOptions): Plugin {
         },
       });
 
-      return {
-        code: dataToEsm(generated.document),
-        map: null,
-      };
+      for (const error of result.errors) {
+        this.error(toRollupLog(error));
+      }
+
+      for (const warning of result.warnings) {
+        this.warn(toRollupLog(warning));
+      }
+
+      if (result.document) {
+        return {
+          code: dataToEsm(result.document),
+          map: result.sourceMap,
+        };
+      } else {
+        return null;
+      }
     },
   };
 }

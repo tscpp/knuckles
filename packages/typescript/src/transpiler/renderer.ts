@@ -1,5 +1,6 @@
 import Scaffold from "./scaffold.js";
 import type { Chunk } from "@knuckles/fabricator";
+import type { Document } from "@knuckles/syntax-tree";
 import { type Project, type SourceFile, ts } from "ts-morph";
 
 export default class Renderer {
@@ -11,15 +12,15 @@ export default class Renderer {
     project,
     fileName = "view.html",
     mode,
-    source,
+    document,
   }: {
     project: Project;
     fileName?: string | undefined;
     mode?: "strict" | "loose" | undefined;
-    source: string;
+    document: Document;
   }) {
     this.#project = project;
-    this.#scaffold = new Scaffold(mode).render(source);
+    this.#scaffold = new Scaffold(mode).render(document);
 
     this.sourceFile = this.#project.createSourceFile(
       fileName + ".ts",

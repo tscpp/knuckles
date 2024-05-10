@@ -5,7 +5,9 @@ import {
   readConfigFile,
 } from "@knuckles/config";
 import { Position, Range } from "@knuckles/location";
+import { parse } from "@knuckles/parser";
 import { Transpiler } from "@knuckles/typescript";
+import assert from "node:assert/strict";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   type SourceFile,
@@ -77,18 +79,23 @@ async function updateDocumentState(
 
   const config = await provider.getConfig(path);
 
+  // TODO: handle error gracefully
+  const parseResult = parse(original);
+  assert(!!parseResult.document);
+
   const transpiler = provider.getTranspiler(path);
-  const { generated, sourceMap, sourceFile } = transpiler.transpile(
+  const { generated, mappings, sourceFile } = transpiler.transpile(
     path,
     original,
+    parseResult.document,
     config.analyzer.mode,
   );
 
-  const snapshot = await new Snapshot({
+  const snapshot = new Snapshot({
     fileName: path,
     original,
     generated,
-    sourceMap,
+    mappings,
   });
 
   const project = sourceFile.getProject();

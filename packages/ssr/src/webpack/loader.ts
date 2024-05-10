@@ -1,4 +1,5 @@
-import { render, type RenderOptions } from "../lib/exports.js";
+import { render, type Diagnostic, type RenderOptions } from "../lib/exports.js";
+import { formatFileLocation } from "@knuckles/location";
 import { urlToRequest } from "loader-utils";
 import { validate } from "schema-utils";
 import type { Schema } from "schema-utils/declarations/validate.js";
@@ -56,8 +57,27 @@ const loader: LoaderDefinitionFunction = function (source) {
     },
   };
 
+  const formatDiagnostic = (diagnostic: Diagnostic) => {
+    return (
+      (diagnostic.range?.start
+        ? formatFileLocation(diagnostic.filename, diagnostic.range?.start) +
+          ": "
+        : "") + diagnostic.message
+    );
+  };
+
   render(source, renderOptions)
-    .then(({ document }) => callback(null, document))
+    .then((result) => {
+      for (const error of result.errors) {
+        this.emitError(new Error(formatDiagnostic(error)));
+      }
+
+      for (const warning of result.warnings) {
+        this.emitWarning(new Error(formatDiagnostic(warning)));
+      }
+
+      return result.document ?? undefined;
+    })
     .catch(callback);
 };
 
