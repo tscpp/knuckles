@@ -1,5 +1,5 @@
-import "./components/application";
 import "./global.css";
-import * as ko from "knockout";
+import { createPlayground } from "./lib/playground";
 
-ko.applyBindings({});
+const container = document.getElementById("playground")!;
+createPlayground(container);

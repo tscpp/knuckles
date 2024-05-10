@@ -1,16 +1,22 @@
 {
-  "name": "@apps/mapping-visualizer",
+  "name": "@apps/playground",
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "types": "./index.d.ts",
   "dependencies": {
-    "knockout": "^3.5.1"
+    "@knuckles/analyzer": "workspace:^",
+    "@knuckles/location": "workspace:^",
+    "@knuckles/typescript": "workspace:^",
+    "knockout": "^3.5.1",
+    "monaco-editor": "^0.48.0"
   },
   "devDependencies": {
     "@types/estree": "^1.0.5",
     "sass": "^1.77.0",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
+    "vite-plugin-node-polyfills": "^0.21.0",
     "vite-tsconfig-paths": "^4.3.2"
   }
 }

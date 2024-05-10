@@ -1,0 +1,1 @@
+[{"name":"analyzer","files":[{"name":"view.html","text":"<!-- #ko with: default from \"./viewmodel.js\" -->\n<div data-bind=\"text: text\"></div>\n<!-- /ko -->\n","lang":"html"},{"name":"viewmodel.ts","text":"export default {\n  text: \"hello\",\n};\n","lang":"typescript"}]}]

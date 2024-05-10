@@ -1,16 +1,5 @@
-import type { OffsetArray, Range } from "./location";
-
-export type Snapshot = {
-  name: string;
-  original: string;
-  generated: string;
-  mappings: {
-    original: Range;
-    generated: Range;
-    bidirectional: boolean;
-    name: string | undefined;
-  }[];
-};
+import type { Snapshot } from "@knuckles/analyzer";
+import type { OffsetArray } from "./location";
 
 export type TextRange = {
   range: OffsetArray;

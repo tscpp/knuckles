@@ -1,0 +1,21 @@
+.workspace {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.toolbar {
+
+}
+
+.files {
+
+}
+
+.file {
+
+}
+
+.editor {
+  flex: 1;
+}

@@ -12,12 +12,43 @@ const config: UserConfig<ThemeConfig> = {
   base: "/",
   lastUpdated: true,
 
-  // prettier-ignore
   head: [
-    ['link', { rel: 'apple-touch-icon', sizes: "180x180", href: "/apple-touch-icon.png" }],
-    ['link', { rel: 'icon', type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" }],
-    ['link', { rel: 'icon', type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" }],
-    ['script', { src: "https://api.pirsch.io/pa.js", defer: "", id: "pianjs", "data-code": "aPZ05TdxBbcnBLbX51IweJNb1Kd7UU78" }]
+    [
+      "link",
+      {
+        rel: "apple-touch-icon",
+        sizes: "180x180",
+        href: "/apple-touch-icon.png",
+      },
+    ],
+    [
+      "link",
+      {
+        rel: "icon",
+        type: "image/png",
+        sizes: "32x32",
+        href: "/favicon-32x32.png",
+      },
+    ],
+    [
+      "link",
+      {
+        rel: "icon",
+        type: "image/png",
+        sizes: "16x16",
+        href: "/favicon-16x16.png",
+      },
+    ],
+    [
+      "script",
+      {
+        src: "https://api.pirsch.io/pa.js",
+        defer: "",
+        id: "pianjs",
+        "data-code": "aPZ05TdxBbcnBLbX51IweJNb1Kd7UU78",
+        "data-dev": "knuckles.elsk.dev",
+      },
+    ],
   ],
 
   themeConfig: {
@@ -32,6 +63,10 @@ const config: UserConfig<ThemeConfig> = {
         text: "Docs",
         link: "/docs/introduction",
         activeMatch: "/docs/",
+      },
+      {
+        text: "Playground",
+        link: "/playground",
       },
       {
         text: "Packages",
@@ -180,6 +215,11 @@ const config: UserConfig<ThemeConfig> = {
   },
 
   vite: {
+    optimizeDeps: {
+      exclude: [
+        "@apps/playground"
+      ]
+    },
     resolve: {
       alias: readdirSync(
         fileURLToPath(new URL("./theme/components/", import.meta.url)),

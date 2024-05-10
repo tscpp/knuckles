@@ -3,8 +3,8 @@ import { join } from "node:path";
 
 export default {
   paths() {
-    return readdirSync("packages", { withFileTypes: true }).map((entry) => {
-      const path = join(entry.path, entry.name, "README.md");
+    return readdirSync("../packages", { withFileTypes: true }).map((entry) => {
+      const path = join(entry.path, entry.name, "CHANGELOG.md");
       let content = `_Missing file \`${path}\`._`;
       try {
         content = readFileSync(path, "utf8");

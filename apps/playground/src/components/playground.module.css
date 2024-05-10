@@ -1,0 +1,26 @@
+.application {
+  margin: 3rem auto;
+  display: grid;
+  grid: auto 1fr / 1fr;
+  width: 80rem;
+  --backet-color: blue;
+}
+
+:global(.dark) .application {
+  --backet-color: rgb(167, 167, 255);
+}
+
+.toolbar {
+  height: 3rem;
+  padding: 0.5rem;
+  background-color: rgba(0, 255, 255, 0.2);
+  margin-bottom: 3rem;
+}
+
+.workspace {
+  height: 40rem;
+}
+
+.visualizer {
+  margin-top: 5rem;
+}

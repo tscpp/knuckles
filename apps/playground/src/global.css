@@ -7,7 +7,6 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-  --backet-color: rgb(167, 167, 255);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -19,15 +18,5 @@
   :root {
     color: #213547;
     background-color: #ffffff;
-    --backet-color: blue;
   }
-}
-
-html {
-  height: 100%;
-}
-
-body {
-  min-height: 100%;
-  margin: 0;
 }

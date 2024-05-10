@@ -11,7 +11,7 @@
     "package.json": "pnpm-lock.yaml, pnpm-workspace.yaml, .npmrc",
     "nx.json": ".nxignore",
     ".prettierrc": ".prettierignore",
-    "*.ts": "$(basename).test.ts, $(basename).spec.ts, $(basename).css, $(basename).scss",
+    "*.ts": "$(basename).test.ts, $(basename).spec.ts, $(basename).css, $(basename).scss, $(basename).module.css, $(basename).module.scss",
     "*.js": "$(basename).test.js, $(basename).spec.js, , $(basename).d.ts, $(basename).js.map",
     "*.json": "$(basename).schema.json"
   },
