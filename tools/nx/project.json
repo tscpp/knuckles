@@ -1,5 +1,5 @@
 {
-  "name": "@dev/nx",
+  "name": "@tools/nx",
   "sourceRoot": "{projectRoot}/src",
   "projectType": "library"
 }

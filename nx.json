@@ -20,7 +20,7 @@
       "cache": true
     },
     "test": {
-      "executor": "@dev/nx:test",
+      "executor": "@tools/nx:test",
       "cache": true
     },
     "e2e": {

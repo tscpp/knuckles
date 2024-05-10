@@ -1,5 +1,5 @@
 {
-  "name": "@dev/eslint",
+  "name": "@tools/eslint",
   "version": "0.0.0",
   "private": true,
   "type": "module",

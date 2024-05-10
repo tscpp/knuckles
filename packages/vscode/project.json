@@ -4,7 +4,7 @@
   "sourceRoot": "{projectRoot}/src",
   "targets": {
     "build": {
-      "executor": "@dev/nx:build",
+      "executor": "@tools/nx:build",
       "options": {
         "entry": [
           "{projectRoot}/src/extension.ts",

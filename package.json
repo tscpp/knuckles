@@ -1,5 +1,5 @@
 {
-  "name": "@dev/source",
+  "name": "@tools/source",
   "private": true,
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
     "checks": "tools/scripts/checks",
     "docs": "vitepress dev docs",
     "format": "prettier --write .",
-    "generate": "nx g @dev/nx:package",
+    "generate": "nx g @tools/nx:package",
     "postinstall": "tools/scripts/prepare",
     "lint": "eslint .",
     "release": "tools/scripts/release",
@@ -27,9 +27,9 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.27.1",
-    "@dev/eslint": "workspace:*",
-    "@dev/nx": "workspace:*",
-    "@dev/tsconfig": "workspace:*",
+    "@tools/eslint": "workspace:*",
+    "@tools/nx": "workspace:*",
+    "@tools/tsconfig": "workspace:*",
     "@eslint/js": "^9.0.0",
     "@microsoft/api-extractor": "^7.43.1",
     "@nx/eslint": "18.3.0",

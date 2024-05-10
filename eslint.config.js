@@ -1,4 +1,4 @@
-import { config, references } from "@dev/eslint";
+import { config, references } from "@tools/eslint";
 import js from "@eslint/js";
 import nx from "@nx/eslint-plugin";
 import prettier from "eslint-config-prettier";

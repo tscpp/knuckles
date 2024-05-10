@@ -1,4 +1,4 @@
 {
-  "extends": ["@dev/tsconfig/web.json"],
+  "extends": ["@tools/tsconfig/web.json"],
   "include": ["src/runtime"]
 }

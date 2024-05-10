@@ -1,5 +1,5 @@
 {
-  "extends": ["@dev/tsconfig/bun.json"],
+  "extends": ["@tools/tsconfig/bun.json"],
   "include": ["test"],
   "exclude": ["**/__fixtures__"]
 }

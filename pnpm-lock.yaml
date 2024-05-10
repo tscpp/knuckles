@@ -26,13 +26,13 @@ importers:
       '@changesets/cli':
         specifier: ^2.27.1
         version: 2.27.1
-      '@dev/eslint':
+      '@tools/eslint':
         specifier: workspace:*
         version: link:tools/eslint
-      '@dev/nx':
+      '@tools/nx':
         specifier: workspace:*
         version: link:tools/nx
-      '@dev/tsconfig':
+      '@tools/tsconfig':
         specifier: workspace:*
         version: link:tools/tsconfig
       '@eslint/js':
@@ -125,6 +125,28 @@ importers:
       vue:
         specifier: ^3.4.23
         version: 3.4.23(typescript@5.4.5)
+
+  apps/playground:
+    dependencies:
+      knockout:
+        specifier: ^3.5.1
+        version: 3.5.1
+    devDependencies:
+      '@types/estree':
+        specifier: ^1.0.5
+        version: 1.0.5
+      sass:
+        specifier: ^1.77.0
+        version: 1.77.0
+      typescript:
+        specifier: ^5.2.2
+        version: 5.4.5
+      vite:
+        specifier: ^5.2.0
+        version: 5.2.9(@types/node@20.12.7)(sass@1.77.0)(terser@5.30.3)
+      vite-tsconfig-paths:
+        specifier: ^4.3.2
+        version: 4.3.2(typescript@5.4.5)(vite@5.2.9(@types/node@20.12.7)(sass@1.77.0)(terser@5.30.3))
 
   packages/analyzer:
     dependencies:
@@ -436,28 +458,6 @@ importers:
       typescript-eslint:
         specifier: ^7.7.0
         version: 7.7.0(eslint@9.0.0)(typescript@5.4.5)
-
-  tools/mapping-visualizer:
-    dependencies:
-      knockout:
-        specifier: ^3.5.1
-        version: 3.5.1
-    devDependencies:
-      '@types/estree':
-        specifier: ^1.0.5
-        version: 1.0.5
-      sass:
-        specifier: ^1.77.0
-        version: 1.77.0
-      typescript:
-        specifier: ^5.2.2
-        version: 5.4.5
-      vite:
-        specifier: ^5.2.0
-        version: 5.2.9(@types/node@20.12.7)(sass@1.77.0)(terser@5.30.3)
-      vite-tsconfig-paths:
-        specifier: ^4.3.2
-        version: 4.3.2(typescript@5.4.5)(vite@5.2.9(@types/node@20.12.7)(sass@1.77.0)(terser@5.30.3))
 
   tools/nx:
     dependencies:
