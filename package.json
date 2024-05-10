@@ -1,5 +1,5 @@
 {
-  "name": "@tools/source",
+  "name": "knuckles-workspace",
   "private": true,
   "repository": {
     "type": "git",
