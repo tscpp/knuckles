@@ -60,5 +60,6 @@
   "release": {
     "projects": ["@knuckles/*"],
     "projectsRelationship": "independent"
-  }
+  },
+  "nxCloudAccessToken": "NGVjNTNhZjMtNjVlMi00OWVkLTliMTgtYjNiNjQ3MTRkNWI0fHJlYWQtd3JpdGU="
 }
