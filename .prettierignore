@@ -10,3 +10,4 @@ packages/legacy-compiler/lib/parser.cjs
 .changeset/pre.json
 **/.vitepress/cache
 packages/*/README.md
+apps/playground/src/assets/

@@ -1,5 +1,5 @@
-import "~/bindings/instantiate";
 import * as ko from "knockout";
+import "~/bindings/instantiate";
 import Playground from "~/components/playground";
 
 export function createPlayground(container: HTMLElement) {

@@ -1,5 +1,5 @@
-import { readdirSync } from "node:fs";
 import { ThemeConfig } from "../apps/website/.vitepress/theme";
+import { readdirSync } from "node:fs";
 
 const config: ThemeConfig = {
   logo: "/knuckles-sharp.svg",
