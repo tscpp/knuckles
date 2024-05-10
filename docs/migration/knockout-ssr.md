@@ -4,7 +4,7 @@
 `knockout-ssr` is no longer maintained.
 :::
 
-<!-- @include: @/parts/migration-intro.md -->
+<!-- @include: @/docs/parts/migration-intro.md -->
 
 This guide will help you migrate your project to using [Knuckles SSR](/docs/ssr/overview).
 

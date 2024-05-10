@@ -1,5 +1,5 @@
 # Language Support
 
-<!-- @include: @/parts/work-in-progress.md -->
+<!-- @include: @/docs/parts/work-in-progress.md -->
 
-<!-- @include: @/parts/packages/language-support/description.md -->
+<!-- @include: @/docs/parts/packages/language-support/description.md -->

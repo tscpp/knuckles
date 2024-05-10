@@ -4,4 +4,4 @@ next: "Overview | SSR"
 
 # ESLint
 
-<!-- @include: @/parts/work-in-progress.md -->
+<!-- @include: @/docs/parts/work-in-progress.md -->

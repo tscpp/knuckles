@@ -4,7 +4,7 @@
 Some features in the toolkit is still under development and may be unstable.
 :::
 
-<!-- @include: @/parts/intro.md -->
+<!-- @include: @/docs/parts/intro.md -->
 
 ## What's next?
 

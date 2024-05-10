@@ -1,5 +1,5 @@
 # Analyzer
 
-<!-- @include: @/parts/packages/analyzer/description.md -->
+<!-- @include: @/docs/parts/packages/analyzer/description.md -->
 
-<!-- @include: @/parts/reference.md -->
+<!-- @include: @/docs/parts/reference.md -->
