@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { UserConfig } from "vitepress";
 import footnote from "markdown-it-footnote";
 import themeConfig from "../../../docs/vitepress.config.js";
+import viteCommonJs from "vite-plugin-commonjs";
 
 // https://vitepress.dev/reference/site-config
 const config: UserConfig<ThemeConfig> = {
@@ -61,6 +62,7 @@ const config: UserConfig<ThemeConfig> = {
   },
 
   vite: {
+    plugins: [viteCommonJs()],
     optimizeDeps: {
       exclude: ["@apps/playground"],
     },

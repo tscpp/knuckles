@@ -53,6 +53,14 @@
 
 .VPButton {
   user-select: none;
+  border-width: 2px !important;
+  line-height: 36px !important;
+}
+
+.VPButton.alt2 {
+  color: var(--vp-c-text-2);
+  border-color: currentColor !important;
+  box-sizing: border-box;
 }
 
 /* CONTENT */

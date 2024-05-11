@@ -10,9 +10,12 @@ hero:
     alt: Knuckles Shield
   actions:
     - theme: brand
-      text: Introduction
+      text: Introduction ✨
       link: /docs/introduction
     - theme: alt
+      text: Playground
+      link: /playground
+    - theme: alt2
       text: View on GitHub
       link: https://github.com/tscpp/knuckles
 features:
@@ -59,111 +62,3 @@ features:
     # link:
     linkText: Comming soon
 ---
-
-<script setup>
-import { 
-  VPTeamPage,
-  VPTeamPageTitle,
-  VPTeamMembers,
-  VPSponsors
-} from 'vitepress/theme'
-
-const members = [
-  {
-    avatar: 'https://www.github.com/yyx990803.png',
-    name: 'Evan You',
-    title: 'Creator',
-    links: [
-      { icon: 'github', link: 'https://github.com/yyx990803' },
-      { icon: 'twitter', link: 'https://twitter.com/youyuxi' },
-    ],
-  },
-];
-
-const sponsors = [
-  {
-    tier: 'Sponsors',
-    size: 'big',
-    items: [
-      {
-        name: "Placeholder",
-        img: "/heart.svg",
-        url: "https://github.com/sponsors/tscpp",
-      },
-      {
-        name: "Placeholder",
-        img: "/heart.svg",
-        url: "https://github.com/sponsors/tscpp",
-      },
-      {
-        name: "Placeholder",
-        img: "/heart.svg",
-        url: "https://github.com/sponsors/tscpp",
-      },
-    ],
-  }
-];
-</script>
-
-<!-- <section>
-
-<hgroup>
-
-## Sponsors
-
-Big thanks to our sponsors for keeping the project going!
-
-</hgroup>
-
-<VPSponsors mode='normal' :data="sponsors" />
-
-</section> -->
-
-<style scoped>
-  section {
-    border-top: 1px solid var(--vp-c-divider);
-    margin-top: 5rem;
-    padding-top: 5rem;
-  }
-
-  section .header-anchor {
-    display: none;
-  }
-
-  hgroup {
-    text-align: center;
-    margin: 0;
-    margin-bottom: 2rem;
-    font-weight: 600;
-  }
-
-  hgroup h2 {
-    font-size: 250%;
-    border-top: none;
-    margin: 0;
-    margin-bottom: .5em;
-    padding: 0;
-    color: var(--vp-c-text-1);
-  }
-
-  hgroup p {
-    font-size: 125%;
-    margin: 0;
-    color: var(--vp-c-text-2);
-  }
-
-  :global(.vp-sponsor) {
-    max-width: 65rem;
-    margin: 0 auto;
-  }
-
-  :global(.vp-sponsor-grid.big .vp-sponsor-grid-image) {
-    max-height: 64px;
-  }
-
-  :global(.vp-sponsor-grid.big .vp-sponsor-grid-image[alt="Placeholder"]) {
-    height: 64px;
-    width: 64px;
-    opacity: 0.5;
-  }
-</style>

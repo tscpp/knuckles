@@ -1,5 +1,5 @@
 window.MonacoEnvironment ??= {};
-window.MonacoEnvironment.getWorker = async (_workerId, label) => {
+window.MonacoEnvironment.getWorker ??= async (_workerId, label) => {
   const module = await getWorkerModule(label);
   const constructor = module.default;
   const worker = new constructor();

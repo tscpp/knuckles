@@ -26,7 +26,7 @@ const config: ThemeConfig = {
   ],
 
   sidebar: {
-    "/docs/": [
+    "../../docs/": [
       {
         text: "Toolkit",
         collapsed: false,
@@ -108,7 +108,7 @@ const config: ThemeConfig = {
         link: "https://github.com/tscpp/knuckles/discussions",
       },
     ],
-    "/package": [
+    "./packages/": [
       {
         text: "Documentation",
         items: readdirSync("packages").map((name) => {

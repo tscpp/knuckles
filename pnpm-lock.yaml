@@ -180,7 +180,13 @@ importers:
       '@apps/playground':
         specifier: workspace:*
         version: link:../playground
+      monaco-editor:
+        specifier: ^0.48.0
+        version: 0.48.0
     devDependencies:
+      vite-plugin-commonjs:
+        specifier: ^0.10.1
+        version: 0.10.1
       vitepress:
         specifier: ^1.1.3
         version: 1.1.3(@algolia/client-search@4.23.3)(@types/node@20.12.7)(axios@1.6.8)(postcss@8.4.38)(sass@1.77.0)(search-insights@2.13.0)(terser@5.30.3)(typescript@5.4.5)
@@ -6655,6 +6661,12 @@ packages:
     resolution: {integrity: sha512-de6HJgzC+TFzOu0NTC4RAIsyf/DY/ibWDYQUcuEA84EMHhcefTUGkjFHKKEJhQN4A+6I0u++kr3l36ZF2d7XRw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
+
+  vite-plugin-commonjs@0.10.1:
+    resolution: {integrity: sha512-taP8R9kYGlCW5OzkVR0UIWRCnG6rSxeWWuA7tnU5b9t5MniibOnDY219NhisTeDhJAeGT8cEnrhVWZ9A5yD+vg==}
+
+  vite-plugin-dynamic-import@1.5.0:
+    resolution: {integrity: sha512-Qp85c+AVJmLa8MLni74U4BDiWpUeFNx7NJqbGZyR2XJOU7mgW0cb7nwlAMucFyM4arEd92Nfxp4j44xPi6Fu7g==}
 
   vite-plugin-node-polyfills@0.21.0:
     resolution: {integrity: sha512-Sk4DiKnmxN8E0vhgEhzLudfJQfaT8k4/gJ25xvUPG54KjLJ6HAmDKbr4rzDD/QWEY+Lwg80KE85fGYBQihEPQA==}
@@ -14408,6 +14420,20 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+
+  vite-plugin-commonjs@0.10.1:
+    dependencies:
+      acorn: 8.11.3
+      fast-glob: 3.3.2
+      magic-string: 0.30.10
+      vite-plugin-dynamic-import: 1.5.0
+
+  vite-plugin-dynamic-import@1.5.0:
+    dependencies:
+      acorn: 8.11.3
+      es-module-lexer: 1.5.0
+      fast-glob: 3.3.2
+      magic-string: 0.30.10
 
   vite-plugin-node-polyfills@0.21.0(rollup@4.14.3)(vite@5.2.9(@types/node@20.12.7)(sass@1.77.0)(terser@5.30.3)):
     dependencies:
