@@ -116,9 +116,9 @@ export default class Workspace extends Component<WorkspaceProps> {
               message: marker.message,
               severity: marker.severity,
               startLineNumber: marker.range.start.line + 1,
-              startColumn: marker.range.start.column,
+              startColumn: marker.range.start.column + 1,
               endLineNumber: marker.range.end.line + 1,
-              endColumn: marker.range.end.column,
+              endColumn: marker.range.end.column + 1,
             }),
           ),
         );

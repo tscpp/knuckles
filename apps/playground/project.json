@@ -9,14 +9,14 @@
     "dev": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "vite",
+        "command": "node scripts/dev.js",
         "cwd": "{projectRoot}"
       }
     },
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc && vite build",
+        "command": "node scripts/build.js",
         "cwd": "{projectRoot}"
       },
       "outputs": ["{projectRoot}/dist", "{projectRoot}/dist-ssr"]

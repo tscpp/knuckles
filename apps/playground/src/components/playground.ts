@@ -10,10 +10,52 @@ import { Position, Range } from "@knuckles/location";
 import AnalyzerTypeScriptPlugin from "@knuckles/typescript/analyzer";
 import * as ko from "knockout";
 import * as monaco from "monaco-editor";
-import samples from "~/assets/samples.json";
+import {
+  type FileSystemHost,
+  InMemoryFileSystemHost,
+  ScriptTarget,
+  ModuleKind,
+  ModuleResolutionKind,
+  ts,
+} from "ts-morph";
 import { Component } from "~/lib/component";
 import debounce from "~/lib/debounce";
 import html from "~/lib/html";
+
+function langFromExt(ext: string) {
+  switch (ext) {
+    case ".ts":
+    case ".mts":
+    case ".cts":
+    case ".tsx":
+      return "typescript";
+    case ".js":
+    case ".mjs":
+    case ".cjs":
+    case ".jsx":
+      return "javascript";
+    case ".html":
+      return "html";
+    case ".css":
+      return "css";
+    default:
+      return "plain";
+  }
+}
+
+function getFileName(path: string) {
+  path = path.replaceAll("\\", "/");
+  const i = path.lastIndexOf("/");
+  if (i === -1) return path;
+  return path.slice(i);
+}
+
+function getFileExt(path: string) {
+  const n = getFileName(path);
+  const i = n.lastIndexOf(".");
+  if (i === -1) return "";
+  return n.slice(i);
+}
 
 export default class Playground extends Component {
   override readonly components = {
@@ -45,7 +87,7 @@ export default class Playground extends Component {
     </div>
   `;
 
-  readonly sample = ko.observable(samples[0]);
+  readonly sample = ko.observable(SAMPLES[0]);
   readonly snapshot = ko.observable<Snapshot>();
 
   readonly enableVisualizer = ko.observable(false);
@@ -54,19 +96,59 @@ export default class Playground extends Component {
     () =>
       this.sample()?.files.map(
         (file): WorkspaceFile =>
-          createWorkspaceFile(file.name, file.text, file.lang),
+          createWorkspaceFile(
+            file.name,
+            file.text,
+            langFromExt(getFileExt(file.name)),
+          ),
       ) ?? [],
   );
   readonly activeFile = ko.observable(this.files()[0]);
 
   analyzer: Promise<Analyzer> | undefined;
+  #fileSystem: FileSystemHost | undefined;
   readonly isAnalyzing = ko.observable(false);
 
   async createAnalyzer() {
+    this.#fileSystem = new InMemoryFileSystemHost();
+
+    const dependencies = {
+      "node_modules/knockout/package.json":
+        "https://cdn.jsdelivr.net/npm/knockout@3.5.1/package.json",
+      "node_modules/knockout/build/types/knockout.d.ts":
+        "https://cdn.jsdelivr.net/npm/knockout@3.5.1/build/types/knockout.d.ts",
+      "node_modules/@knuckles/typescript/package.json":
+        "https://cdn.jsdelivr.net/npm/@knuckles/typescript/package.json",
+      "node_modules/@knuckles/typescript/types/loose.d.ts":
+        "https://cdn.jsdelivr.net/npm/@knuckles/typescript/types/loose.d.ts",
+      "node_modules/@knuckles/typescript/types/lib/loose.d.ts":
+        "https://cdn.jsdelivr.net/npm/@knuckles/typescript/types/lib/loose.d.ts",
+      "node_modules/@knuckles/typescript/types/lib/common.d.ts":
+        "https://cdn.jsdelivr.net/npm/@knuckles/typescript/types/lib/common.d.ts",
+    };
+
+    const dependenciesVirtualFiles = await Promise.all(
+      Object.entries(dependencies).map(async ([name, url]) => {
+        const response = await fetch(url);
+        const text = await response.text();
+        return [name, text] as const;
+      }),
+    );
+
+    for (const [name, text] of dependenciesVirtualFiles) {
+      this.#fileSystem.writeFileSync(name, text);
+    }
+
     return new Analyzer({
       plugins: [
         await AnalyzerTypeScriptPlugin({
-          browser: true,
+          fileSystem: this.#fileSystem,
+          tsconfig: {
+            target: ScriptTarget.ESNext,
+            module: ModuleKind.ESNext,
+            moduleResolution: ModuleResolutionKind.Bundler,
+            moduleDetection: ts.ModuleDetectionKind.Force,
+          },
         }),
       ],
     });
@@ -88,15 +170,13 @@ export default class Playground extends Component {
 
   analyzeDebounce = debounce(async () => {
     this.analyze();
-  }, 500);
+  }, 200);
 
   onUpdate() {
     this.analyzeDebounce();
   }
 
   async analyze() {
-    const activeFile = this.activeFile();
-    if (activeFile?.lang() !== "html") return;
     if (this.isAnalyzing()) return;
     this.isAnalyzing(true);
     const start = performance.now();
@@ -107,17 +187,24 @@ export default class Playground extends Component {
   }
 
   async _analyze() {
-    const activeFile = this.activeFile()!;
+    // TODO: lint all html files.
+    const file = this.files().find((file) => file.name() === "view.html");
+    if (!file) return;
+
+    // TODO: delete old files
+    for (const file of this.files()) {
+      this.#fileSystem!.writeFileSync(file.name(), file.text());
+    }
 
     const analyzer = await this.analyzer!;
-    const result = await analyzer.analyze(activeFile.name(), activeFile.text());
+    const result = await analyzer.analyze(file.name(), file.text());
 
     this.snapshot(result.snapshots.typescript);
-    activeFile.markers(
+    file.markers(
       result.issues.map((issue): Marker => {
-        const start = issue.start ?? Position.fromOffset(0, activeFile.text());
+        const start = issue.start ?? Position.fromOffset(0, file.text());
         const end =
-          issue.end ?? Position.fromOffset(start.offset + 1, activeFile.text());
+          issue.end ?? Position.fromOffset(start.offset + 1, file.text());
 
         const severity = {
           [AnalyzerSeverity.Error]: monaco.MarkerSeverity.Error,

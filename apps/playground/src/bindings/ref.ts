@@ -6,7 +6,7 @@ ko.bindingHandlers["ref"] = {
 
     if (ko.isWritableObservable(observable)) {
       observable(element);
-    } else if (import.meta.env.DEV) {
+    } else {
       console.error("ref binding must be passed a writable observable.");
     }
   },

@@ -3,20 +3,29 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "types": "./index.d.ts",
+  "exports": {
+    ".": "./dist/playground.js",
+    "./playground.css": "./dist/playground.css",
+    "./dist/monaco/workers/css.js": "./dist/monaco/workers/css.js",
+    "./dist/monaco/workers/editor.js": "./dist/monaco/workers/editor.js",
+    "./dist/monaco/workers/html.js": "./dist/monaco/workers/html.js",
+    "./dist/monaco/workers/json.js": "./dist/monaco/workers/json.js",
+    "./dist/monaco/workers/typescript.js": "./dist/monaco/workers/typescript.js"
+  },
   "dependencies": {
     "@knuckles/analyzer": "workspace:^",
     "@knuckles/location": "workspace:^",
     "@knuckles/typescript": "workspace:^",
     "knockout": "^3.5.1",
-    "monaco-editor": "^0.48.0"
+    "monaco-editor": "^0.48.0",
+    "ts-morph": "^22.0.0"
   },
   "devDependencies": {
-    "@types/estree": "^1.0.5",
+    "esbuild": "~0.21.1",
+    "esbuild-plugin-sass": "^1.0.1",
+    "node-stdlib-browser": "^1.2.0",
     "sass": "^1.77.0",
-    "typescript": "^5.2.2",
-    "vite": "^5.2.0",
-    "vite-plugin-node-polyfills": "^0.21.0",
-    "vite-tsconfig-paths": "^4.3.2"
+    "serve": "^14.2.3",
+    "typescript": "^5.2.2"
   }
 }

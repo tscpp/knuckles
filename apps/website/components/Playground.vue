@@ -18,24 +18,18 @@ onMounted(async () => {
       case "css":
       case "scss":
       case "less":
-        return import("monaco-editor/esm/vs/language/css/css.worker.js?worker");
+        return import("@apps/playground/dist/monaco/workers/css.js?worker");
       case "html":
       case "handlebars":
       case "razor":
-        return import(
-          "monaco-editor/esm/vs/language/html/html.worker.js?worker"
-        );
+        return import("@apps/playground/dist/monaco/workers/html.js?worker");
       case "json":
-        return import(
-          "monaco-editor/esm/vs/language/json/json.worker.js?worker"
-        );
+        return import("@apps/playground/dist/monaco/workers/json.js?worker");
       case "typescript":
       case "javascript":
-        return import(
-          "monaco-editor/esm/vs/language/typescript/ts.worker?worker"
-        );
+        return import("@apps/playground/dist/monaco/workers/typescript.js?worker");
       default:
-        return import("monaco-editor/esm/vs/editor/editor.worker.js?worker");
+        return import("@apps/playground/dist/monaco/workers/editor.js?worker");
     }
   }
 

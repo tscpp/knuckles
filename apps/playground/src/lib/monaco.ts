@@ -1,8 +1,7 @@
 window.MonacoEnvironment ??= {};
 window.MonacoEnvironment.getWorker ??= async (_workerId, label) => {
-  const module = await getWorkerModule(label);
-  const constructor = module.default;
-  const worker = new constructor();
+  const module = getWorkerModule(label);
+  const worker = new Worker(module, { type: "module" });
   return worker;
 };
 
@@ -11,19 +10,17 @@ function getWorkerModule(label: string) {
     case "css":
     case "scss":
     case "less":
-      return import("monaco-editor/esm/vs/language/css/css.worker.js?worker");
+      return "/build/monaco/workers/css.js";
     case "html":
     case "handlebars":
     case "razor":
-      return import("monaco-editor/esm/vs/language/html/html.worker.js?worker");
+      return "/build/monaco/workers/html.js";
     case "json":
-      return import("monaco-editor/esm/vs/language/json/json.worker.js?worker");
+      return "/build/monaco/workers/json.js";
     case "typescript":
     case "javascript":
-      return import(
-        "monaco-editor/esm/vs/language/typescript/ts.worker?worker"
-      );
+      return "/build/monaco/workers/typescript.js";
     default:
-      return import("monaco-editor/esm/vs/editor/editor.worker.js?worker");
+      return "/build/monaco/workers/editor.js";
   }
 }
