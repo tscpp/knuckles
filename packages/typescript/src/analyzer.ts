@@ -5,16 +5,18 @@ import {
   type AnalyzerPlugin,
 } from "@knuckles/analyzer";
 import { Position } from "@knuckles/location";
-import { ts } from "ts-morph";
+import { ts, type FileSystemHost } from "ts-morph";
 
 export type Options = {
   tsconfig?: string | ts.CompilerOptions | undefined;
   mode?: "strict" | "loose" | undefined;
+  fileSystem?: FileSystemHost;
 };
 
 export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
   const transpiler = new Transpiler({
     tsConfig: options.tsconfig,
+    fileSystem: options.fileSystem,
   });
 
   return {
