@@ -67,7 +67,8 @@ export default class Scaffold {
     if (node instanceof VirtualElement) {
       const closure = new Chunk()
         .add(this.#renderBindingComment(node.binding))
-        .add(this.#renderBindingClosure(node.binding));
+        .add(this.#renderBindingClosure(node.binding))
+        .write("($context)");
       const decendants = this.#renderNodes(node.children);
 
       if (decendants.length > 0) {
