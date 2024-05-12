@@ -60,6 +60,10 @@ export default class Range {
     }
   }
 
+  get size() {
+    return this.end.offset - this.start.offset;
+  }
+
   get offsets(): readonly [number, number] {
     return [this.start.offset, this.end.offset];
   }

@@ -29,7 +29,9 @@ export class Snapshot {
 
   getOriginalRange(position: Position): Range | null {
     return (
-      this.mappings.find((mapping) => mapping.original.contains(position))
+      this.mappings
+        .filter((mapping) => mapping.generated.contains(position))
+        .reduce((a, b) => (a.generated.size < b.generated.size ? a : b))
         ?.original ?? null
     );
   }
@@ -53,7 +55,9 @@ export class Snapshot {
 
   getGeneratedRange(position: Position): Range | null {
     return (
-      this.mappings.find((mapping) => mapping.generated.contains(position))
+      this.mappings
+        .filter((mapping) => mapping.original.contains(position))
+        .reduce((a, b) => (a.original.size < b.original.size ? a : b))
         ?.generated ?? null
     );
   }
