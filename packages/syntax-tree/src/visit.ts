@@ -1,4 +1,4 @@
-import { type Node, isParentNode } from "./syntax-tree.js";
+import { type Node, isParentNode } from "./collections.js";
 
 export function visit<T extends Node>(
   node: Node,

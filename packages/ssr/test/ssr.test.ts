@@ -1,4 +1,4 @@
-import { type Plugin, render, utils } from "../src/lib/exports.js";
+import { type Plugin, render, utils } from "../src/index.js";
 import { test, describe } from "bun:test";
 import assert from "node:assert/strict";
 import { resolve } from "node:path";
@@ -89,7 +89,7 @@ describe("server-side rendering", () => {
       },
     };
     const i18nPlugin: Plugin = {
-      filter: (binding) => binding.name === "i18n",
+      filter: (binding) => binding.name.value === "i18n",
       ssr: ({ binding, generated, context, value }) => {
         const lang = (context.$data as any).language;
         const key = String(value());

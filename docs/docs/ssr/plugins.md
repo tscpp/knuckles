@@ -14,7 +14,7 @@ import { Plugin, utils } from "@knuckles/ssr";
 const i18n: Plugin = {
   // Look for bindings with name "i18n". Once the plugin claims the bindings,
   // no other plugins will touch it.
-  filter: (binding) => binding.name === "i18n",
+  filter: (binding) => binding.name.value === "i18n",
 
   // This method is called when server-side rendering.
   ssr: ({ binding, generated, value }) => {

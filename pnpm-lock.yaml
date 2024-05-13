@@ -422,15 +422,6 @@ importers:
         specifier: ^2.3.9
         version: 2.3.9
 
-  samples/analyzer:
-    devDependencies:
-      '@knuckles/cli':
-        specifier: workspace:^
-        version: link:../../packages/cli
-      '@knuckles/typescript':
-        specifier: workspace:^
-        version: link:../../packages/typescript
-
   tools/eslint:
     dependencies:
       eslint:

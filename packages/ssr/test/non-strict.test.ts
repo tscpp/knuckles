@@ -1,4 +1,4 @@
-import { render } from "../src/lib/exports.js";
+import { render } from "../src/index.js";
 import { test, describe } from "bun:test";
 import assert from "node:assert/strict";
 import { resolve } from "node:path";

@@ -1,0 +1,7 @@
+{
+  "active": "view.html",
+  "settings": {
+    "analyzer": true,
+    "ssr": false
+  }
+}
