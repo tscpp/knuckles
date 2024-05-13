@@ -17,9 +17,7 @@ function createIfPlugin(filter: Plugin["filter"], test: boolean): Plugin {
     ssr({ binding, generated, value, bubble }) {
       bubble(() => {
         const tmpl =
-          value() == test
-            ? undefined
-            : extractIntoTemplate(binding, generated);
+          value() == test ? undefined : extractIntoTemplate(binding, generated);
 
         const q = invertQuote(binding.attribute?.value.quote ?? '"');
 

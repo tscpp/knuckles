@@ -1,7 +1,7 @@
 import { Range } from "@knuckles/location";
 
 export interface IdentifierInit {
-  range: Range
+  range: Range;
   value: string;
 }
 
@@ -15,7 +15,7 @@ export class Identifier extends Range {
 }
 
 export interface ExpressionInit {
-  range: Range
+  range: Range;
   value: string;
 }
 
@@ -37,7 +37,7 @@ export interface StringLiteralInit {
 export class StringLiteral extends Range {
   value: string;
   quote: '"' | "'" | null;
-  
+
   get text() {
     return this.quote + this.value + this.quote;
   }

@@ -1,7 +1,7 @@
 import type { Attribute, Element } from "./element.js";
 import type { Expression, Identifier } from "./primitives.js";
-import { Range } from "@knuckles/location";
 import type { KoVirtualElement } from "./virtual-element.js";
+import { Range } from "@knuckles/location";
 
 export interface BindingInit {
   name: Identifier;

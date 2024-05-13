@@ -1,5 +1,5 @@
-import type { Range } from "@knuckles/location";
 import { Node } from "./node.js";
+import type { Range } from "@knuckles/location";
 
 export interface TextInit {
   content: string;
