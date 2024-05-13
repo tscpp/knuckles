@@ -18,15 +18,13 @@ export default class Visualizer extends Component<VisualizerProps> {
 
   readonly template = html`
     <div class="${styles.visualizer}">
-      <div class="${styles.documents}">
-        <!-- ko foreach: [generatedRanges(), originalRanges()] -->
-        <!-- ko instantiate: [VisualizerDocument, {
-          content: $data,
-          highlights: $parent.targetTextRanges(),
-          active: $parent.activeTextRange
-        }] --><!-- /ko -->
-        <!-- /ko -->
-      </div>
+      <!-- ko foreach: [originalRanges(), generatedRanges()] -->
+      <!-- ko instantiate: [VisualizerDocument, {
+        content: $data,
+        highlights: $parent.targetTextRanges(),
+        active: $parent.activeTextRange
+      }] --><!-- /ko -->
+      <!-- /ko -->
       <div class="${styles.sidebar}">
         <div class="${styles.mappings}">
           <!-- ko if: activeTextRange -->

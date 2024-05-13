@@ -9,10 +9,7 @@ declare module "*.module.css" {
   export default styles;
 }
 
-var SAMPLES: {
-  name: string;
-  files: {
-    name: string;
-    text: string;
-  }[];
-}[];
+declare module "*.module.scss" {
+  const styles: Record<string, string>;
+  export default styles;
+}

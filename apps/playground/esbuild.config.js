@@ -7,16 +7,17 @@ import polyfillNode from "node-stdlib-browser/helpers/esbuild/plugin";
 /** @type {import('esbuild').BuildOptions} */
 const common = {
   entryPoints: {
-    "monaco/workers/css":
+    "monaco/css.worker":
       "node_modules/monaco-editor/esm/vs/language/css/css.worker.js",
-    "monaco/workers/html":
+    "monaco/html.worker":
       "node_modules/monaco-editor/esm/vs/language/html/html.worker.js",
-    "monaco/workers/json":
+    "monaco/json.worker":
       "node_modules/monaco-editor/esm/vs/language/json/json.worker.js",
-    "monaco/workers/typescript":
+    "monaco/ts.worker":
       "node_modules/monaco-editor/esm/vs/language/typescript/ts.worker.js",
-    "monaco/workers/editor":
+    "monaco/editor.worker":
       "node_modules/monaco-editor/esm/vs/editor/editor.worker.js",
+    "esbuild/esbuild-wasm": "node_modules/esbuild-wasm/esbuild.wasm",
   },
   bundle: true,
   minify: true,
@@ -24,11 +25,13 @@ const common = {
   plugins: [polyfillNode(nodeLib), sass()],
   loader: {
     ".ttf": "file",
+    ".wasm": "file",
   },
   define: {
     SAMPLES: JSON.stringify(samples),
   },
   inject: ["assets/polyfill.js"],
+  external: ["import-meta-resolve"],
 };
 
 /** @type {import('esbuild').BuildOptions[]} */

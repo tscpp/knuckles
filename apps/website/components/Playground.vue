@@ -1,41 +1,49 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import Loader from "./Loader.vue";
+import PlaygroundLoader from "./PlaygroundLoader.vue";
 
 const container = ref(null);
 
 onMounted(async () => {
-  window.MonacoEnvironment ??= {};
-  window.MonacoEnvironment.getWorker ??= async (_workerId, label) => {
-    const module = await getWorkerModule(label);
-    const constructor = module.default;
-    const worker = new constructor();
-    return worker;
-  };
-
-  function getWorkerModule(label) {
-    switch (label) {
-      case "css":
-      case "scss":
-      case "less":
-        return import("@apps/playground/dist/monaco/workers/css.js?worker");
-      case "html":
-      case "handlebars":
-      case "razor":
-        return import("@apps/playground/dist/monaco/workers/html.js?worker");
-      case "json":
-        return import("@apps/playground/dist/monaco/workers/json.js?worker");
-      case "typescript":
-      case "javascript":
-        return import("@apps/playground/dist/monaco/workers/typescript.js?worker");
-      default:
-        return import("@apps/playground/dist/monaco/workers/editor.js?worker");
-    }
-  }
-
-  await import("@apps/playground/playground.css");
+  await import("@apps/playground/dist/playground.css");
   const { createPlayground } = await import("@apps/playground");
-  createPlayground(container.value);
+  const { default: esbuildWasmUrl } = await import(
+    "esbuild-wasm/esbuild.wasm?url"
+  );
+  const { default: editorWorker } = await import(
+    "monaco-editor/esm/vs/editor/editor.worker?worker"
+  );
+  const { default: jsonWorker } = await import(
+    "monaco-editor/esm/vs/language/json/json.worker?worker"
+  );
+  const { default: cssWorker } = await import(
+    "monaco-editor/esm/vs/language/css/css.worker?worker"
+  );
+  const { default: htmlWorker } = await import(
+    "monaco-editor/esm/vs/language/html/html.worker?worker"
+  );
+  const { default: tsWorker } = await import(
+    "monaco-editor/esm/vs/language/typescript/ts.worker?worker"
+  );
+
+  createPlayground(container.value, {
+    monacoWorkerFactory: async (_workerId, label) => {
+      if (label === "json") {
+        return new jsonWorker();
+      }
+      if (label === "css" || label === "scss" || label === "less") {
+        return new cssWorker();
+      }
+      if (label === "html" || label === "handlebars" || label === "razor") {
+        return new htmlWorker();
+      }
+      if (label === "typescript" || label === "javascript") {
+        return new tsWorker();
+      }
+      return new editorWorker();
+    },
+    esbuildWasmUrl,
+  });
 });
 </script>
 
@@ -66,7 +74,7 @@ onMounted(async () => {
 <template>
   <div class="page">
     <div class="playground" ref="container">
-      <Loader />
+      <PlaygroundLoader />
     </div>
   </div>
 </template>

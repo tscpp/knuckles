@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { UserConfig } from "vitepress";
 import footnote from "markdown-it-footnote";
 import themeConfig from "../../../docs/vitepress.config.js";
-import viteCommonJs from "vite-plugin-commonjs";
+import { createLogger } from "vite";
 
 // https://vitepress.dev/reference/site-config
 const config: UserConfig<ThemeConfig> = {
@@ -62,9 +62,23 @@ const config: UserConfig<ThemeConfig> = {
   },
 
   vite: {
-    plugins: [viteCommonJs()],
+    customLogger: (() => {
+      const logger = createLogger();
+      const warn = logger.warn;
+      logger.warn = (msg, options) => {
+        if (msg.includes("import cannot be analyzed")) return;
+        warn(msg, options);
+      };
+      return logger;
+    })(),
     optimizeDeps: {
       exclude: ["@apps/playground"],
+    },
+    build: {
+      rollupOptions: {
+        external: /import-meta-resolve/,
+      },
+      chunkSizeWarningLimit: 0,
     },
     resolve: {
       alias: readdirSync(

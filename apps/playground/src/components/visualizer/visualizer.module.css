@@ -1,23 +1,19 @@
 .visualizer {
   display: grid;
-  grid-template-rows: 1fr auto;
-}
-
-.documents {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.document + .document {
-  border-left: 1px solid grey;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  background-color: #f9fffe;
+  color: black;
 }
 
 .sidebar {
+  grid-column: 2;
+  grid-row: 1 / 3;
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  background-color: rgba(225, 0, 255, 0.164);
-  height: 5rem;
+  background-color: rgba(0, 47, 255, 0.164);
+  width: 30ch;
   overflow: auto;
 }
 
