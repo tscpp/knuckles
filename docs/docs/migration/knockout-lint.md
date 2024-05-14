@@ -43,9 +43,9 @@ You may also notice the `/ko` end comment. This allows you to override the view 
 ```html
 <!-- ko-import ViewModel from './viewmodel.js' --> // [!code --]
 <!-- ko-viewmodel ViewModel --> // [!code --]
-<!-- #ko with: default from './viewmodel.js' --> // [!code ++]
+<!-- ok with: default from './viewmodel.js' --> // [!code ++]
   ...
-<!-- /ko --> // [!code ++]
+<!-- /ok --> // [!code ++]
 ```
 
 ### Defining Binding Handlers

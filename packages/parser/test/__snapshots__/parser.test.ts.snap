@@ -3,120 +3,170 @@
 exports[`parser Deep virtual elements 1`] = `
 Document {
   "children": [
-    VirtualElement {
+    KoVirtualElement {
       "binding": Binding {
         "attribute": null,
-        "name": Scope {
-          "range": Range {
-            "end": Position {
-              "column": 11,
-              "line": 0,
-              "offset": 11,
-            },
-            "start": Position {
-              "column": 8,
-              "line": 0,
-              "offset": 8,
-            },
-          },
-          "text": "foo",
+        "end": Position {
+          "column": 16,
+          "line": 0,
+          "offset": 16,
         },
-        "param": Scope {
-          "range": Range {
-            "end": Position {
-              "column": 16,
-              "line": 0,
-              "offset": 16,
-            },
-            "start": Position {
-              "column": 13,
-              "line": 0,
-              "offset": 13,
-            },
-          },
-          "text": "foo",
-        },
-        "range": Range {
+        "name": Identifier {
           "end": Position {
-            "column": 16,
+            "column": 11,
             "line": 0,
-            "offset": 16,
+            "offset": 11,
           },
           "start": Position {
             "column": 8,
             "line": 0,
             "offset": 8,
           },
+          "value": "foo",
+        },
+        "param": Expression {
+          "end": Position {
+            "column": 16,
+            "line": 0,
+            "offset": 16,
+          },
+          "start": Position {
+            "column": 13,
+            "line": 0,
+            "offset": 13,
+          },
+          "value": "foo",
+        },
+        "parent": [Circular],
+        "start": Position {
+          "column": 8,
+          "line": 0,
+          "offset": 8,
         },
       },
       "children": [
-        VirtualElement {
+        KoVirtualElement {
           "binding": Binding {
             "attribute": null,
-            "name": Scope {
-              "range": Range {
-                "end": Position {
-                  "column": 31,
-                  "line": 0,
-                  "offset": 31,
-                },
-                "start": Position {
-                  "column": 28,
-                  "line": 0,
-                  "offset": 28,
-                },
-              },
-              "text": "bar",
+            "end": Position {
+              "column": 36,
+              "line": 0,
+              "offset": 36,
             },
-            "param": Scope {
-              "range": Range {
-                "end": Position {
-                  "column": 36,
-                  "line": 0,
-                  "offset": 36,
-                },
-                "start": Position {
-                  "column": 33,
-                  "line": 0,
-                  "offset": 33,
-                },
-              },
-              "text": "bar",
-            },
-            "range": Range {
+            "name": Identifier {
               "end": Position {
-                "column": 36,
+                "column": 31,
                 "line": 0,
-                "offset": 36,
+                "offset": 31,
               },
               "start": Position {
                 "column": 28,
                 "line": 0,
                 "offset": 28,
               },
+              "value": "bar",
+            },
+            "param": Expression {
+              "end": Position {
+                "column": 36,
+                "line": 0,
+                "offset": 36,
+              },
+              "start": Position {
+                "column": 33,
+                "line": 0,
+                "offset": 33,
+              },
+              "value": "bar",
+            },
+            "parent": [Circular],
+            "start": Position {
+              "column": 28,
+              "line": 0,
+              "offset": 28,
             },
           },
           "children": [],
+          "end": Position {
+            "column": 52,
+            "line": 0,
+            "offset": 52,
+          },
           "endComment": Comment {
             "content": " /ko ",
-            "range": Range {
-              "end": Position {
-                "column": 52,
-                "line": 0,
-                "offset": 52,
-              },
-              "start": Position {
-                "column": 40,
-                "line": 0,
-                "offset": 40,
-              },
-            },
-          },
-          "range": Range {
             "end": Position {
               "column": 52,
               "line": 0,
               "offset": 52,
+            },
+            "start": Position {
+              "column": 40,
+              "line": 0,
+              "offset": 40,
+            },
+          },
+          "inner": Range {
+            "end": Position {
+              "column": 40,
+              "line": 0,
+              "offset": 40,
+            },
+            "start": Position {
+              "column": 40,
+              "line": 0,
+              "offset": 40,
+            },
+          },
+          "name": Identifier {
+            "end": Position {
+              "column": 31,
+              "line": 0,
+              "offset": 31,
+            },
+            "start": Position {
+              "column": 28,
+              "line": 0,
+              "offset": 28,
+            },
+            "value": "bar",
+          },
+          "namespace": Identifier {
+            "end": Position {
+              "column": 27,
+              "line": 0,
+              "offset": 27,
+            },
+            "start": Position {
+              "column": 25,
+              "line": 0,
+              "offset": 25,
+            },
+            "value": "ko",
+          },
+          "param": Expression {
+            "end": Position {
+              "column": 36,
+              "line": 0,
+              "offset": 36,
+            },
+            "start": Position {
+              "column": 33,
+              "line": 0,
+              "offset": 33,
+            },
+            "value": "bar",
+          },
+          "start": Position {
+            "column": 20,
+            "line": 0,
+            "offset": 20,
+          },
+          "startComment": Comment {
+            "content": " ko bar: bar ",
+            "end": Position {
+              "column": 40,
+              "line": 0,
+              "offset": 40,
             },
             "start": Position {
               "column": 20,
@@ -124,140 +174,88 @@ Document {
               "offset": 20,
             },
           },
-          "startComment": Comment {
-            "content": " ko bar: bar ",
-            "range": Range {
-              "end": Position {
-                "column": 40,
-                "line": 0,
-                "offset": 40,
-              },
-              "start": Position {
-                "column": 20,
-                "line": 0,
-                "offset": 20,
-              },
-            },
-          },
         },
       ],
+      "end": Position {
+        "column": 64,
+        "line": 0,
+        "offset": 64,
+      },
       "endComment": Comment {
         "content": " /ko ",
-        "range": Range {
-          "end": Position {
-            "column": 64,
-            "line": 0,
-            "offset": 64,
-          },
-          "start": Position {
-            "column": 52,
-            "line": 0,
-            "offset": 52,
-          },
-        },
-      },
-      "range": Range {
         "end": Position {
           "column": 64,
           "line": 0,
           "offset": 64,
         },
         "start": Position {
-          "column": 0,
+          "column": 52,
           "line": 0,
-          "offset": 0,
+          "offset": 52,
         },
+      },
+      "inner": Range {
+        "end": Position {
+          "column": 52,
+          "line": 0,
+          "offset": 52,
+        },
+        "start": Position {
+          "column": 20,
+          "line": 0,
+          "offset": 20,
+        },
+      },
+      "name": Identifier {
+        "end": Position {
+          "column": 11,
+          "line": 0,
+          "offset": 11,
+        },
+        "start": Position {
+          "column": 8,
+          "line": 0,
+          "offset": 8,
+        },
+        "value": "foo",
+      },
+      "namespace": Identifier {
+        "end": Position {
+          "column": 7,
+          "line": 0,
+          "offset": 7,
+        },
+        "start": Position {
+          "column": 5,
+          "line": 0,
+          "offset": 5,
+        },
+        "value": "ko",
+      },
+      "param": Expression {
+        "end": Position {
+          "column": 16,
+          "line": 0,
+          "offset": 16,
+        },
+        "start": Position {
+          "column": 13,
+          "line": 0,
+          "offset": 13,
+        },
+        "value": "foo",
+      },
+      "start": Position {
+        "column": 0,
+        "line": 0,
+        "offset": 0,
       },
       "startComment": Comment {
         "content": " ko foo: foo ",
-        "range": Range {
-          "end": Position {
-            "column": 20,
-            "line": 0,
-            "offset": 20,
-          },
-          "start": Position {
-            "column": 0,
-            "line": 0,
-            "offset": 0,
-          },
-        },
-      },
-    },
-  ],
-  "range": Range {
-    "end": Position {
-      "column": 0,
-      "line": 0,
-      "offset": 0,
-    },
-    "start": Position {
-      "column": 0,
-      "line": 0,
-      "offset": 0,
-    },
-  },
-}
-`;
-
-exports[`parser Hidden virtual element 1`] = `
-Document {
-  "children": [
-    DirectiveElement {
-      "children": [],
-      "directive": {
-        "kind": 1,
-        "name": Scope {
-          "range": Range {
-            "end": Position {
-              "column": 12,
-              "line": 0,
-              "offset": 12,
-            },
-            "start": Position {
-              "column": 9,
-              "line": 0,
-              "offset": 9,
-            },
-          },
-          "text": "foo",
-        },
-        "param": Scope {
-          "range": Range {
-            "end": Position {
-              "column": 17,
-              "line": 0,
-              "offset": 17,
-            },
-            "start": Position {
-              "column": 14,
-              "line": 0,
-              "offset": 14,
-            },
-          },
-          "text": "foo",
-        },
-      },
-      "endComment": Comment {
-        "content": " /ko ",
-        "range": Range {
-          "end": Position {
-            "column": 33,
-            "line": 0,
-            "offset": 33,
-          },
-          "start": Position {
-            "column": 21,
-            "line": 0,
-            "offset": 21,
-          },
-        },
-      },
-      "range": Range {
         "end": Position {
-          "column": 33,
+          "column": 20,
           "line": 0,
-          "offset": 33,
+          "offset": 20,
         },
         "start": Position {
           "column": 0,
@@ -265,34 +263,17 @@ Document {
           "offset": 0,
         },
       },
-      "startComment": Comment {
-        "content": " #ko foo: foo ",
-        "range": Range {
-          "end": Position {
-            "column": 21,
-            "line": 0,
-            "offset": 21,
-          },
-          "start": Position {
-            "column": 0,
-            "line": 0,
-            "offset": 0,
-          },
-        },
-      },
     },
   ],
-  "range": Range {
-    "end": Position {
-      "column": 0,
-      "line": 0,
-      "offset": 0,
-    },
-    "start": Position {
-      "column": 0,
-      "line": 0,
-      "offset": 0,
-    },
+  "end": Position {
+    "column": 64,
+    "line": 0,
+    "offset": 64,
+  },
+  "start": Position {
+    "column": 0,
+    "line": 0,
+    "offset": 0,
   },
 }
 `;
@@ -303,8 +284,57 @@ Document {
     Element {
       "attributes": [
         Attribute {
-          "name": Scope {
-            "range": Range {
+          "end": Position {
+            "column": 23,
+            "line": 0,
+            "offset": 23,
+          },
+          "name": Identifier {
+            "end": Position {
+              "column": 14,
+              "line": 0,
+              "offset": 14,
+            },
+            "start": Position {
+              "column": 5,
+              "line": 0,
+              "offset": 5,
+            },
+            "value": "data-bind",
+          },
+          "namespace": null,
+          "parent": [Circular],
+          "prefix": null,
+          "start": Position {
+            "column": 5,
+            "line": 0,
+            "offset": 5,
+          },
+          "value": StringLiteral {
+            "end": Position {
+              "column": 23,
+              "line": 0,
+              "offset": 23,
+            },
+            "quote": "'",
+            "start": Position {
+              "column": 15,
+              "line": 0,
+              "offset": 15,
+            },
+            "value": "0: bar",
+          },
+        },
+      ],
+      "bindings": [
+        Binding {
+          "attribute": Attribute {
+            "end": Position {
+              "column": 23,
+              "line": 0,
+              "offset": 23,
+            },
+            "name": Identifier {
               "end": Position {
                 "column": 14,
                 "line": 0,
@@ -315,161 +345,105 @@ Document {
                 "line": 0,
                 "offset": 5,
               },
+              "value": "data-bind",
             },
-            "text": "data-bind",
-          },
-          "namespace": null,
-          "prefix": null,
-          "quote": "'",
-          "range": Range {
-            "end": Position {
-              "column": 23,
-              "line": 0,
-              "offset": 23,
-            },
+            "namespace": null,
+            "parent": [Circular],
+            "prefix": null,
             "start": Position {
               "column": 5,
               "line": 0,
               "offset": 5,
             },
-          },
-          "value": Scope {
-            "range": Range {
+            "value": StringLiteral {
               "end": Position {
                 "column": 23,
                 "line": 0,
                 "offset": 23,
               },
+              "quote": "'",
               "start": Position {
                 "column": 15,
                 "line": 0,
                 "offset": 15,
               },
-            },
-            "text": "0: bar",
-          },
-        },
-      ],
-      "bindings": [
-        Binding {
-          "attribute": Attribute {
-            "name": Scope {
-              "range": Range {
-                "end": Position {
-                  "column": 14,
-                  "line": 0,
-                  "offset": 14,
-                },
-                "start": Position {
-                  "column": 5,
-                  "line": 0,
-                  "offset": 5,
-                },
-              },
-              "text": "data-bind",
-            },
-            "namespace": null,
-            "prefix": null,
-            "quote": "'",
-            "range": Range {
-              "end": Position {
-                "column": 23,
-                "line": 0,
-                "offset": 23,
-              },
-              "start": Position {
-                "column": 5,
-                "line": 0,
-                "offset": 5,
-              },
-            },
-            "value": Scope {
-              "range": Range {
-                "end": Position {
-                  "column": 23,
-                  "line": 0,
-                  "offset": 23,
-                },
-                "start": Position {
-                  "column": 15,
-                  "line": 0,
-                  "offset": 15,
-                },
-              },
-              "text": "0: bar",
+              "value": "0: bar",
             },
           },
-          "name": Scope {
-            "range": Range {
-              "end": Position {
-                "column": 17,
-                "line": 0,
-                "offset": 17,
-              },
-              "start": Position {
-                "column": 16,
-                "line": 0,
-                "offset": 16,
-              },
-            },
-            "text": "0",
+          "end": Position {
+            "column": 22,
+            "line": 0,
+            "offset": 22,
           },
-          "param": Scope {
-            "range": Range {
-              "end": Position {
-                "column": 22,
-                "line": 0,
-                "offset": 22,
-              },
-              "start": Position {
-                "column": 19,
-                "line": 0,
-                "offset": 19,
-              },
-            },
-            "text": "bar",
-          },
-          "range": Range {
+          "name": Identifier {
             "end": Position {
-              "column": 22,
+              "column": 17,
               "line": 0,
-              "offset": 22,
+              "offset": 17,
             },
             "start": Position {
               "column": 16,
               "line": 0,
               "offset": 16,
             },
+            "value": "0",
+          },
+          "param": Expression {
+            "end": Position {
+              "column": 22,
+              "line": 0,
+              "offset": 22,
+            },
+            "start": Position {
+              "column": 19,
+              "line": 0,
+              "offset": 19,
+            },
+            "value": "bar",
+          },
+          "parent": [Circular],
+          "start": Position {
+            "column": 16,
+            "line": 0,
+            "offset": 16,
           },
         },
       ],
       "children": [],
-      "range": Range {
+      "end": Position {
+        "column": 30,
+        "line": 0,
+        "offset": 30,
+      },
+      "inner": Range {
         "end": Position {
-          "column": 30,
+          "column": 24,
           "line": 0,
-          "offset": 30,
+          "offset": 24,
         },
         "start": Position {
-          "column": 0,
+          "column": 24,
           "line": 0,
-          "offset": 0,
+          "offset": 24,
         },
+      },
+      "start": Position {
+        "column": 0,
+        "line": 0,
+        "offset": 0,
       },
       "tagName": "div",
     },
   ],
-  "range": Range {
-    "end": Position {
-      "column": 0,
-      "line": 0,
-      "offset": 0,
-    },
-    "start": Position {
-      "column": 0,
-      "line": 0,
-      "offset": 0,
-    },
+  "end": Position {
+    "column": 30,
+    "line": 0,
+    "offset": 30,
+  },
+  "start": Position {
+    "column": 0,
+    "line": 0,
+    "offset": 0,
   },
 }
 `;

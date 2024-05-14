@@ -8,7 +8,11 @@ describe("rollup (build-tool)", () => {
   test("build", async () => {
     const build = await rollup({
       input: resolve(import.meta.dir, "__fixtures__/view.html"),
-      plugins: [knockoutSSR()],
+      plugins: [
+        knockoutSSR({
+          fallback: true,
+        }),
+      ],
     });
 
     const { output } = await build.generate({

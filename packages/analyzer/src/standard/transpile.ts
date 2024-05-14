@@ -4,7 +4,7 @@ import {
   visit,
   Element,
   type Binding,
-  VirtualElement,
+  KoVirtualElement,
 } from "@knuckles/syntax-tree";
 
 export function transpile(document: Document) {
@@ -12,11 +12,11 @@ export function transpile(document: Document) {
 
   const render = (binding: Binding) => {
     chunk
-      .write(`// ${binding.name.text}: ${binding.param.text}`)
+      .write(`// ${binding.name.value}: ${binding.param.value}`)
       .nl()
       .write("{ ")
-      .write(binding.param.text, {
-        range: binding.param.range,
+      .write(binding.param.value, {
+        range: binding.param,
         bidirectional: true,
       })
       .write(" }");
@@ -28,7 +28,7 @@ export function transpile(document: Document) {
     }
   });
 
-  visit(document, VirtualElement, (node) => {
+  visit(document, KoVirtualElement, (node) => {
     render(node.binding);
   });
 

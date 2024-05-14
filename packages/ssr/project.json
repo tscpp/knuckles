@@ -8,7 +8,8 @@
         "tsup": [
           {
             "entry": {
-              "index": "{projectRoot}/src/lib/exports.ts",
+              "index": "{projectRoot}/src/index.ts",
+              "node/index": "{projectRoot}/src/node/index.ts",
               "rollup/index": "{projectRoot}/src/rollup/plugin.ts",
               "vite/index": "{projectRoot}/src/vite/plugin.ts",
               "webpack/index": "{projectRoot}/src/webpack/loader.ts"

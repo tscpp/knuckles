@@ -6,9 +6,10 @@ import {
   VirtualElement,
   Binding,
   type Document,
-  DirectiveElement,
-  Scope,
-  DirectiveKind,
+  KoVirtualElement,
+  WithVirtualElement,
+  Identifier,
+  Expression,
 } from "@knuckles/syntax-tree";
 
 export default class Scaffold {
@@ -38,13 +39,69 @@ export default class Scaffold {
   }
 
   #renderNode(node: Node): Chunk | undefined {
-    if (node instanceof Element) {
-      let closure: Chunk | undefined;
-      for (const binding of node.bindings) {
+    let closure: Chunk | undefined;
+
+    if (node instanceof Element || node instanceof VirtualElement) {
+      if (node instanceof Element) {
+        for (const binding of node.bindings) {
+          closure = new Chunk()
+            .add(this.#renderBindingComment(binding))
+            .add(this.#renderBindingClosure(binding))
+            .write("($context)");
+        }
+      }
+
+      if (node instanceof KoVirtualElement) {
         closure = new Chunk()
-          .add(this.#renderBindingComment(binding))
-          .add(this.#renderBindingClosure(binding))
+          .add(this.#renderBindingComment(node.binding))
+          .add(this.#renderBindingClosure(node.binding))
           .write("($context)");
+      }
+
+      if (node instanceof WithVirtualElement) {
+        const mockParam =
+          "undefined! as " +
+          ns +
+          ".Interop<(typeof import(" +
+          quote(node.import.module.value) +
+          "))" +
+          (node.import.identifier.value === "*"
+            ? ""
+            : "[" + quote(node.import.identifier.value) + "]") +
+          ">";
+
+        const mock = new Binding({
+          name: new Identifier({
+            value: "with",
+            range: node.name,
+          }),
+          param: new Expression({
+            value: mockParam,
+            range: node.param,
+          }),
+          // TODO: Fix this unsafe non-null assertion
+          parent: undefined!,
+        });
+
+        const closure = new Chunk()
+          .write(
+            `// "${rmnl(node.name.value)}: ${rmnl(node.param.value)}" (${node.name.start.format()})`,
+          )
+          .nl()
+          .add(this.#renderBindingClosure(mock))
+          .write("($context)");
+
+        const decendants = this.#renderNodes(node.children);
+
+        if (decendants.length > 0) {
+          return this.#renderDecendantClosure(closure, decendants)
+            .write(";")
+            .nl(2);
+        } else {
+          return closure //
+            .write(";")
+            .nl(2);
+        }
       }
 
       const decendants = this.#renderNodes(node.children);
@@ -61,66 +118,6 @@ export default class Scaffold {
         }
       } else {
         return new Chunk().add(decendants);
-      }
-    }
-
-    if (node instanceof VirtualElement) {
-      const closure = new Chunk()
-        .add(this.#renderBindingComment(node.binding))
-        .add(this.#renderBindingClosure(node.binding))
-        .write("($context)");
-      const decendants = this.#renderNodes(node.children);
-
-      if (decendants.length > 0) {
-        return this.#renderDecendantClosure(closure, decendants)
-          .write(";")
-          .nl(2);
-      } else {
-        return closure //
-          .write(";")
-          .nl(2);
-      }
-    }
-
-    if (node instanceof DirectiveElement) {
-      let closure = new Chunk().write("$context");
-
-      if (node.directive.kind === DirectiveKind.With) {
-        const param =
-          "undefined! as " +
-          (node.directive.inline ??
-            `${ns}.Interop<(typeof import(${quote(node.directive.import.module)}))[${quote(node.directive.import.specifier)}]>`);
-
-        const mock = new Binding({
-          name: new Scope({
-            text: "with",
-            range: node.directive.name.range,
-          }),
-          param: new Scope({
-            text: param,
-            range: node.directive.param.range,
-          }),
-        });
-
-        closure = new Chunk()
-          .write(
-            `// "${rmnl(node.directive.name.text)}: ${rmnl(node.directive.param.text)}" (${node.directive.name.range.start.format()})`,
-          )
-          .nl()
-          .add(this.#renderBindingClosure(mock))
-          .write("($context)");
-      }
-
-      const decendants = this.#renderNodes(node.children);
-
-      if (decendants.length > 0) {
-        return this.#renderDecendantClosure(closure, decendants)
-          .write(";")
-          .nl(2);
-      } else {
-        return closure //
-          .write(";")
-          .nl(2);
       }
     }
 
@@ -146,7 +143,7 @@ export default class Scaffold {
   #renderBindingComment(binding: Binding) {
     return new Chunk()
       .write(
-        `// "${rmnl(binding.name.text)}: ${rmnl(binding.param.text)}" (${binding.range.start.format()})`,
+        `// "${rmnl(binding.name.value)}: ${rmnl(binding.param.value)}" (${binding.start.format()})`,
       )
       .nl();
   }
@@ -154,7 +151,7 @@ export default class Scaffold {
   #renderBindingClosure(binding: Binding) {
     const chunk = new Chunk({
       mapping: {
-        range: binding.range,
+        range: binding,
       },
     })
       .write("(($context) => {")
@@ -170,18 +167,18 @@ export default class Scaffold {
       .nl(2)
       .write(`return ${ns}.$`);
 
-    if (/^[a-z$_][a-z$_0-9]*$/i.test(binding.name.text)) {
+    if (/^[a-z$_][a-z$_0-9]*$/i.test(binding.name.value)) {
       chunk //
         .write(".")
-        .write(binding.name.text, {
-          range: binding.name.range,
+        .write(binding.name.value, {
+          range: binding.name,
           bidirectional: true,
         });
     } else {
       chunk //
         .write("[")
-        .write(binding.name.text, {
-          range: binding.name.range,
+        .write(binding.name.value, {
+          range: binding.name,
           bidirectional: true,
         })
         .write("]");
@@ -189,8 +186,8 @@ export default class Scaffold {
 
     return chunk //
       .write("((")
-      .write(binding.param.text, {
-        range: binding.param.range,
+      .write(binding.param.value, {
+        range: binding.param,
         bidirectional: true,
       })
       .write("), $context)")

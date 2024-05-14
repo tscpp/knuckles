@@ -30,7 +30,6 @@ export class Transpiler {
       skipAddingFilesFromTsConfig: true,
       fileSystem: options?.fileSystem,
     });
-    this.#project.enableLogging(true);
   }
 
   transpile(

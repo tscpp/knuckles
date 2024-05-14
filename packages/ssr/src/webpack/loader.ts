@@ -1,4 +1,9 @@
-import { render, type Diagnostic, type RenderOptions } from "../lib/exports.js";
+import {
+  createNodeModuleProvider,
+  render,
+  type Diagnostic,
+  type RenderOptions,
+} from "../node/index.js";
 import { formatFileLocation } from "@knuckles/location";
 import { urlToRequest } from "loader-utils";
 import { validate } from "schema-utils";
@@ -37,25 +42,23 @@ const loader: LoaderDefinitionFunction = function (source) {
     return;
   }
 
-  const filename = urlToRequest(this.resourcePath);
+  const fileName = urlToRequest(this.resourcePath);
 
-  const renderOptions: RenderOptions = {
-    ...options,
-    filename,
-    resolve: (specifier) => {
+  const moduleProvider = createNodeModuleProvider(fileName, {
+    resolve: (ctx) => {
       return new Promise((resolve, reject) => {
-        this.resolve(this.context, specifier, (err, result) => {
+        this.resolve(this.context, ctx.specifier, (err, result) => {
           if (err) {
             reject(err);
           } else if (!result) {
-            reject(new Error(`Webpack could not resolve ${specifier}`));
+            reject(new Error(`Webpack could not resolve '${ctx.specifier}'.`));
           } else {
-            resolve(result);
+            resolve({ id: result });
           }
         });
       });
     },
-  };
+  });
 
   const formatDiagnostic = (diagnostic: Diagnostic) => {
     return (
@@ -64,6 +67,12 @@ const loader: LoaderDefinitionFunction = function (source) {
           ": "
         : "") + diagnostic.message
     );
+  };
+
+  const renderOptions: RenderOptions = {
+    ...options,
+    fileName,
+    module: moduleProvider,
   };
 
   render(source, renderOptions)
@@ -76,7 +85,7 @@ const loader: LoaderDefinitionFunction = function (source) {
         this.emitWarning(new Error(formatDiagnostic(warning)));
       }
 
-      return result.document ?? undefined;
+      return result.modified ?? undefined;
     })
     .catch(callback);
 };

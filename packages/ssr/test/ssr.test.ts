@@ -1,85 +1,80 @@
-import { type Plugin, render, utils } from "../src/lib/exports.js";
+import * as ssr from "../src/node/index.js";
+import { html, render } from "./common.js";
 import { test, describe } from "bun:test";
 import assert from "node:assert/strict";
-import { resolve } from "node:path";
-
-// Prettier can format the template literals as html when tagged.
-const html = String.raw;
 
 describe("server-side rendering", () => {
   test("renders text binding into element", async () => {
-    const { document } = await render(html`
-      <!-- #ko with: {} -->
+    const { modified } = await render(html`
+      <!-- ko with: {} -->
       <div data-bind="text: 'Hello'"></div>
       <!-- /ko -->
     `);
-    assert(document);
-    assert(document.includes(">Hello<"));
+    assert(modified);
+    assert(modified.includes(">Hello<"));
   });
 
   test("renders data from inline viewmodel", async () => {
-    const { document } = await render(html`
-      <!-- #ko with: { name: 'SSR' } -->
+    const { modified } = await render(html`
+      <!-- ko with: { name: 'SSR' } -->
       <div data-bind="text: 'Hello ' + name"></div>
       <!-- /ko -->
     `);
-    assert(document);
-    assert(document.includes(">Hello SSR<"));
+    assert(modified);
+    assert(modified.includes(">Hello SSR<"));
   });
 
   test("resolves viewmodel from relative path", async () => {
-    const { document } = await render(
+    const { modified } = await render(
       html`
-        <!-- #ko with: default from "./viewmodel.js" -->
+        <!-- ok with: default from "./viewmodel.js" -->
         <div data-bind="text: 'Hello ' + name"></div>
-        <!-- /ko -->
+        <!-- /ok -->
       `,
-      {
-        filename: resolve(import.meta.dir, "__fixtures__/unnamed.html"),
-      },
+      new URL("__fixtures__/unnamed.html", import.meta.url),
     );
-    assert(document);
-    assert(document.includes(">Hello SSR<"));
+    assert(modified);
+    assert(modified.includes(">Hello SSR<"));
   });
 
   test("renders html binding into element", async () => {
-    const { document } = await render(html`
-      <!-- #ko with: {} -->
+    const { modified } = await render(html`
+      <!-- ko with: {} -->
       <div data-bind="html: '<b>Hello</b>'"></div>
       <!-- /ko -->
     `);
-    assert(document);
-    assert(document.includes("><b>Hello</b><"));
+    assert(modified);
+    assert(modified.includes("><b>Hello</b><"));
   });
 
   test("renders visible binding on element", async () => {
-    const { document } = await render(html`
-      <!-- #ko with: {} -->
+    const { modified } = await render(html`
+      <!-- ko with: {} -->
       <div data-bind="visible: false"></div>
       <!-- /ko -->
     `);
-    assert(document);
-    assert(/style=["'][^]*display:\s*none/.test(document));
+    assert(modified);
+    assert(/style=["'][^]*display:\s*none/.test(modified));
   });
 
   test("renders class binding on element", async () => {
-    const { document } = await render(html`
-      <!-- #ko with: {} -->
+    const { modified } = await render(html`
+      <!-- ko with: {} -->
       <div data-bind="class: 'foo'"></div>
       <!-- /ko -->
     `);
-    assert(document);
-    assert(/class=["'][^]*foo/.test(document));
+    assert(modified);
+    assert(/class=["'][^]*foo/.test(modified));
   });
 
   test("renders css binding on element", async () => {
-    const { document } = await render(html`
-      <!-- #ko with: {} -->
+    const { modified } = await render(html`
+      <!-- ko with: {} -->
       <div data-bind="css: { foo: true }"></div>
       <!-- /ko -->
     `);
-    assert(document);
-    assert(/class=["'][^]*foo/.test(document));
+    assert(modified);
+    assert(/class=["'][^]*foo/.test(modified));
   });
 
   test("renders using custom plugin", async () => {
@@ -88,118 +83,118 @@ describe("server-side rendering", () => {
         greeting: "bonjour",
       },
     };
-    const i18nPlugin: Plugin = {
-      filter: (binding) => binding.name === "i18n",
+    const i18nPlugin: ssr.Plugin = {
+      filter: (binding) => binding.name.value === "i18n",
       ssr: ({ binding, generated, context, value }) => {
         const lang = (context.$data as any).language;
         const key = String(value());
-        const asHtml = utils.escapeHtml((translations as any)[lang][key]);
+        const asHtml = ssr.helpers.escapeHtml((translations as any)[lang][key]);
 
-        const inner = utils.getInnerRange(binding.parent, generated.original);
-        if (inner.isEmpty) {
-          generated.appendLeft(inner.start.offset, asHtml);
+        if (binding.parent.inner.isEmpty) {
+          generated.appendLeft(binding.parent.inner.start.offset, asHtml);
         } else {
-          generated.update(...inner.offsets, asHtml);
+          generated.update(...binding.parent.inner.offsets, asHtml);
         }
       },
     };
-    const { document } = await render(
+    const { modified } = await render(
       html`
-        <!-- #ko with: { language: "fr" } -->
+        <!-- ko with: { language: "fr" } -->
         <div data-bind="i18n: 'greeting'"></div>
         <!-- /ko -->
       `,
+      undefined,
       {
         plugins: [i18nPlugin],
       },
     );
-    assert(document);
-    assert(document.includes(`>${translations.fr.greeting}<`));
+    assert(modified);
+    assert(modified.includes(`>${translations.fr.greeting}<`));
   });
 
   test("renders style binding on element", async () => {
-    const { document } = await render(html`
-      <!-- #ko with: {} -->
+    const { modified } = await render(html`
+      <!-- ko with: {} -->
       <div data-bind="style: { color: 'red' }"></div>
       <!-- /ko -->
     `);
-    assert(document);
-    assert(/style=["'][^]*color:\s*red/.test(document));
+    assert(modified);
+    assert(/style=["'][^]*color:\s*red/.test(modified));
   });
 
   test("renders attr binding on element", async () => {
-    const { document } = await render(html`
-      <!-- #ko with: {} -->
+    const { modified } = await render(html`
+      <!-- ko with: {} -->
       <div data-bind="attr: { title: 'Hello' }"></div>
       <!-- /ko -->
     `);
-    assert(document);
-    assert(/title=["'][^]*Hello/.test(document));
+    assert(modified);
+    assert(/title=["'][^]*Hello/.test(modified));
   });
 
   test("renders with binding", async () => {
-    const { document } = await render(`
-      <!-- #ko with: { foo: { bar: 'baz' } } -->
-        <!-- ko with: foo -->
-          <div data-bind="text: bar"></div>
-        <!-- /ko -->
+    const { modified } = await render(html`
+      <!-- ko with: { foo: { bar: 'baz' } } -->
+      <!-- ko with: foo -->
+      <div data-bind="text: bar"></div>
+      <!-- /ko -->
       <!-- /ko -->
     `);
-    assert(document);
-    assert(document.includes(">baz<"));
+    assert(modified);
+    assert(modified.includes(">baz<"));
   });
 
   test("renders using binding", async () => {
-    const { document } = await render(`
-      <!-- #ko with: { foo: { bar: 'baz' } } -->
-        <div data-bind="using: foo, as: 'hi'">
-          <div data-bind="text: hi.bar"></div>
-        </div>
+    const { modified } = await render(html`
+      <!-- ko with: { foo: { bar: 'baz' } } -->
+      <div data-bind="using: foo, as: 'hi'">
+        <div data-bind="text: hi.bar"></div>
+      </div>
       <!-- /ko -->
     `);
-    assert(document);
-    assert(document.includes(">baz<"));
+    assert(modified);
+    assert(modified.includes(">baz<"));
   });
 
   test("renders let binding", async () => {
-    const { document } = await render(`
-      <!-- #ko with: { } -->
-        <!-- ko let: { foo: 'bar' } -->
-        <div data-bind="text: foo"></div>
-        <!-- /ko -->
+    const { modified } = await render(html`
+      <!-- ko with: { } -->
+      <!-- ko let: { foo: 'bar' } -->
+      <div data-bind="text: foo"></div>
+      <!-- /ko -->
       <!-- /ko -->
     `);
-    assert(document);
-    assert(document.includes(">bar<"));
+    assert(modified);
+    assert(modified.includes(">bar<"));
   });
 
   test("renders value binding", async () => {
-    const { document } = await render(`
-      <!-- #ko with: { value: 'foo' } -->
-        <input data-bind="value: value">
+    const { modified } = await render(html`
+      <!-- ko with: { value: 'foo' } -->
+      <input data-bind="value: value" />
       <!-- /ko -->
     `);
-    assert(document);
-    assert(/value=["']foo/.test(document));
+    assert(modified);
+    assert(/value=["']foo/.test(modified));
   });
 
   test("renders checked binding", async () => {
-    const { document } = await render(`
-      <!-- #ko with: { value: true } -->
-        <input data-bind="checked: value">
+    const { modified } = await render(html`
+      <!-- ko with: { value: true } -->
+      <input data-bind="checked: value" />
       <!-- /ko -->
     `);
-    assert(document);
-    assert(document.includes('checked=""'));
+    assert(modified);
+    assert(modified.includes('checked=""'));
   });
 
-  test.only("renders disabled binding", async () => {
-    const { document } = await render(`
-      <!-- #ko with: { value: true } -->
-        <input data-bind="disabled: value">
+  test("renders disabled binding", async () => {
+    const { modified } = await render(html`
+      <!-- ko with: { value: true } -->
+      <input data-bind="disabled: value" />
       <!-- /ko -->
     `);
-    assert(document);
-    assert(document.includes('disabled=""'));
+    assert(modified);
+    assert(modified.includes('disabled=""'));
   });
 });

@@ -1,4 +1,9 @@
-import { type RenderOptions, render, type Diagnostic } from "../lib/exports.js";
+import {
+  type RenderOptions,
+  render,
+  type Diagnostic,
+  createNodeModuleProvider,
+} from "../node/index.js";
 import { dataToEsm } from "@rollup/pluginutils";
 import type { RollupLog } from "rollup";
 import { type FilterPattern, type Plugin, createFilter } from "vite";
@@ -24,15 +29,21 @@ export function knockoutSSR(options?: KnockoutSSRPluginOptions): Plugin {
   return {
     name: "@knuckles/ssr",
     async transform(code, id) {
-      if (!filter(id)) return null;
+      if (!filter(id)) {
+        return;
+      }
+
+      const moduleProvider = createNodeModuleProvider(id, {
+        resolve: async (ctx) => {
+          const resolved = await this.resolve(ctx.specifier, id);
+          return { id: resolved?.id };
+        },
+      });
 
       const result = await render(code, {
         ...options,
-        filename: id,
-        resolve: async (specifier) => {
-          const resolved = await this.resolve(specifier, id);
-          return resolved?.id ?? null;
-        },
+        fileName: id,
+        module: moduleProvider,
       });
 
       for (const error of result.errors) {
@@ -43,9 +54,9 @@ export function knockoutSSR(options?: KnockoutSSRPluginOptions): Plugin {
         this.warn(toRollupLog(warning));
       }
 
-      if (result.document) {
+      if (result.modified) {
         return {
-          code: dataToEsm(result.document),
+          code: dataToEsm(result.modified),
           map: result.sourceMap,
         };
       } else {

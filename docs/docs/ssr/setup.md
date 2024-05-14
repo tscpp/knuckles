@@ -36,20 +36,20 @@ You need to add hints to the view so the renderer know what data to render. This
 
 <!-- prettier-ignore -->
 ```html
-<!-- #ko with: default from './viewmodel' --> // [!code ++]
+<!-- ok with: default from './viewmodel' --> // [!code ++]
   <p data-bind="text: message"></p>
-<!-- /ko --> // [!code ++]
+<!-- /ok --> // [!code ++]
 ```
 
 To enable rendering, you either need to explicitly specify the "ssr" hint in the view, or configure SSR to render by default
 
 <!-- prettier-ignore -->
 ```html
-<!-- #ko with: default from './viewmodel' -->
-  <!-- #ko ssr: --> // [!code ++]
+<!-- ok with: default from './viewmodel' -->
+  <!-- ok ssr: --> // [!code ++]
     <p data-bind="text: message"></p>
-  <!-- /ko --> // [!code ++]
-<!-- /ko -->
+  <!-- /ok --> // [!code ++]
+<!-- /ok -->
 ```
 
 ### Hydrating Server-side Rendered Views
