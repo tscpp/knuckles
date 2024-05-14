@@ -17,7 +17,7 @@ export class Binding extends Range {
   parent: Element | KoVirtualElement;
 
   constructor(init: BindingInit) {
-    super(init.name);
+    super(init.name.start, init.param.end);
     this.name = init.name;
     this.param = init.param;
     this.attribute = init.attribute ?? null;
