@@ -48,7 +48,7 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Build with VitePress
-        run: nx build @apps/website
+        run: pnpm nx build @apps/website
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
