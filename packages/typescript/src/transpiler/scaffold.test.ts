@@ -19,7 +19,7 @@ describe("Scaffold", () => {
 
   test("renders 'with' directive", () => {
     const chunk = render(
-      "<!-- #ko with: default from 'viewmodel' --><div data-bind='text: text'></div><!-- /ko -->",
+      "<!-- ok with: default from 'viewmodel' --><div data-bind='text: text'></div><!-- /ok -->",
     );
     expect(chunk.content).toContain('(typeof import("viewmodel"))["default"]');
   });

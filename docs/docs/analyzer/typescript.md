@@ -60,7 +60,7 @@ You have to provide the type declartion for the data used within a view. See the
 Using the type declaration provided from the import.
 
 ```html
-<!-- #ko with: default from './viewmodel' -->
+<!-- ok with: default from './viewmodel' -->
 ```
 
 ---
@@ -68,7 +68,7 @@ Using the type declaration provided from the import.
 Alternativly if the type declaration are not included in the import, you can add an additional hint.
 
 ```html
-<!-- #ko with: type default from './viewmodel' -->
+<!-- ok with: type default from './viewmodel' -->
 ```
 
 :::

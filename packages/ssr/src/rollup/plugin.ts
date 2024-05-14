@@ -43,10 +43,9 @@ export function knockoutSSR(options?: KnockoutSSRPluginOptions): Plugin {
         },
       });
 
-      const result = await render({
+      const result = await render(code, {
         ...options,
         fileName: id,
-        text: code,
         module: moduleProvider,
       });
 

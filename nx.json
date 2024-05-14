@@ -3,7 +3,6 @@
   "targetDefaults": {
     "build": {
       "executor": "@dev/nx:build",
-      "dependsOn": ["^build"],
       "inputs": ["default", "^default", "{workspaceRoot}/tools/nx/**"],
       "options": {
         "entry": "{projectRoot}/src/index.ts",

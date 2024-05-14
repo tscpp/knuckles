@@ -52,9 +52,9 @@ ko.components.register("application", {
   viewModel: class {
     readonly Stage = Stage;
 
-    readonly defaultEditorText = `<!-- #ko with: default from "./viewmodel.js" -->
+    readonly defaultEditorText = `<!-- ok with: default from "./viewmodel.js" -->
    <div data-bind="text: text"></div>
-  <!-- /ko -->\n`;
+  <!-- /ok -->\n`;
 
     readonly stage = ko.observable(Stage.Meta);
     readonly snapshots = ko.observable<readonly Snapshot[]>();

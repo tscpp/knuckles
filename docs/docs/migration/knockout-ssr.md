@@ -22,9 +22,9 @@ Knuckles introduces an universal way to link view models to the decendants bindi
 <!-- prettier-ignore -->
 ```html
 <!-- ko ssr: './viewmodel.js' --> // [!code --]
-<!-- #ko with: default from './viewmodel.js' --> // [!code ++]
+<!-- ok with: default from './viewmodel.js' --> // [!code ++]
   ...
-<!-- /ko -->
+<!-- /ok -->
 ```
 
 ### Toggle Rendering
@@ -34,9 +34,9 @@ Knuckles introduces an universal way to link view models to the decendants bindi
 <!-- prettier-ignore -->
 ```
 <!-- ko ssr: './viewmodel.js' --> // [!code --]
-<!-- #ko with: default from './viewmodel.js' -->
-  <!-- #ko ssr --> // [!code ++]
+<!-- ok with: default from './viewmodel.js' -->
+  <!-- ok ssr --> // [!code ++]
     ...
-  <!-- /ko --> // [!code ++]
-<!-- /ko -->
+  <!-- /ok --> // [!code ++]
+<!-- /ok -->
 ```

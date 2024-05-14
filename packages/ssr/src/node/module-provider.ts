@@ -1,4 +1,5 @@
 import type { ModuleProvider } from "../module-provider.js";
+import { access } from "node:fs/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 export function createNodeModuleProvider(
@@ -13,6 +14,16 @@ export function createNodeModuleProvider(
       const parentUrl = pathToFileURL(parent).toString();
       const url = importMetaResolve(ctx.specifier, parentUrl);
       const path = fileURLToPath(url);
+
+      try {
+        await access(path);
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+          return { success: false };
+        } else {
+          throw error;
+        }
+      }
 
       return { id: path };
     },

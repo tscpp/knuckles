@@ -12,9 +12,9 @@ The `with` directive allows you to define the data/type of the descendant bindin
 
 <!-- prettier-ignore -->
 ```html
-<!-- #ko with: ... -->
+<!-- ok with: ... -->
   ...
-<!-- /ko -->
+<!-- /ok -->
 ```
 
 ### Importing
@@ -28,7 +28,7 @@ You can import a view model (or essentially anything) by specifying the identifi
 Default import:
 
 ```html
-<!-- #ko with: default from './viewmodel.js' -->
+<!-- ok with: default from './viewmodel.js' -->
 ```
 
 ---
@@ -36,7 +36,7 @@ Default import:
 Named import:
 
 ```html
-<!-- #ko with: myViewModel from './viewmodel.js' -->
+<!-- ok with: myViewModel from './viewmodel.js' -->
 ```
 
 ---
@@ -44,7 +44,7 @@ Named import:
 Namespace import:
 
 ```html
-<!-- #ko with: * from './viewmodel.js' -->
+<!-- ok with: * from './viewmodel.js' -->
 ```
 
 :::
@@ -54,7 +54,7 @@ Namespace import:
 You can also import only the type by prefixing the identifier with "type".
 
 ```html
-<!-- #ko with: type SomeType from './viewmodel.js' -->
+<!-- ok with: type SomeType from './viewmodel.js' -->
 ```
 
 [descendants]: /docs/glossary#descendant

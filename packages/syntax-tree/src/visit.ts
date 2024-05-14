@@ -1,4 +1,5 @@
-import { type Node, isParentNode } from "./collections.js";
+import { isParentNode } from "./collections.js";
+import type { Node } from "./syntax-tree/node.js";
 
 export function visit<T extends Node>(
   node: Node,

@@ -60,13 +60,6 @@ const loader: LoaderDefinitionFunction = function (source) {
     },
   });
 
-  const renderOptions: RenderOptions = {
-    ...options,
-    fileName,
-    text: source,
-    module: moduleProvider,
-  };
-
   const formatDiagnostic = (diagnostic: Diagnostic) => {
     return (
       (diagnostic.range?.start
@@ -76,7 +69,13 @@ const loader: LoaderDefinitionFunction = function (source) {
     );
   };
 
-  render(renderOptions)
+  const renderOptions: RenderOptions = {
+    ...options,
+    fileName,
+    module: moduleProvider,
+  };
+
+  render(source, renderOptions)
     .then((result) => {
       for (const error of result.errors) {
         this.emitError(new Error(formatDiagnostic(error)));

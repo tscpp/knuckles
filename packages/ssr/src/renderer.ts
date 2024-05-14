@@ -24,6 +24,8 @@ import {
   type StringLiteral,
   type ImportStatement,
   KoVirtualElement,
+  VirtualElement,
+  type Node,
 } from "@knuckles/syntax-tree";
 import ko from "knockout";
 import MagicString from "magic-string";
@@ -56,11 +58,11 @@ export interface RendererOptions {
    */
   strict?: boolean | undefined;
 
+  fallback?: boolean | undefined;
+
   preserveHints?: boolean | undefined;
 
-  module: ModuleProvider;
-
-  text: string;
+  module?: ModuleProvider;
 }
 
 export class Renderer {
@@ -71,9 +73,9 @@ export class Renderer {
   readonly errors: DiagnosticError[] = [];
   readonly warnings: DiagnosticWarning[] = [];
 
-  constructor(options: RendererOptions) {
+  constructor(text: string, options: RendererOptions | undefined = {}) {
     this.#options = options;
-    this.modified = new MagicString(options.text);
+    this.modified = new MagicString(text);
     this.#plugins = [
       ...(options?.useBuiltins !== false ? bindings : []),
       ...(options?.plugins ?? []),
@@ -119,6 +121,10 @@ export class Renderer {
 
   //#region Modules
   async resolve(module: StringLiteral) {
+    if (!this.#options.module) {
+      throw new Error(`Module provider is not defined.`);
+    }
+
     let result: ModuleProviderResolveResult;
     try {
       result = await this.#options.module.resolve({
@@ -156,7 +162,7 @@ export class Renderer {
 
     let result: ModuleProviderLoadResult;
     try {
-      result = await this.#options.module.load({
+      result = await this.#options.module!.load({
         id: resolved.id!,
         namespace: resolved.namespace,
       });
@@ -244,20 +250,43 @@ export class Renderer {
     return true;
   }
 
-  async scan(node: ParentNode) {
-    if (node instanceof WithVirtualElement) {
-      await this.renderRoot(this.modified, node);
-      return;
+  isSsrVirtualElement(node: Node) {
+    return (
+      node instanceof VirtualElement &&
+      (node.name.value === "ssr" || node.name.value === "no-ssr")
+    );
+  }
+
+  isSsrEnabled(node: Node, fallback = true) {
+    if (node instanceof VirtualElement) {
+      if (node.name.value === "ssr" && node.param.value === "true") {
+        return true;
+      }
+
+      if (node.name.value === "no-ssr" && node.param.value === "false") {
+        return true;
+      }
     }
 
-    for (const child of node.children) {
-      if (isParentNode(child)) {
-        await this.scan(child);
+    return fallback;
+  }
+
+  async scan(node: ParentNode) {
+    if (this.isSsrEnabled(node, this.#options.fallback ?? false)) {
+      // If ssr is enabled, render the decendants.
+      const context = new BindingContext({});
+      await this.renderDecendants(node, context);
+    } else {
+      // Continue to scan decendants
+      for (const child of node.children) {
+        if (isParentNode(child)) {
+          await this.scan(child);
+        }
       }
     }
   }
 
-  async renderRoot(modified: MagicString, node: WithVirtualElement) {
+  async renderViewModel(modified: MagicString, node: WithVirtualElement) {
     const data = await this.import(node.import);
     const context = new BindingContext(data);
 
@@ -276,14 +305,16 @@ export class Renderer {
     modified = this.modified,
   ) {
     for (const child of node.children) {
-      if (child instanceof WithVirtualElement) {
-        await this.renderRoot(modified, child);
-        continue;
-      }
+      if (this.isSsrEnabled(child, true)) {
+        if (child instanceof WithVirtualElement) {
+          await this.renderViewModel(modified, child);
+          continue;
+        }
 
-      if (isParentNode(child)) {
-        await this.renderParent(child, context, modified);
-        continue;
+        if (isParentNode(child)) {
+          await this.renderParent(child, context, modified);
+          continue;
+        }
       }
     }
   }
