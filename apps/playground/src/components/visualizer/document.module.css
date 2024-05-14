@@ -1,0 +1,9 @@
+.document {
+  padding: 1rem;
+  outline: 0;
+  cursor: default;
+  overflow: auto;
+  font-family: monospace;
+  white-space: nowrap;
+  border-bottom: 1px solid grey;
+}

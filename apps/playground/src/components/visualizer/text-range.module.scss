@@ -1,0 +1,36 @@
+.textRange {
+  position: relative;
+  margin: 0 1px;
+
+  &.mapped {
+    background-color: rgba(255, 255, 0, 0.2);
+
+    &:hover {
+      background-color: rgba(255, 255, 0, 0.5);
+    }
+
+    &.active {
+      background-color: rgba(255, 0, 0, 0.2);
+    }
+  }
+
+  &::before,
+  &::after {
+    position: absolute;
+    color: var(--backet-color);
+    font-weight: 400;
+    font-size: 24px;
+  }
+
+  &.before::before {
+    content: "[";
+    top: -11px;
+    left: -6px;
+  }
+
+  &.after::after {
+    content: "]";
+    top: -11px;
+    right: -6px;
+  }
+}

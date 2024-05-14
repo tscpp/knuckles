@@ -1,0 +1,30 @@
+.visualizer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  background-color: #f9fffe;
+  color: black;
+}
+
+.sidebar {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: rgba(0, 47, 255, 0.164);
+  width: 30ch;
+  overflow: auto;
+}
+
+.mappings {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  gap: 1ch;
+}
+
+.mappings pre {
+  margin: 0;
+  padding: 0;
+}

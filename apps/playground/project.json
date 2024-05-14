@@ -1,0 +1,32 @@
+{
+  "name": "@apps/playground",
+  "sourceRoot": "{projectRoot}/src",
+  "projectType": "application",
+  "targets": {
+    "bundle-samples": {
+      "command": "node {projectRoot}/scripts/bundle-samples.js > {projectRoot}/src/assets/samples.json"
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node scripts/dev.js",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node scripts/build.js",
+        "cwd": "{projectRoot}"
+      },
+      "outputs": ["{projectRoot}/dist", "{projectRoot}/dist-ssr"]
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite preview",
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@ import type {
 } from "./plugin.js";
 import standard from "./standard/plugin.js";
 import { parse } from "@knuckles/parser";
-import assert from "node:assert/strict";
+import assert from "node:assert";
 
 export interface AnalyzerOptions {
   plugins?: readonly AnalyzerPlugin[];

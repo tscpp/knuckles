@@ -1,0 +1,48 @@
+.workspace {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.toolbar {
+  background-color: #f9fffe;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.files {
+  display: flex;
+}
+
+.file {
+  border: none;
+  border-radius: 0;
+  padding: 0.5rem 1.5rem;
+  background-color: transparent;
+  color: black;
+  border-right: 1px solid rgba(0, 0, 0, 0.5);
+  font-family: inherit;
+}
+
+.file:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.file.active {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.editors {
+  display: grid;
+  grid-template-columns: 1fr;
+  flex: 1;
+}
+
+.editors.split {
+  grid-template-columns: 1fr 1fr;
+}
+
+.editor {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}

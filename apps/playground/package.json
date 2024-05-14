@@ -1,0 +1,35 @@
+{
+  "name": "@apps/playground",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./dist/playground.js",
+    "./dist/playground.css": "./dist/playground.css",
+    "./dist/esbuild/esbuild-wasm": "./dist/esbuild/esbuild-wasm.js",
+    "./dist/monaco/css.worker.js": "./dist/monaco/css.worker.js",
+    "./dist/monaco/editor.worker.js": "./dist/monaco/editor.worker.js",
+    "./dist/monaco/html.worker.js": "./dist/monaco/html.worker.js",
+    "./dist/monaco/json.worker.js": "./dist/monaco/json.worker.js",
+    "./dist/monaco/ts.worker.js": "./dist/monaco/ts.worker.js"
+  },
+  "dependencies": {
+    "@knuckles/analyzer": "workspace:^",
+    "@knuckles/location": "workspace:^",
+    "@knuckles/ssr": "workspace:^",
+    "@knuckles/typescript": "workspace:^",
+    "esbuild-wasm": "0.21.2",
+    "knockout": "^3.5.1",
+    "monaco-editor": "0.48.0",
+    "ts-morph": "^22.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "~0.21.1",
+    "esbuild-plugin-sass": "^1.0.1",
+    "globby": "^14.0.1",
+    "node-stdlib-browser": "^1.2.0",
+    "sass": "^1.77.0",
+    "serve": "^14.2.3",
+    "typescript": "^5.2.2"
+  }
+}

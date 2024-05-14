@@ -1,4 +1,4 @@
 {
-  "extends": ["@dev/tsconfig/node.json"],
+  "extends": ["@tools/tsconfig/node.json"],
   "include": ["src"]
 }

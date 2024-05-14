@@ -73,7 +73,7 @@ Samples are small project used to manually test the workspace packages. Visit ea
 ### Workspace Structure
 
 - `packages/` - Source code for all public `@knuckles` packages.
-- `tools/` - Development (private) packages such as `@dev/nx` and `@dev/tsconfig`
+- `tools/` - Development (private) packages such as `@tools/nx` and `@tools/tsconfig`
 
 ## Toolkit
 

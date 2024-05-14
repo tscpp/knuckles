@@ -1,6 +1,6 @@
-import { config, references } from "@dev/eslint";
 import js from "@eslint/js";
 import nx from "@nx/eslint-plugin";
+import { config, references } from "@tools/eslint";
 import prettier from "eslint-config-prettier";
 import imprt from "eslint-plugin-import";
 import playwright from "eslint-plugin-playwright";
@@ -18,7 +18,11 @@ export default config([
       "**/samples/",
       "**/dist/",
       "**/.vscode-test/",
-      "docs/",
+      "**/vite.config.*",
+
+      // documentation
+      "docs/**/*",
+      "apps/website/**/*",
 
       // projects
       "packages/ssr/e2e/frontend/",
@@ -102,7 +106,7 @@ export default config([
     },
   },
   {
-    files: ["tools/nx/src/**/*", "tools/mapping-visualizer/**/*"],
+    files: ["tools/nx/src/**/*", "apps/playground/**/*"],
     rules: {
       "import/extensions": "off",
     },

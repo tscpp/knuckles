@@ -2,6 +2,10 @@
 
 export SHELL=bash
 
+# DEPS
+apt update -qqy
+apt install -qqy xsel
+
 # SETUP PNPM
 npm config set update-notifier false
 npm i -g pnpm

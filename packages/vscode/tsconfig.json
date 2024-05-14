@@ -1,5 +1,5 @@
 {
-  "extends": ["@dev/tsconfig/node.json"],
+  "extends": ["@tools/tsconfig/node.json"],
   "compilerOptions": {
     "sourceMap": true,
     "verbatimModuleSyntax": false

@@ -1,3 +1,4 @@
-packages/legacy-compiler/lib/parser.cjs linguist-generated=true
 tsconfig.json linguist-generated=true
 **/*.snap linguist-generated=true
+
+apps/playground/src/assets/samples.json linguist-generated=true

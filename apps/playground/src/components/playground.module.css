@@ -1,0 +1,47 @@
+.application {
+  margin: 3rem auto;
+  display: grid;
+  grid: auto 1fr / 1fr;
+  width: 80rem;
+  --backet-color: blue;
+}
+
+:global(.dark) .application {
+  --backet-color: rgb(167, 167, 255);
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.toolbar .debug {
+  display: contents;
+}
+
+.toolbar .debug * {
+  opacity: 0.5;
+}
+
+.toolbar button,
+.toolbar select {
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #333;
+  color: #eee;
+}
+
+.toolbar select {
+  -webkit-appearance: listbox;
+}
+
+.workspace {
+  height: 40rem;
+}
+
+.visualizer {
+  margin-top: 5rem;
+}

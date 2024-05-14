@@ -1,5 +1,5 @@
 {
-  "name": "@dev/eslint",
+  "name": "@tools/eslint",
   "projectType": "library",
   "sourceRoot": "{projectRoot}/src"
 }
