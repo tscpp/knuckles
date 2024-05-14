@@ -293,10 +293,9 @@ export default class Playground extends Component {
         },
       });
 
-      result = await ssr.render({
+      result = await ssr.render(activeFile.text(), {
         fileName: activeFile.name(),
         preserveHints: true,
-        text: activeFile.text(),
         module: moduleProvider,
       });
     } catch (error) {
