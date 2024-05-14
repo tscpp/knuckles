@@ -297,6 +297,7 @@ export default class Playground extends Component {
         fileName: activeFile.name(),
         preserveHints: true,
         module: moduleProvider,
+        fallback: true,
       });
     } catch (error) {
       console.error(error);
