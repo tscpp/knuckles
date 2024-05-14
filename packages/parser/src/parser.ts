@@ -97,7 +97,10 @@ export default class Parser {
 
     return new Document({
       children,
-      range: new Range(Position.zero, Position.zero),
+      range: new Range(
+        Position.zero,
+        Position.fromOffset(this.#string.length, this.#string),
+      ),
     });
   }
 
