@@ -13,4 +13,13 @@ describe("parser", () => {
     const { document } = parse("<div data-bind='0: bar'></div>");
     expect(document).toMatchSnapshot();
   });
+
+  test("Emits error on invalid element binding", () => {
+    const { errors } = parse("<div data-bind='foo: bar)'></div>");
+    expect(
+      errors.some((error) =>
+        error.message.includes("Invalid binding expression"),
+      ),
+    ).toBe(true);
+  });
 });

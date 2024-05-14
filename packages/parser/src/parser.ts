@@ -1,4 +1,5 @@
 import { ParserError } from "./error.js";
+import { isAcornSyntaxError } from "./utils/acorn.js";
 import CharIter from "./utils/char-iter.js";
 import {
   parse5ErrorMessage,
@@ -406,16 +407,6 @@ export default class Parser {
   }
 
   #parseAttributeBindings(attr: Attribute) {
-    const expressionText = `({${attr.value.value}})`;
-    const expression = acorn.parseExpressionAt(expressionText, 0, {
-      ecmaVersion: "latest",
-      sourceType: "script",
-      ranges: true,
-    });
-    if (expression.type !== "ObjectExpression") {
-      throw new Error("Expected ObjectExpression.");
-    }
-
     const innerOffset =
       // name
       attr.name.end.offset +
@@ -430,67 +421,99 @@ export default class Parser {
       // attribute value is wrapped in expressionText
       2;
 
-    return expression.properties.map((prop) => {
-      if (prop.type === "SpreadElement") {
-        throw this.#error(
-          Range.fromOffset(
-            translate(prop.range![0]),
-            translate(prop.range![1]),
-            this.#string,
-          ),
-          "Spread syntax is not supported in bindings.",
-        );
-      }
-
-      if (prop.computed) {
-        throw this.#error(
-          Range.fromOffset(
-            translate(prop.range![0]),
-            translate(prop.range![1]),
-            this.#string,
-          ),
-          "Computed property as binding is not supported.",
-        );
-      }
-
-      let name: string;
-
-      if (prop.key.type === "Identifier") {
-        name = prop.key.name;
-      } else if (prop.key.type === "Literal" && prop.key.raw) {
-        name = prop.key.raw;
-      } else {
-        throw this.#error(
-          Range.fromOffset(
-            translate(prop.key.range![0]),
-            translate(prop.key.range![1]),
-            this.#string,
-          ),
-          "Unsupported property key in binding.",
-        );
-      }
-
-      return new Binding({
-        name: new Identifier({
-          value: name,
-          range: Range.fromOffset(
-            translate(prop.key.range![0]),
-            translate(prop.key.range![1]),
-            this.#string,
-          ),
-        }),
-        param: new Expression({
-          value: expressionText.slice(...prop.value.range!),
-          range: Range.fromOffset(
-            translate(prop.value.range![0]),
-            translate(prop.value.range![1]),
-            this.#string,
-          ),
-        }),
-        attribute: attr,
-        parent: attr.parent,
+    const expressionText = `({${attr.value.value}})`;
+    let expression: acorn.Expression;
+    try {
+      expression = acorn.parseExpressionAt(expressionText, 0, {
+        ecmaVersion: "latest",
+        sourceType: "script",
+        ranges: true,
       });
-    });
+    } catch (error) {
+      if (isAcornSyntaxError(error)) {
+        this.#error(
+          Range.fromOffset(
+            translate(error.pos),
+            translate(error.pos + 1),
+            this.#string,
+          ),
+          "Invalid binding expression.",
+        );
+        return [];
+      } else {
+        throw error;
+      }
+    }
+    if (expression.type !== "ObjectExpression") {
+      throw new Error("Expected ObjectExpression.");
+    }
+
+    return expression.properties
+      .map((prop) => {
+        if (prop.type === "SpreadElement") {
+          this.#error(
+            Range.fromOffset(
+              translate(prop.range![0]),
+              translate(prop.range![1]),
+              this.#string,
+            ),
+            "Spread syntax is not supported in bindings.",
+          );
+          return null;
+        }
+
+        if (prop.computed) {
+          this.#error(
+            Range.fromOffset(
+              translate(prop.range![0]),
+              translate(prop.range![1]),
+              this.#string,
+            ),
+            "Computed property as binding is not supported.",
+          );
+          return null;
+        }
+
+        let name: string;
+
+        if (prop.key.type === "Identifier") {
+          name = prop.key.name;
+        } else if (prop.key.type === "Literal" && prop.key.raw) {
+          name = prop.key.raw;
+        } else {
+          this.#error(
+            Range.fromOffset(
+              translate(prop.key.range![0]),
+              translate(prop.key.range![1]),
+              this.#string,
+            ),
+            "Unsupported property key in binding.",
+          );
+          return null;
+        }
+
+        return new Binding({
+          name: new Identifier({
+            value: name,
+            range: Range.fromOffset(
+              translate(prop.key.range![0]),
+              translate(prop.key.range![1]),
+              this.#string,
+            ),
+          }),
+          param: new Expression({
+            value: expressionText.slice(...prop.value.range!),
+            range: Range.fromOffset(
+              translate(prop.value.range![0]),
+              translate(prop.value.range![1]),
+              this.#string,
+            ),
+          }),
+          attribute: attr,
+          parent: attr.parent,
+        });
+      })
+      .filter((v): v is Binding => v !== null);
   }
   //#endregion
 
