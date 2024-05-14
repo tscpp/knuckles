@@ -48,12 +48,12 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Build with VitePress
-        run: pnpm exec vitepress build docs
+        run: nx build @apps/website
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/.vitepress/dist
+          path: apps/website/.vitepress/dist
 
   deploy:
     environment:
