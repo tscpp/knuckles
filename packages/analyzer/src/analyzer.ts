@@ -106,6 +106,12 @@ export class Analyzer {
       snapshots: context.snapshots,
     };
   }
+
+  async dispose() {
+    for (const plugin of this.#plugins) {
+      await plugin.dispose?.();
+    }
+  }
 }
 
 export function parserErrorToAnalyzerIssue(error: ParserError): AnalyzerIssue {
