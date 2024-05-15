@@ -4,7 +4,7 @@ import type { Identifier, StringLiteral } from "./primitives.js";
 import { Range } from "@knuckles/location";
 
 export interface ElementInit {
-  tagName: string;
+  tagName: Identifier;
   attributes: Iterable<Attribute>;
   bindings: Iterable<Binding>;
   children: Iterable<Node>;
@@ -13,7 +13,7 @@ export interface ElementInit {
 }
 
 export class Element extends Node {
-  tagName: string;
+  tagName: Identifier;
   attributes: Attribute[];
   bindings: Binding[];
   children: Node[];

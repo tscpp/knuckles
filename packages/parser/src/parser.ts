@@ -314,12 +314,23 @@ export default class Parser {
       children.push(this.#parseNode(current.value, iter));
     }
 
+    const range = parse5NodeToRange(node);
+
+    const tagName = new Identifier({
+      value: node.tagName,
+      range: Range.fromOffset(
+        range.start.offset + 1,
+        range.start.offset + 1 + node.tagName.length,
+        this.#string,
+      ),
+    });
+
     const element = new Element({
-      tagName: node.tagName,
+      tagName,
       attributes: [],
       bindings: [],
       children,
-      range: parse5NodeToRange(node),
+      range,
       inner: undefined!,
     });
 
