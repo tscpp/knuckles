@@ -60,31 +60,22 @@ export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
             ? startOffset + length
             : undefined;
 
-        let start: Position | undefined;
-        let end: Position | undefined;
+        let range: Range | null | undefined;
 
         if (startOffset !== undefined) {
           if (endOffset !== undefined) {
-            const generatedRange = new Range(
+            range = snapshot.getRealRangeInOriginal(
+              new Range(
+                Position.fromOffset(startOffset, snapshot.generated),
+                Position.fromOffset(endOffset, snapshot.generated),
+              ),
+            );
+          }
+
+          if (!range) {
+            range = snapshot.blameOriginal(
               Position.fromOffset(startOffset, snapshot.generated),
-              Position.fromOffset(endOffset, snapshot.generated),
             );
-            const originalRange =
-              snapshot.getRealRangeInOriginal(generatedRange);
-            if (originalRange !== null) {
-              start = originalRange.start;
-              end = originalRange.end;
-            }
-          } else {
-            const generatedPosition = Position.fromOffset(
-              startOffset,
-              snapshot.generated,
-            );
-            const originalPosition =
-              snapshot.getRealPositionInGenerated(generatedPosition);
-            if (originalPosition !== null) {
-              start = originalPosition;
-            }
           }
         }
 
@@ -107,8 +98,8 @@ export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
         c.report({
           name,
           message,
-          start,
-          end,
+          start: range?.start,
+          end: range?.end,
           severity,
         });
       }
