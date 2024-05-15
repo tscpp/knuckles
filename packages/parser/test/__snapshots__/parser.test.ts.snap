@@ -432,7 +432,19 @@ Document {
         "line": 0,
         "offset": 0,
       },
-      "tagName": "div",
+      "tagName": Identifier {
+        "end": Position {
+          "column": 4,
+          "line": 0,
+          "offset": 4,
+        },
+        "start": Position {
+          "column": 1,
+          "line": 0,
+          "offset": 1,
+        },
+        "value": "div",
+      },
     },
   ],
   "end": Position {
