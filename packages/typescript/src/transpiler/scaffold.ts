@@ -47,7 +47,9 @@ export default class Scaffold {
           closure = new Chunk()
             .add(this.#renderBindingComment(binding))
             .add(this.#renderBindingClosure(binding))
-            .write("($context)");
+            .write("(")
+            .add(closure ?? new Chunk().write("$context"))
+            .write(")");
         }
       }
 
@@ -83,25 +85,13 @@ export default class Scaffold {
           parent: undefined!,
         });
 
-        const closure = new Chunk()
+        closure = new Chunk()
           .write(
             `// "${rmnl(node.name.value)}: ${rmnl(node.param.value)}" (${node.name.start.format()})`,
           )
           .nl()
           .add(this.#renderBindingClosure(mock))
           .write("($context)");
-
-        const decendants = this.#renderNodes(node.children);
-
-        if (decendants.length > 0) {
-          return this.#renderDecendantClosure(closure, decendants)
-            .write(";")
-            .nl(2);
-        } else {
-          return closure //
-            .write(";")
-            .nl(2);
-        }
       }
 
       const decendants = this.#renderNodes(node.children);
