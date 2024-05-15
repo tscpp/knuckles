@@ -154,7 +154,7 @@ declare namespace ns {
     }>
   }
 
-  export { Knuckles };
+  // export { Knuckles };
 }
 
 export default ns;
