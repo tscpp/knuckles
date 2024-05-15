@@ -11,3 +11,4 @@ packages/legacy-compiler/lib/parser.cjs
 **/.vitepress/cache
 packages/*/README.md
 apps/playground/src/assets/
+# packages/typescript/types/index.d.ts

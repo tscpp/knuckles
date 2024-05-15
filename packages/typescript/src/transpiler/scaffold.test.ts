@@ -21,6 +21,6 @@ describe("Scaffold", () => {
     const chunk = render(
       "<!-- ok with: default from 'viewmodel' --><div data-bind='text: text'></div><!-- /ok -->",
     );
-    expect(chunk.content).toContain('(typeof import("viewmodel"))["default"]');
+    expect(chunk.content).toContain('typeof import("viewmodel")');
   });
 });

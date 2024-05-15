@@ -5,11 +5,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./analyzer": "./src/analyzer.ts",
-    "./types/loose": {
-      "types": "./types/loose.d.ts"
-    },
-    "./types/strict": {
-      "types": "./types/strict.d.ts"
+    "./types": {
+      "types": "./types/index.d.ts"
     }
   },
   "dependencies": {

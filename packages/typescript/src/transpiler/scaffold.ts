@@ -1,15 +1,13 @@
-import { TYPES_MODULE, ns, quote, rmnl } from "./utils.js";
+import { ns, quote, rmnl } from "./utils.js";
 import { Chunk } from "@knuckles/fabricator";
 import {
   type Node,
   Element,
   VirtualElement,
-  Binding,
+  type Binding,
   type Document,
   KoVirtualElement,
   WithVirtualElement,
-  Identifier,
-  Expression,
 } from "@knuckles/syntax-tree";
 
 export default class Scaffold {
@@ -19,15 +17,28 @@ export default class Scaffold {
     this.#mode = mode ?? "loose";
   }
 
+  get #unknown() {
+    return this.#mode === "strict" ? "unknown" : "any";
+  }
+
   render(document: Document) {
     return this.#renderDocument(document);
   }
 
   #renderDocument(document: Document) {
     return new Chunk()
-      .write(`import ${ns} from '${TYPES_MODULE}/${this.#mode}';`)
+      .write(`import ${ns} from '@knuckles/typescript/types';`)
       .nl(2)
-      .write(`declare const $context: ${ns}.BindingContext<{}>;`)
+      .write(
+        `declare const $context: {
+          $parentContext: Knuckles.Ctx | undefined;
+          $parents: Knuckles.Ctx[];
+          $parent: Knuckles.Ctx | undefined;
+          $root: ${this.#unknown};
+          $data: ${this.#unknown};
+          $rawData: ${this.#unknown};
+        };`,
+      )
       .nl(2)
       .add(this.#renderNodes(document.children));
   }
@@ -61,37 +72,26 @@ export default class Scaffold {
       }
 
       if (node instanceof WithVirtualElement) {
-        const mockParam =
-          "undefined! as " +
-          ns +
-          ".Interop<(typeof import(" +
-          quote(node.import.module.value) +
-          "))" +
-          (node.import.identifier.value === "*"
-            ? ""
-            : "[" + quote(node.import.identifier.value) + "]") +
-          ">";
-
-        const mock = new Binding({
-          name: new Identifier({
-            value: "with",
-            range: node.name,
-          }),
-          param: new Expression({
-            value: mockParam,
-            range: node.param,
-          }),
-          // TODO: Fix this unsafe non-null assertion
-          parent: undefined!,
-        });
-
         closure = new Chunk()
           .write(
             `// "${rmnl(node.name.value)}: ${rmnl(node.param.value)}" (${node.name.start.format()})`,
           )
           .nl()
-          .add(this.#renderBindingClosure(mock))
-          .write("($context)");
+          .write("(($context) => ")
+          .nl()
+          .indent()
+          .write(`${ns}.hints.with(${ns}.type<typeof import(`)
+          .write(quote(node.import.module.value))
+          .write(")")
+          .write(
+            node.import.identifier.value === "*"
+              ? ""
+              : "[" + quote(node.import.identifier.value) + "]",
+          )
+          .write(">(), $context)")
+          .dedent()
+          .nl()
+          .write(")($context)");
       }
 
       const decendants = this.#renderNodes(node.children);
@@ -155,7 +155,7 @@ export default class Scaffold {
       .locate("data", (c) => c.write("{ }"))
       .write(" = $context.$data;")
       .nl(2)
-      .write(`return ${ns}.$`);
+      .write(`return ${ns}.${this.#mode}`);
 
     if (/^[a-z$_][a-z$_0-9]*$/i.test(binding.name.value)) {
       chunk //
@@ -174,13 +174,36 @@ export default class Scaffold {
         .write("]");
     }
 
-    return chunk //
-      .write("((")
+    chunk.write("(");
+
+    if (binding.parent instanceof Element) {
+      chunk.add(
+        new Chunk({
+          mapping: {
+            range: binding.name,
+          },
+        })
+          .write(`${ns}.element("`)
+          .write(binding.parent.tagName.value, {
+            range: binding.parent.tagName,
+            bidirectional: true,
+          })
+          .write('")'),
+      );
+    } else {
+      chunk //
+        .write(`${ns}.comment()`, {
+          range: binding.parent,
+        });
+    }
+
+    return chunk
+      .write(", ") //
       .write(binding.param.value, {
         range: binding.param,
         bidirectional: true,
       })
-      .write("), $context)")
+      .write(", $context)")
       .write(";")
       .dedent()
       .nl()

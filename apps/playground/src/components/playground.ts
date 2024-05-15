@@ -36,6 +36,7 @@ type Sample = {
 };
 
 declare const SAMPLES: readonly Sample[];
+declare const STATIC_FILES: Readonly<Record<string, string>>;
 
 export default class Playground extends Component {
   override readonly components = {
@@ -144,30 +145,29 @@ export default class Playground extends Component {
   async createAnalyzer() {
     this.#fileSystem = new InMemoryFileSystemHost();
 
-    const dependencies = {
+    const download = {
       "node_modules/knockout/package.json":
         "https://cdn.jsdelivr.net/npm/knockout@3.5.1/package.json",
       "node_modules/knockout/build/types/knockout.d.ts":
         "https://cdn.jsdelivr.net/npm/knockout@3.5.1/build/types/knockout.d.ts",
-      "node_modules/@knuckles/typescript/package.json":
-        "https://cdn.jsdelivr.net/npm/@knuckles/typescript/package.json",
-      "node_modules/@knuckles/typescript/types/loose.d.ts":
-        "https://cdn.jsdelivr.net/npm/@knuckles/typescript/types/loose.d.ts",
-      "node_modules/@knuckles/typescript/types/lib/loose.d.ts":
-        "https://cdn.jsdelivr.net/npm/@knuckles/typescript/types/lib/loose.d.ts",
-      "node_modules/@knuckles/typescript/types/lib/common.d.ts":
-        "https://cdn.jsdelivr.net/npm/@knuckles/typescript/types/lib/common.d.ts",
     };
 
-    const dependenciesVirtualFiles = await Promise.all(
-      Object.entries(dependencies).map(async ([name, url]) => {
-        const response = await fetch(url);
-        const text = await response.text();
-        return [name, text] as const;
-      }),
+    const networkFiles = Object.fromEntries(
+      await Promise.all(
+        Object.entries(download).map(async ([name, url]) => {
+          const response = await fetch(url);
+          const text = await response.text();
+          return [name, text] as const;
+        }),
+      ),
     );
 
-    for (const [name, text] of dependenciesVirtualFiles) {
+    const files = {
+      ...networkFiles,
+      ...STATIC_FILES,
+    };
+
+    for (const [name, text] of Object.entries(files)) {
       this.#fileSystem.writeFileSync(name, text);
     }
 
