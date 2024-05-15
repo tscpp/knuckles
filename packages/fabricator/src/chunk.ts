@@ -5,14 +5,14 @@ const UNIVERSAL_NEWLINE_REGEX = /\r\n|\n\r|\n|\r/g;
 export interface OffsetMapping {
   original: OffsetRange;
   generated: OffsetRange | undefined;
-  bidirectional: boolean;
+  uniform: boolean;
   name: string | undefined;
 }
 
 export interface Mapping {
   original: Range;
   generated: Range;
-  bidirectional: boolean;
+  uniform: boolean;
   name: string | undefined;
 }
 
@@ -57,7 +57,7 @@ export class Chunk {
       this.#mappings.push({
         generated: undefined,
         original: toOffsetRange(options.mapping.range),
-        bidirectional: options.mapping.bidirectional ?? false,
+        uniform: options.mapping.bidirectional ?? false,
         name: options.mapping.name,
       });
     }
@@ -120,7 +120,7 @@ export class Chunk {
           end: this.length,
         },
         original: toOffsetRange(mapping.range),
-        bidirectional: mapping.bidirectional ?? false,
+        uniform: mapping.bidirectional ?? false,
         name: mapping.name,
       });
     }
