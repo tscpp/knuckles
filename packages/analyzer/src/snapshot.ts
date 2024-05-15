@@ -113,9 +113,9 @@ export class Snapshot {
     );
   }
 
-  blameOriginal(position: Position): Position | null {
+  blameOriginal(position: Position): Range | null {
     const filtered = this.mappings.filter((mapping) =>
-      mapping.original.contains(position),
+      mapping.generated.contains(position),
     );
 
     if (filtered.length === 0) {
@@ -125,6 +125,6 @@ export class Snapshot {
     // Pick the shortest original range.
     return filtered.reduce((a, b) =>
       a.original.size < b.original.size ? a : b,
-    ).original.start;
+    ).original;
   }
 }
