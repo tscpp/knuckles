@@ -16,10 +16,6 @@ describe("parser", () => {
 
   test("Emits error on invalid element binding", () => {
     const { errors } = parse("<div data-bind='foo: bar)'></div>");
-    expect(
-      errors.some((error) =>
-        error.message.includes("Invalid binding expression"),
-      ),
-    ).toBe(true);
+    expect(errors.length).toEqual(1);
   });
 });

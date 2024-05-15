@@ -32,6 +32,7 @@ export interface AnalyzerPlugin {
   readonly name: string;
   readonly dependencies?: AnalyzerPluginDependencies;
   analyze(context: AnalyzeContext): void | PromiseLike<void>;
+  dispose?(): void | PromiseLike<void>;
 }
 
 export type AnalyzerPluginFactory = (

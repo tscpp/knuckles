@@ -4,7 +4,7 @@ import {
   Snapshot,
   type AnalyzerPlugin,
 } from "@knuckles/analyzer";
-import { Position } from "@knuckles/location";
+import { Position, Range } from "@knuckles/location";
 import { ts, type FileSystemHost } from "ts-morph";
 
 export type Options = {
@@ -60,18 +60,33 @@ export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
             ? startOffset + length
             : undefined;
 
-        const start =
-          startOffset !== undefined
-            ? snapshot.getOriginalPosition(
-                Position.fromOffset(startOffset, snapshot.generated),
-              ) ?? undefined
-            : undefined;
-        const end =
-          endOffset !== undefined
-            ? snapshot.getOriginalPosition(
-                Position.fromOffset(endOffset, snapshot.generated),
-              ) ?? undefined
-            : undefined;
+        let start: Position | undefined;
+        let end: Position | undefined;
+
+        if (startOffset !== undefined) {
+          if (endOffset !== undefined) {
+            const generatedRange = new Range(
+              Position.fromOffset(startOffset, snapshot.generated),
+              Position.fromOffset(endOffset, snapshot.generated),
+            );
+            const originalRange =
+              snapshot.getRealRangeInOriginal(generatedRange);
+            if (originalRange !== null) {
+              start = originalRange.start;
+              end = originalRange.end;
+            }
+          } else {
+            const generatedPosition = Position.fromOffset(
+              startOffset,
+              snapshot.generated,
+            );
+            const originalPosition =
+              snapshot.getRealPositionInGenerated(generatedPosition);
+            if (originalPosition !== null) {
+              start = originalPosition;
+            }
+          }
+        }
 
         const category = diagnostic.getCategory();
         let severity: AnalyzerSeverity;

@@ -1,13 +1,23 @@
-import { Snapshot } from "@knuckles/analyzer";
+import { createAsyncDebounce } from "./utils/debounce.js";
+import {
+  Analyzer,
+  AnalyzerSeverity,
+  Snapshot,
+  parserErrorToAnalyzerIssue,
+  type AnalyzerIssue,
+} from "@knuckles/analyzer";
 import {
   defaultConfig,
   discoverConfigFile,
   readConfigFile,
+  type NormalizedConfig,
 } from "@knuckles/config";
 import { Position, Range } from "@knuckles/location";
 import { parse } from "@knuckles/parser";
 import { Transpiler } from "@knuckles/typescript";
+import analyzerTypeScriptPlugin from "@knuckles/typescript/analyzer";
 import assert from "node:assert/strict";
+import { writeFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   type SourceFile,
@@ -17,52 +27,36 @@ import {
 } from "ts-morph";
 import * as ts from "typescript/lib/tsserverlibrary.js";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import {
-  type Connection,
-  createConnection,
-  ProposedFeatures,
-  TextDocuments,
-  TextDocumentSyncKind,
-  type TextDocumentIdentifier,
-  type Location,
-  Range as VSCodeRange,
-  Position as VSCodePosition,
-  type CompletionItem,
-} from "vscode-languageserver/node.js";
+import * as vscode from "vscode-languageserver/node.js";
 
-const UPDATE_DEBOUNCE = 1000;
+const UPDATE_DEBOUNCE = 500;
 
 export interface LanguageServerOptions {
-  connection?: Connection;
+  connection?: vscode.Connection;
 }
 
-class SharedResourcesProvider {
-  async getConfig(path: string) {
-    const koConfigFilePath = await discoverConfigFile(path);
-    const koConfig = koConfigFilePath
-      ? await readConfigFile(koConfigFilePath)
-      : defaultConfig;
-    return koConfig;
-  }
-
-  getTranspiler(path: string) {
-    const tsConfigFilePath = ts.findConfigFile(path, ts.sys.fileExists);
-
-    const transpiler = new Transpiler({
-      tsConfig: tsConfigFilePath,
-    });
-
-    return transpiler;
-  }
+enum DocumentStatus {
+  Broken,
+  Complete,
 }
 
-interface DocumentState {
-  snapshot: Snapshot;
-  sourceFile: SourceFile;
-  service: LanguageService;
-  document: TextDocument;
-  checker: TypeChecker;
-}
+type DocumentState =
+  | {
+      status: DocumentStatus.Broken;
+      snapshot?: undefined;
+      sourceFile?: undefined;
+      service?: undefined;
+      document?: undefined;
+      checker?: undefined;
+    }
+  | {
+      status: DocumentStatus.Complete;
+      snapshot: Snapshot;
+      sourceFile: SourceFile;
+      service: LanguageService;
+      document: TextDocument;
+      checker: TypeChecker;
+    };
 
 interface DocumentStateProvider {
   getState(): Promise<DocumentState>;
@@ -70,117 +64,35 @@ interface DocumentStateProvider {
   dispose(): void;
 }
 
-async function updateDocumentState(
-  provider: SharedResourcesProvider,
-  document: TextDocument,
-): Promise<DocumentState> {
-  const path = fileURLToPath(document.uri);
-  const original = document.getText();
-
-  const config = await provider.getConfig(path);
-
-  // TODO: handle error gracefully
-  const parseResult = parse(original);
-  assert(!!parseResult.document);
-
-  const transpiler = provider.getTranspiler(path);
-  const { generated, mappings, sourceFile } = transpiler.transpile(
-    path,
-    original,
-    parseResult.document,
-    config.analyzer.mode,
-  );
-
-  const snapshot = new Snapshot({
-    fileName: path,
-    original,
-    generated,
-    mappings,
-  });
-
-  const project = sourceFile.getProject();
-  const service = project.getLanguageService();
-  const checker = project.getTypeChecker();
-
-  return {
-    document,
-    snapshot,
-    sourceFile,
-    service,
-    checker,
-  };
-}
-
-function createDocumentStateProvider(
-  provider: SharedResourcesProvider,
-  document: TextDocument,
-): DocumentStateProvider {
-  let statePromise = updateDocumentState(provider, document);
-
-  const onChange = createDebounce(() => {
-    statePromise = updateDocumentState(provider, document);
-  }, UPDATE_DEBOUNCE);
-
-  const documentStateProvider: DocumentStateProvider = {
-    getState: () => {
-      return statePromise;
-    },
-
-    onChange,
-
-    dispose: () => {
-      onChange.cancel();
-    },
-  };
-
-  return documentStateProvider;
-}
-
-interface Debounce {
-  (): void;
-  cancel(): void;
-}
-
-function createDebounce(callback: () => void, timeout: number): Debounce {
-  let id: ReturnType<typeof setTimeout> | undefined;
-  const cancel = () => clearTimeout(id);
-
-  return Object.assign(
-    () => {
-      cancel();
-      id = setTimeout(callback, timeout);
-    },
-    {
-      cancel,
-    },
-  );
+interface SharedResourcesProvider {
+  getAnalyzer(path: string): Promise<Analyzer>;
+  getConfig(path: string): Promise<NormalizedConfig>;
+  getTranspiler(path: string): Promise<Transpiler>;
+  close(path: string): void;
 }
 
 export function startLanguageServer(options?: LanguageServerOptions) {
+  //#region Initialize
   const connection =
-    options?.connection ?? createConnection(ProposedFeatures.all);
-  const documents = new TextDocuments(TextDocument);
+    options?.connection ?? vscode.createConnection(vscode.ProposedFeatures.all);
+  const documents = new vscode.TextDocuments(TextDocument);
 
-  const sharedResourcesProvider = new SharedResourcesProvider();
+  const sharedResourcesProvider = createSharedResourcesProvider();
   const snapshotProviderMap = new WeakMap<
     TextDocument,
     DocumentStateProvider
   >();
 
-  const getDocumentState = (documentId: TextDocumentIdentifier) => {
-    const document = documents.get(documentId.uri)!;
-    const provider = createDocumentStateProvider(
-      sharedResourcesProvider,
-      document,
-    );
+  const getDocumentState = (documentId: vscode.TextDocumentIdentifier) => {
+    const document = documents.get(documentId.uri);
+    assert(document);
+    const provider = snapshotProviderMap.get(document);
+    assert(provider);
     return provider.getState();
   };
 
   documents.onDidOpen(async (event) => {
-    const provider = createDocumentStateProvider(
-      sharedResourcesProvider,
-      event.document,
-    );
+    const provider = createDocumentStateProvider(event.document);
     snapshotProviderMap.set(event.document, provider);
   });
 
@@ -198,16 +110,26 @@ export function startLanguageServer(options?: LanguageServerOptions) {
   connection.onInitialize(() => {
     return {
       capabilities: {
-        textDocumentSync: TextDocumentSyncKind.Incremental,
+        textDocumentSync: vscode.TextDocumentSyncKind.Incremental,
         definitionProvider: true,
         hoverProvider: true,
-        completionProvider: {},
+        completionProvider: {
+          resolveProvider: false,
+          triggerCharacters: [".", '"', "'", "`", "/", "@", "<", "#", " "],
+          allCommitCharacters: [".", ",", ";", ")"],
+        },
       },
     };
   });
+  //#endregion
 
+  //#region Definition
   connection.onDefinition(async (params) => {
     const state = await getDocumentState(params.textDocument);
+
+    if (state.status === DocumentStatus.Broken) {
+      return [];
+    }
 
     const originalPosition = Position.fromLineAndColumn(
       params.position.line,
@@ -215,7 +137,7 @@ export function startLanguageServer(options?: LanguageServerOptions) {
       state.snapshot.original,
     );
     const generatedPosition =
-      state.snapshot.getGeneratedPosition(originalPosition);
+      state.snapshot.getRealPositionInGenerated(originalPosition);
 
     if (generatedPosition) {
       const definitions = state.service.getDefinitionsAtPosition(
@@ -223,10 +145,12 @@ export function startLanguageServer(options?: LanguageServerOptions) {
         generatedPosition.offset,
       );
 
-      return definitions.flatMap((definition): Location[] => {
+      return definitions.flatMap((definition): vscode.Location[] => {
         const node = definition.getNode();
 
-        const definitionToLocation = (definition: DefinitionInfo): Location => {
+        const definitionToLocation = (
+          definition: DefinitionInfo,
+        ): vscode.Location => {
           const sourceFile = definition.getSourceFile();
           const path = sourceFile.getFilePath();
           const uri = pathToFileURL(path).toString();
@@ -236,9 +160,9 @@ export function startLanguageServer(options?: LanguageServerOptions) {
             span.getEnd(),
             sourceFile.getFullText(),
           );
-          const range2 = VSCodeRange.create(
-            VSCodePosition.create(range1.start.line, range1.start.column),
-            VSCodePosition.create(range1.end.line, range1.end.column),
+          const range2 = vscode.Range.create(
+            vscode.Position.create(range1.start.line, range1.start.column),
+            vscode.Position.create(range1.end.line, range1.end.column),
           );
 
           return {
@@ -256,7 +180,7 @@ export function startLanguageServer(options?: LanguageServerOptions) {
             state.snapshot.generated,
           );
           const originalPosition =
-            state.snapshot.getOriginalPosition(generatedPosition);
+            state.snapshot.getRealPositionInOriginal(generatedPosition);
 
           if (originalPosition) {
             const generatedEndOffset = node.getEnd();
@@ -272,9 +196,9 @@ export function startLanguageServer(options?: LanguageServerOptions) {
             return [
               {
                 uri: state.document.uri,
-                range: VSCodeRange.create(
-                  VSCodePosition.create(range.start.line, range.start.column),
-                  VSCodePosition.create(range.end.line, range.end.column),
+                range: vscode.Range.create(
+                  vscode.Position.create(range.start.line, range.start.column),
+                  vscode.Position.create(range.end.line, range.end.column),
                 ),
               },
             ];
@@ -292,9 +216,15 @@ export function startLanguageServer(options?: LanguageServerOptions) {
       return [];
     }
   });
+  //#endregion
 
+  //#region Hover
   connection.onHover(async (params) => {
     const state = await getDocumentState(params.textDocument);
+
+    if (state.status === DocumentStatus.Broken) {
+      return null;
+    }
 
     const originalPosition = Position.fromLineAndColumn(
       params.position.line,
@@ -302,7 +232,7 @@ export function startLanguageServer(options?: LanguageServerOptions) {
       state.snapshot.original,
     );
     const generatedPosition =
-      state.snapshot.getGeneratedPosition(originalPosition);
+      state.snapshot.getRealPositionInGenerated(originalPosition);
 
     if (generatedPosition) {
       let quickInfo: ts.QuickInfo | undefined;
@@ -324,7 +254,7 @@ export function startLanguageServer(options?: LanguageServerOptions) {
             state.snapshot.generated,
           );
           const originalPosition =
-            state.snapshot.getOriginalPosition(generatedPosition);
+            state.snapshot.getRealPositionInGenerated(generatedPosition);
 
           if (!originalPosition) {
             const [definition] = state.service.getDefinitions(node);
@@ -364,9 +294,15 @@ export function startLanguageServer(options?: LanguageServerOptions) {
 
     return null;
   });
+  //#endregion
 
+  //#region Completion
   connection.onCompletion(async (params) => {
     const state = await getDocumentState(params.textDocument);
+
+    if (state.status === DocumentStatus.Broken) {
+      return null;
+    }
 
     const originalPosition = Position.fromLineAndColumn(
       params.position.line,
@@ -374,19 +310,98 @@ export function startLanguageServer(options?: LanguageServerOptions) {
       state.snapshot.original,
     );
     const generatedPosition =
-      state.snapshot.getGeneratedPosition(originalPosition);
+      state.snapshot.getRealPositionInGenerated(originalPosition);
 
     if (generatedPosition) {
       const completions = state.service.compilerObject.getCompletionsAtPosition(
         state.sourceFile.getFilePath(),
         generatedPosition.offset,
-        {},
+        {
+          includeCompletionsForImportStatements: false,
+          includeCompletionsForModuleExports: false,
+          allowRenameOfImportPath: false,
+          // TODO: get quote from current binding attribute
+          quotePreference: "auto",
+          triggerCharacter: params.context?.triggerCharacter as
+            | ts.CompletionsTriggerCharacter
+            | undefined,
+          triggerKind: params.context?.triggerKind,
+        },
       );
 
       if (completions) {
-        return completions.entries.map((entry): CompletionItem => {
+        return completions.entries.map((entry): vscode.CompletionItem => {
+          // https://github.com/microsoft/vscode/blob/77e5788/extensions/typescript-language-features/src/languageFeatures/completions.ts#L440
+          const convertKind = (kind: string): vscode.CompletionItemKind => {
+            switch (kind) {
+              case ts.ScriptElementKind.primitiveType:
+              case ts.ScriptElementKind.keyword:
+                return vscode.CompletionItemKind.Keyword;
+
+              case ts.ScriptElementKind.constElement:
+              case ts.ScriptElementKind.letElement:
+              case ts.ScriptElementKind.variableElement:
+              case ts.ScriptElementKind.localVariableElement:
+              case ts.ScriptElementKind.alias:
+              case ts.ScriptElementKind.parameterElement:
+                return vscode.CompletionItemKind.Variable;
+
+              case ts.ScriptElementKind.memberVariableElement:
+              case ts.ScriptElementKind.memberGetAccessorElement:
+              case ts.ScriptElementKind.memberSetAccessorElement:
+                return vscode.CompletionItemKind.Field;
+
+              case ts.ScriptElementKind.functionElement:
+              case ts.ScriptElementKind.localFunctionElement:
+                return vscode.CompletionItemKind.Function;
+
+              case ts.ScriptElementKind.memberFunctionElement:
+              case ts.ScriptElementKind.constructSignatureElement:
+              case ts.ScriptElementKind.callSignatureElement:
+              case ts.ScriptElementKind.indexSignatureElement:
+                return vscode.CompletionItemKind.Method;
+
+              case ts.ScriptElementKind.enumElement:
+                return vscode.CompletionItemKind.Enum;
+
+              case ts.ScriptElementKind.enumMemberElement:
+                return vscode.CompletionItemKind.EnumMember;
+
+              case ts.ScriptElementKind.moduleElement:
+              case ts.ScriptElementKind.externalModuleName:
+                return vscode.CompletionItemKind.Module;
+
+              case ts.ScriptElementKind.classElement:
+              case ts.ScriptElementKind.typeElement:
+                return vscode.CompletionItemKind.Class;
+
+              case ts.ScriptElementKind.interfaceElement:
+                return vscode.CompletionItemKind.Interface;
+
+              case ts.ScriptElementKind.warning:
+                return vscode.CompletionItemKind.Text;
+
+              case ts.ScriptElementKind.scriptElement:
+                return vscode.CompletionItemKind.File;
+
+              case ts.ScriptElementKind.directory:
+                return vscode.CompletionItemKind.Folder;
+
+              case ts.ScriptElementKind.string:
+                return vscode.CompletionItemKind.Constant;
+
+              default:
+                return vscode.CompletionItemKind.Property;
+            }
+          };
+
           return {
             label: entry.name,
+            kind: convertKind(entry.kind),
+            preselect: entry.isRecommended,
+            insertText: entry.insertText,
+            filterText: entry.filterText,
+            sortText: entry.sortText,
           };
         });
       }
@@ -394,9 +409,239 @@ export function startLanguageServer(options?: LanguageServerOptions) {
 
     return null;
   });
+  //#endregion
 
+  //#region Connect
   documents.listen(connection);
   connection.listen();
 
   connection.console.log("Listening...");
+  //#endregion
+
+  //#region Document State
+  async function updateDocumentState(
+    provider: SharedResourcesProvider,
+    document: TextDocument,
+  ): Promise<DocumentState> {
+    const startTime = performance.now();
+
+    const path = fileURLToPath(document.uri);
+    const original = document.getText();
+
+    const config = await provider.getConfig(path);
+
+    const parseResult = parse(original);
+
+    connection.sendDiagnostics({
+      uri: document.uri,
+      diagnostics: parseResult.errors.map((error) =>
+        analyzerIssueToVscodeDiagnostic(
+          parserErrorToAnalyzerIssue(error),
+          original,
+        ),
+      ),
+    });
+
+    if (!parseResult.document) {
+      return {
+        status: DocumentStatus.Broken,
+      };
+    }
+
+    const transpiler = await provider.getTranspiler(path);
+    const { generated, mappings, sourceFile } = transpiler.transpile(
+      path,
+      original,
+      parseResult.document,
+      config.analyzer.mode,
+    );
+
+    writeFileSync(path + ".generated.ts", sourceFile.getFullText(), "utf8");
+
+    const snapshot = new Snapshot({
+      fileName: path,
+      original,
+      generated,
+      mappings,
+    });
+
+    const project = sourceFile.getProject();
+    const service = project.getLanguageService();
+    const checker = project.getTypeChecker();
+
+    const analyzer = await provider.getAnalyzer(path);
+
+    const result = await analyzer.analyze(path, original, {
+      cache: {
+        document: parseResult.document,
+        snapshots: {
+          typescript: snapshot,
+        },
+      },
+    });
+
+    connection.sendDiagnostics({
+      uri: document.uri,
+      diagnostics: result.issues.map((issue) =>
+        analyzerIssueToVscodeDiagnostic(issue, original),
+      ),
+    });
+
+    const endTime = performance.now();
+    const deltaTime = endTime - startTime;
+    console.log(`Analyze took ${deltaTime.toFixed(2)}ms`);
+
+    return {
+      status: DocumentStatus.Complete,
+      document,
+      snapshot,
+      sourceFile,
+      service,
+      checker,
+    };
+  }
+
+  function createDocumentStateProvider(
+    document: TextDocument,
+  ): DocumentStateProvider {
+    const path = fileURLToPath(document.uri);
+
+    let statePromise: Promise<DocumentState>;
+
+    const onChange = createAsyncDebounce(async () => {
+      statePromise = updateDocumentState(sharedResourcesProvider, document);
+      await statePromise;
+    }, UPDATE_DEBOUNCE);
+
+    const documentStateProvider: DocumentStateProvider = {
+      getState: () => {
+        return statePromise;
+      },
+
+      onChange,
+
+      dispose: () => {
+        sharedResourcesProvider.close(path);
+        onChange.cancel();
+      },
+    };
+
+    return documentStateProvider;
+  }
+
+  function analyzerIssueToVscodeDiagnostic(
+    issue: AnalyzerIssue,
+    text: string,
+  ): vscode.Diagnostic {
+    const start = issue.start ?? Position.fromOffset(0, text);
+    const end = issue.end ?? Position.fromOffset(start.offset + 1, text);
+    const range = vscode.Range.create(
+      vscode.Position.create(start.line, start.column),
+      vscode.Position.create(end.line, end.column),
+    );
+    const severity = {
+      [AnalyzerSeverity.Error]: vscode.DiagnosticSeverity.Error,
+      [AnalyzerSeverity.Warning]: vscode.DiagnosticSeverity.Warning,
+    }[issue.severity];
+    return {
+      range,
+      severity,
+      message: issue.message,
+      source: "knuckles",
+      code: issue.name,
+    };
+  }
+  //#endregion
+
+  //#region Shared Resources
+  function createSharedResourcesProvider(): SharedResourcesProvider {
+    const resolvedConfigPaths = new Map<string, string | null>();
+    const projectConfigs = new Map<string | null, NormalizedConfig>();
+    const projectAnalyzers = new Map<string | null, Analyzer>();
+
+    const findConfig = async (path: string) => {
+      if (resolvedConfigPaths.has(path)) {
+        return resolvedConfigPaths.get(path)!;
+      } else {
+        const filePath = await discoverConfigFile(path);
+        resolvedConfigPaths.set(path, filePath);
+        return filePath;
+      }
+    };
+
+    const readConfig = async (filePath: string | null) => {
+      if (projectConfigs.has(filePath)) {
+        return projectConfigs.get(filePath)!;
+      } else {
+        const config = filePath
+          ? await readConfigFile(filePath)
+          : defaultConfig;
+        projectConfigs.set(filePath, config);
+        return config;
+      }
+    };
+
+    return {
+      async getAnalyzer(path: string) {
+        const configFilePath = await findConfig(path);
+        const config = await readConfig(configFilePath);
+
+        if (projectAnalyzers.has(configFilePath)) {
+          return projectAnalyzers.get(configFilePath)!;
+        } else {
+          const hasTypeScriptPlugin = config.analyzer.plugins.some(
+            (plugin) => plugin.name === "typescript",
+          );
+
+          const analyzer = new Analyzer({
+            attributes: config.attributes,
+            plugins: hasTypeScriptPlugin
+              ? config.analyzer.plugins
+              : [
+                  await analyzerTypeScriptPlugin({
+                    // TODO: resolve tsconfig
+                    tsconfig: undefined,
+                  }),
+                  ...config.analyzer.plugins,
+                ],
+          });
+          projectAnalyzers.set(configFilePath, analyzer);
+          return analyzer;
+        }
+      },
+
+      async getConfig(path: string) {
+        const filePath = await findConfig(path);
+        return await readConfig(filePath);
+      },
+
+      async getTranspiler(path: string) {
+        const tsConfigFilePath = ts.findConfigFile(path, ts.sys.fileExists);
+        const transpiler = new Transpiler({
+          tsConfig: tsConfigFilePath,
+        });
+        return transpiler;
+      },
+
+      close(path: string) {
+        if (resolvedConfigPaths.has(path)) {
+          const configPath = resolvedConfigPaths.get(path)!;
+          resolvedConfigPaths.delete(path);
+
+          const isDangling = !Array.from(resolvedConfigPaths.values()).some(
+            (value) => value === configPath,
+          );
+
+          if (isDangling) {
+            if (projectAnalyzers.has(configPath)) {
+              const analyzer = projectAnalyzers.get(configPath)!;
+              analyzer.dispose();
+              projectAnalyzers.delete(configPath);
+            }
+          }
+        }
+      },
+    };
+  }
+  //#endregion
 }
