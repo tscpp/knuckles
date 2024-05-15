@@ -1,5 +1,6 @@
 import merge from "./assets/merge-esbuild.js";
-import samples from "./assets/samples.js";
+import SAMPLES from "./assets/samples.js";
+import STATIC_FILES from "./assets/static-files.js";
 import sass from "esbuild-plugin-sass";
 import nodeLib from "node-stdlib-browser";
 import polyfillNode from "node-stdlib-browser/helpers/esbuild/plugin";
@@ -28,7 +29,8 @@ const common = {
     ".wasm": "file",
   },
   define: {
-    SAMPLES: JSON.stringify(samples),
+    SAMPLES: JSON.stringify(SAMPLES),
+    STATIC_FILES: JSON.stringify(STATIC_FILES),
   },
   inject: ["assets/polyfill.js"],
   external: ["import-meta-resolve"],
