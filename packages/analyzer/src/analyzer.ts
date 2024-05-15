@@ -5,7 +5,8 @@ import type {
   AnalyzerSnapshots,
 } from "./plugin.js";
 import standard from "./standard/plugin.js";
-import { parse } from "@knuckles/parser";
+import { type ParserError, parse } from "@knuckles/parser";
+import type { Document } from "@knuckles/syntax-tree";
 import assert from "node:assert";
 
 export interface AnalyzerOptions {
@@ -13,7 +14,12 @@ export interface AnalyzerOptions {
   attributes?: readonly string[];
 }
 
+export interface AnalyzeOptions {
+  cache?: AnalyzeCache;
+}
+
 export interface AnalyzeCache {
+  document?: Document;
   snapshots?: Partial<AnalyzerSnapshots>;
 }
 
@@ -58,39 +64,34 @@ export class Analyzer {
   async analyze(
     fileName: string,
     text: string,
-    cache?: AnalyzeCache,
+    options?: AnalyzeOptions,
   ): Promise<AnalyzeResult> {
     const issues: AnalyzerIssue[] = [];
+    const snapshots = (options?.cache?.snapshots ?? {}) as AnalyzerSnapshots;
 
-    const result = parse(text, {
-      bindingAttributes: this.#attributes,
-    });
-
-    if (result.errors.length > 0) {
-      return {
-        issues: result.errors.map(
-          (error): AnalyzerIssue => ({
-            start: error.range.start,
-            end: error.range.end,
-            message: error.description,
-            name: "knuckles/parser",
-            severity: AnalyzerSeverity.Error,
-          }),
-        ),
-        snapshots: {},
-      };
+    let document: Document;
+    if (options?.cache?.document) {
+      document = options.cache.document;
     } else {
-      assert(result.document);
+      const result = parse(text, {
+        bindingAttributes: this.#attributes,
+      });
+      if (result.errors.length > 0) {
+        return {
+          issues: result.errors.map(parserErrorToAnalyzerIssue),
+          snapshots: {},
+        };
+      } else {
+        assert(result.document);
+      }
+      document = result.document;
     }
 
     const context: AnalyzeContext = {
       fileName,
       text,
-      document: result.document,
-      snapshots: {
-        javascript: undefined!,
-        ...cache?.snapshots,
-      },
+      document,
+      snapshots,
       report(issue) {
         issues.push(issue);
       },
@@ -105,4 +106,14 @@ export class Analyzer {
       snapshots: context.snapshots,
     };
   }
+}
+
+export function parserErrorToAnalyzerIssue(error: ParserError): AnalyzerIssue {
+  return {
+    start: error.range.start,
+    end: error.range.end,
+    message: error.description,
+    name: "knuckles/parser",
+    severity: AnalyzerSeverity.Error,
+  };
 }
