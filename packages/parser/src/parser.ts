@@ -433,45 +433,46 @@ export default class Parser {
     try {
       expression = acorn.parseExpressionAt(expressionText, 0, acornOptions);
     } catch (error) {
-      let program: acorn.Program;
+      if (isAcornSyntaxError(error)) {
+        let program: acorn.Program;
 
-      try {
-        program = acornLoose.parse(expressionText, acornOptions);
-      } catch (error) {
-        if (isAcornSyntaxError(error)) {
-          this.#error(
-            Range.fromOffset(
-              translate(error.pos),
-              translate(error.pos + 1),
-              this.#string,
-            ),
-            error.message,
-          );
-          return [];
-        } else {
-          throw error;
+        try {
+          program = acornLoose.parse(expressionText, acornOptions);
+        } catch (error) {
+          if (isAcornSyntaxError(error)) {
+            this.#error(
+              Range.fromOffset(
+                translate(error.pos),
+                translate(error.pos + 1),
+                this.#string,
+              ),
+              error.message,
+            );
+            return [];
+          } else {
+            throw error;
+          }
         }
-      }
 
-      const statement = program.body[0];
-      if (statement?.type === "ExpressionStatement") {
-        expression = statement.expression;
-      }
-
-      if (!expression) {
-        if (isAcornSyntaxError(error)) {
-          this.#error(
-            Range.fromOffset(
-              translate(error.pos),
-              translate(error.pos + 1),
-              this.#string,
-            ),
-            "Invalid binding expression.",
-          );
-          return [];
-        } else {
-          throw error;
+        const statement = program.body[0];
+        if (statement?.type === "ExpressionStatement") {
+          expression = statement.expression;
         }
+
+        this.#error(
+          Range.fromOffset(
+            translate(error.pos),
+            translate(error.pos + 1),
+            this.#string,
+          ),
+          error.message,
+        );
+
+        if (!expression) {
+          return [];
+        }
+      } else {
+        throw error;
       }
     }
     if (expression.type !== "ObjectExpression") {
