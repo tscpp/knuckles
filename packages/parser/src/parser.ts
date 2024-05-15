@@ -30,6 +30,7 @@ import {
   StringLiteral,
 } from "@knuckles/syntax-tree";
 import * as acorn from "acorn";
+import * as acornLoose from "acorn-loose";
 
 export const VIRTUAL_ELEMENT_START_REGEX = //
   /^(\s*)(ko|ok)(\s+)([^\s]+)(\s*:\s*)([^]*?)\s*$/;
@@ -421,27 +422,56 @@ export default class Parser {
       // attribute value is wrapped in expressionText
       2;
 
+    const acornOptions: acorn.Options = {
+      ecmaVersion: "latest",
+      sourceType: "script",
+      ranges: true,
+    };
+
     const expressionText = `({${attr.value.value}})`;
-    let expression: acorn.Expression;
+    let expression: acorn.Expression | undefined;
     try {
-      expression = acorn.parseExpressionAt(expressionText, 0, {
-        ecmaVersion: "latest",
-        sourceType: "script",
-        ranges: true,
-      });
+      expression = acorn.parseExpressionAt(expressionText, 0, acornOptions);
     } catch (error) {
-      if (isAcornSyntaxError(error)) {
-        this.#error(
-          Range.fromOffset(
-            translate(error.pos),
-            translate(error.pos + 1),
-            this.#string,
-          ),
-          "Invalid binding expression.",
-        );
-        return [];
-      } else {
-        throw error;
+      let program: acorn.Program;
+
+      try {
+        program = acornLoose.parse(expressionText, acornOptions);
+      } catch (error) {
+        if (isAcornSyntaxError(error)) {
+          this.#error(
+            Range.fromOffset(
+              translate(error.pos),
+              translate(error.pos + 1),
+              this.#string,
+            ),
+            error.message,
+          );
+          return [];
+        } else {
+          throw error;
+        }
+      }
+
+      const statement = program.body[0];
+      if (statement?.type === "ExpressionStatement") {
+        expression = statement.expression;
+      }
+
+      if (!expression) {
+        if (isAcornSyntaxError(error)) {
+          this.#error(
+            Range.fromOffset(
+              translate(error.pos),
+              translate(error.pos + 1),
+              this.#string,
+            ),
+            "Invalid binding expression.",
+          );
+          return [];
+        } else {
+          throw error;
+        }
       }
     }
     if (expression.type !== "ObjectExpression") {
