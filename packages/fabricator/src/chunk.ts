@@ -109,9 +109,9 @@ export class Chunk {
 
     const lines = content.split(UNIVERSAL_NEWLINE_REGEX);
     this.#content += lines.shift();
-    this.#content += lines.map((line) =>
-      line.trim() === "" ? "\n" : "\n" + indent + line,
-    );
+    this.#content += lines
+      .map((line) => (line.trim() === "" ? "\n" : "\n" + indent + line))
+      .join("");
 
     if (mapping?.range) {
       this.#mappings.push({
@@ -274,10 +274,14 @@ export class Chunk {
       chunk = chunk.clone();
 
       // Indent all content in chunk.
-      let offset = 0;
+      let offset = 0,
+        first = true;
       for (const line of chunk.content.split(UNIVERSAL_NEWLINE_REGEX)) {
         const indent = this.#indent.repeat(this.#indentCount);
-        chunk.insert(offset, indent);
+        if (!first) {
+          chunk.insert(offset, indent);
+          first = false;
+        }
         offset += indent.length + line.length + 1;
       }
 
