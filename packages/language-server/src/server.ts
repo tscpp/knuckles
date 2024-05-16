@@ -155,7 +155,7 @@ export function startLanguageServer(options?: LanguageServerOptions) {
           const path = sourceFile.getFilePath();
           const uri = pathToFileURL(path).toString();
           const span = definition.getTextSpan();
-          const range1 = Range.fromOffset(
+          const range1 = Range.fromOffsets(
             span.getStart(),
             span.getEnd(),
             sourceFile.getFullText(),

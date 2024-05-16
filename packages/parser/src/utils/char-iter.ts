@@ -31,7 +31,7 @@ export default class CharIter {
   next() {
     if (this.#index >= this.chars.length - 1) {
       throw new ParserError(
-        Range.fromOffset(this.#index, this.#index + 1, this.string),
+        Range.fromOffsets(this.#index, this.#index + 1, this.string),
         "Unexpected end of input.",
       );
     } else {
@@ -53,7 +53,7 @@ export default class CharIter {
     for (const char of chars) {
       if (this.char() !== char) {
         throw new ParserError(
-          Range.fromOffset(start, start + string.length, this.string),
+          Range.fromOffsets(start, start + string.length, this.string),
           `Expected "${string}".`,
         );
       }

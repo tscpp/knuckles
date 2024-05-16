@@ -52,9 +52,11 @@ export class Transpiler {
     });
     const chunk = renderer.render();
 
+    const snapshot = chunk.snapshot(original);
+
     return {
-      generated: chunk.content,
-      mappings: chunk.getMappings(original),
+      generated: snapshot.generated,
+      mappings: snapshot.mappings,
       sourceFile: renderer.sourceFile,
     };
   }

@@ -1,14 +1,16 @@
 import Position from "./position.js";
 
 export default class Range {
-  static fromOffset(start: number, end: number, text: string): Range {
+  static zero = new Range(0, 0, 0, 0, 0, 0);
+
+  static fromOffsets(start: number, end: number, text: string): Range {
     return new Range(
       Position.fromOffset(start, text),
       Position.fromOffset(end, text),
     );
   }
 
-  static fromLineAndColumn(
+  static fromLinesAndColumns(
     startLine: number,
     startColumn: number,
     endLine: number,
