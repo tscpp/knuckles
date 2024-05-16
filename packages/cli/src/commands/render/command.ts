@@ -68,14 +68,14 @@ export default command({
       plugins,
       useBuiltins,
       attributes,
-      filename: path,
+      fileName: path,
     });
     // TODO: graceful error handling
-    if (!result.document) {
+    if (!result.modified) {
       process.exit(1);
     }
 
-    let rendered = result.document;
+    let rendered = result.modified;
 
     if (args.pretty) {
       rendered = await prettier.format(rendered, {

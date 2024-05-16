@@ -3,7 +3,7 @@ import {
   type Snapshot,
   AnalyzerSeverity,
 } from "@knuckles/analyzer";
-import { Position } from "@knuckles/location";
+import { Position, Range } from "@knuckles/location";
 import { Linter } from "eslint";
 
 enum ESLintSeverity {
@@ -73,26 +73,34 @@ export default function (options: Options): AnalyzerPlugin {
       for (const diagnostic of diagnostics) {
         const name = diagnostic.ruleId ?? "eslint/unknown";
         const message = diagnostic.message;
+        let range: Range | null | undefined;
 
-        const start =
-          snapshot.getOriginalPosition(
+        if (
+          diagnostic.endLine !== undefined &&
+          diagnostic.endColumn !== undefined
+        ) {
+          range = snapshot.getRealRangeInOriginal(
+            Range.fromLineAndColumn(
+              diagnostic.line,
+              diagnostic.column,
+              diagnostic.endLine,
+              diagnostic.endColumn,
+              snapshot.generated,
+            ),
+          );
+        }
+
+        if (!range) {
+          range = snapshot.blameOriginal(
             Position.fromLineAndColumn(
               diagnostic.line,
               diagnostic.column,
               snapshot.generated,
             ),
-          ) ?? undefined;
+          );
+        }
 
-        const end =
-          diagnostic.endLine !== undefined && diagnostic.endColumn !== undefined
-            ? snapshot.getOriginalPosition(
-                Position.fromLineAndColumn(
-                  diagnostic.endLine,
-                  diagnostic.endColumn,
-                  snapshot.generated,
-                ),
-              ) ?? undefined
-            : undefined;
+        range ??= Range.fromOffset(0, 1, snapshot.generated);
 
         let severity: AnalyzerSeverity;
         switch (diagnostic.severity) {
@@ -111,8 +119,8 @@ export default function (options: Options): AnalyzerPlugin {
         c.report({
           name,
           message,
-          start,
-          end,
+          start: range.start,
+          end: range.end,
           severity,
         });
       }
