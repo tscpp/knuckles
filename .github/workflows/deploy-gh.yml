@@ -47,6 +47,9 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Copy Docs
+        run: rm -f apps/website/docs && cp -r docs apps/website/docs
+
       - name: Build with VitePress
         run: pnpm nx build @apps/website
 
