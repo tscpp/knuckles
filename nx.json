@@ -2,7 +2,7 @@
   "defaultBase": "main",
   "targetDefaults": {
     "build": {
-      "executor": "@dev/nx:build",
+      "executor": "@tools/nx:build",
       "inputs": ["default", "^default", "{workspaceRoot}/tools/nx/**"],
       "options": {
         "entry": "{projectRoot}/src/index.ts",
