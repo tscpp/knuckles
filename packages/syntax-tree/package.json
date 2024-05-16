@@ -1,10 +1,10 @@
 {
   "name": "@knuckles/syntax-tree",
-  "version": "0.1.0",
+  "version": "0.10.0",
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
-    "@knuckles/location": "workspace:^"
+    "@knuckles/location": "workspace:~"
   },
   "publishConfig": {
     "access": "public"

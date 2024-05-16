@@ -1,6 +1,6 @@
 {
   "name": "@knuckles/typescript",
-  "version": "1.0.0",
+  "version": "0.10.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
@@ -10,17 +10,17 @@
     }
   },
   "dependencies": {
-    "@knuckles/fabricator": "workspace:^",
-    "@knuckles/location": "workspace:^",
-    "@knuckles/syntax-tree": "workspace:^",
+    "@knuckles/fabricator": "workspace:~",
+    "@knuckles/location": "workspace:~",
+    "@knuckles/syntax-tree": "workspace:~",
     "ts-morph": "^22.0.0"
   },
   "devDependencies": {
-    "@knuckles/parser": "workspace:^",
+    "@knuckles/parser": "workspace:~",
     "knockout": "3.5.1"
   },
   "peerDependencies": {
-    "@knuckles/analyzer": "workspace:^"
+    "@knuckles/analyzer": "workspace:latest"
   },
   "publishConfig": {
     "access": "public"

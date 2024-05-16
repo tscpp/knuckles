@@ -1,19 +1,19 @@
 {
   "name": "@knuckles/eslint",
-  "version": "1.0.0",
+  "version": "0.10.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
     "./analyzer": "./src/analyzer.ts"
   },
   "dependencies": {
-    "@knuckles/location": "workspace:^"
+    "@knuckles/location": "workspace:~"
   },
   "devDependencies": {
-    "@knuckles/typescript": "workspace:^"
+    "@knuckles/typescript": "workspace:~"
   },
   "peerDependencies": {
-    "@knuckles/analyzer": "workspace:^",
+    "@knuckles/analyzer": "workspace:latest",
     "eslint": "^9.2.0"
   },
   "publishConfig": {

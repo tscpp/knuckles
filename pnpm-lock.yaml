@@ -21,10 +21,10 @@ importers:
         version: 2.6.2
     devDependencies:
       '@changesets/changelog-github':
-        specifier: ^0.5.0
+        specifier: 0.5.0
         version: 0.5.0
       '@changesets/cli':
-        specifier: ^2.27.1
+        specifier: 2.27.1
         version: 2.27.1
       '@eslint/js':
         specifier: ^9.0.0
@@ -141,16 +141,16 @@ importers:
   apps/playground:
     dependencies:
       '@knuckles/analyzer':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../../packages/analyzer
       '@knuckles/location':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../../packages/location
       '@knuckles/ssr':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../../packages/ssr
       '@knuckles/typescript':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../../packages/typescript
       esbuild-wasm:
         specifier: 0.21.2
@@ -206,16 +206,16 @@ importers:
   packages/analyzer:
     dependencies:
       '@knuckles/fabricator':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../fabricator
       '@knuckles/location':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../location
       '@knuckles/parser':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../parser
       '@knuckles/syntax-tree':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../syntax-tree
       '@types/yargs':
         specifier: ^17.0.32
@@ -233,16 +233,16 @@ importers:
   packages/cli:
     dependencies:
       '@knuckles/analyzer':
-        specifier: workspace:^
+        specifier: workspace:latest
         version: link:../analyzer
       '@knuckles/config':
-        specifier: workspace:^
+        specifier: workspace:latest
         version: link:../config
       '@knuckles/ssr':
-        specifier: workspace:^
+        specifier: workspace:latest
         version: link:../ssr
       '@knuckles/typescript':
-        specifier: workspace:^
+        specifier: workspace:latest
         version: link:../typescript
       chalk:
         specifier: ^5.3.0
@@ -270,29 +270,29 @@ importers:
   packages/config:
     dependencies:
       '@knuckles/analyzer':
-        specifier: workspace:~
+        specifier: workspace:latest
         version: link:../analyzer
 
   packages/eslint:
     dependencies:
       '@knuckles/analyzer':
-        specifier: workspace:^
+        specifier: workspace:latest
         version: link:../analyzer
       '@knuckles/location':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../location
       eslint:
         specifier: ^9.2.0
         version: 9.2.0
     devDependencies:
       '@knuckles/typescript':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../typescript
 
   packages/fabricator:
     dependencies:
       '@knuckles/location':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../location
 
   packages/language-server:
@@ -338,10 +338,10 @@ importers:
   packages/parser:
     dependencies:
       '@knuckles/location':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../location
       '@knuckles/syntax-tree':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../syntax-tree
       acorn:
         specifier: ^8.11.3
@@ -356,13 +356,13 @@ importers:
   packages/ssr:
     dependencies:
       '@knuckles/location':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../location
       '@knuckles/parser':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../parser
       '@knuckles/syntax-tree':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../syntax-tree
       '@rollup/pluginutils':
         specifier: ^5.1.0
@@ -444,29 +444,29 @@ importers:
   packages/syntax-tree:
     dependencies:
       '@knuckles/location':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../location
 
   packages/typescript:
     dependencies:
       '@knuckles/analyzer':
-        specifier: workspace:^
+        specifier: workspace:latest
         version: link:../analyzer
       '@knuckles/fabricator':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../fabricator
       '@knuckles/location':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../location
       '@knuckles/syntax-tree':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../syntax-tree
       ts-morph:
         specifier: ^22.0.0
         version: 22.0.0
     devDependencies:
       '@knuckles/parser':
-        specifier: workspace:^
+        specifier: workspace:~
         version: link:../parser
       knockout:
         specifier: 3.5.1

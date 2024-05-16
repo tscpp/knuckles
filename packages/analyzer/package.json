@@ -1,16 +1,16 @@
 {
   "name": "@knuckles/analyzer",
-  "version": "1.0.0",
+  "version": "0.10.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
     "./cli": "./src/cli/cli.ts"
   },
   "dependencies": {
-    "@knuckles/fabricator": "workspace:^",
-    "@knuckles/location": "workspace:^",
-    "@knuckles/parser": "workspace:^",
-    "@knuckles/syntax-tree": "workspace:^",
+    "@knuckles/fabricator": "workspace:~",
+    "@knuckles/location": "workspace:~",
+    "@knuckles/parser": "workspace:~",
+    "@knuckles/syntax-tree": "workspace:~",
     "@types/yargs": "^17.0.32",
     "chalk": "^5.3.0",
     "winston": "^3.13.0",

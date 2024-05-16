@@ -1,10 +1,10 @@
 {
   "name": "@knuckles/config",
-  "version": "1.0.0",
+  "version": "0.10.0",
   "type": "module",
   "exports": "./src/index.ts",
   "peerDependencies": {
-    "@knuckles/analyzer": "workspace:~"
+    "@knuckles/analyzer": "workspace:latest"
   },
   "publishConfig": {
     "access": "public"

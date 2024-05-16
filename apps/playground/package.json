@@ -14,10 +14,10 @@
     "./dist/monaco/ts.worker.js": "./dist/monaco/ts.worker.js"
   },
   "dependencies": {
-    "@knuckles/analyzer": "workspace:^",
-    "@knuckles/location": "workspace:^",
-    "@knuckles/ssr": "workspace:^",
-    "@knuckles/typescript": "workspace:^",
+    "@knuckles/analyzer": "workspace:~",
+    "@knuckles/location": "workspace:~",
+    "@knuckles/ssr": "workspace:~",
+    "@knuckles/typescript": "workspace:~",
     "esbuild-wasm": "0.21.2",
     "knockout": "^3.5.1",
     "monaco-editor": "0.48.0",

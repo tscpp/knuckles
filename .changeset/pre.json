@@ -1,0 +1,26 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@apps/playground": "0.0.0",
+    "@apps/website": "0.0.0",
+    "@knuckles/analyzer": "0.10.0",
+    "@knuckles/cli": "0.10.0",
+    "@knuckles/config": "0.10.0",
+    "@knuckles/eslint": "0.10.0",
+    "@knuckles/fabricator": "0.10.0",
+    "@knuckles/language-server": "0.10.0",
+    "@knuckles/location": "0.10.0",
+    "@knuckles/parser": "0.10.0",
+    "@knuckles/ssr": "0.10.0",
+    "@knuckles/syntax-tree": "0.10.0",
+    "@knuckles/typescript": "0.10.0",
+    "@knuckles/typescript-plugin": "0.10.0",
+    "@knuckles/vscode": "0.10.0",
+    "@tools/eslint": "0.0.0",
+    "@tools/nx": "0.0.0",
+    "@tools/scripts": "0.0.0",
+    "@tools/tsconfig": "0.0.0"
+  },
+  "changesets": []
+}

@@ -1,11 +1,11 @@
 {
   "name": "@knuckles/parser",
-  "version": "0.1.0",
+  "version": "0.10.0",
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
-    "@knuckles/location": "workspace:^",
-    "@knuckles/syntax-tree": "workspace:^",
+    "@knuckles/location": "workspace:~",
+    "@knuckles/syntax-tree": "workspace:~",
     "acorn": "^8.11.3",
     "acorn-loose": "^8.4.0",
     "parse5": "^7.1.2"
