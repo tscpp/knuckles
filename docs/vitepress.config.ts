@@ -1,5 +1,6 @@
 import { ThemeConfig } from "../apps/website/.vitepress/theme";
 import { readdirSync } from "node:fs";
+import { join, relative } from "node:path";
 
 const config: ThemeConfig = {
   logo: "/knuckles-sharp.svg",
@@ -26,7 +27,7 @@ const config: ThemeConfig = {
   ],
 
   sidebar: {
-    "../../docs/": [
+    [relative(".", __dirname)]: [
       {
         text: "Toolkit",
         collapsed: false,

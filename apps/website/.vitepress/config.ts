@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { UserConfig } from "vitepress";
 import footnote from "markdown-it-footnote";
-import themeConfig from "../../../docs/vitepress.config.js";
+import themeConfig from "../docs/vitepress.config.js";
 import { createLogger } from "vite";
 
 // https://vitepress.dev/reference/site-config
