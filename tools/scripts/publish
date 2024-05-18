@@ -8,8 +8,8 @@ if ((await subprocess1.exited) !== 0) {
 }
 
 const preFile = Bun.file(".changeset/pre.json");
-const tag =
-  ((await preFile.exists()) && (await preFile.json()).tag) || "latest";
+const pre = (await preFile.exists()) && (await preFile.json()).tag;
+const tag = (pre.mode === "pre" && pre.tag) || "latest";
 
 const subprocess2 = Bun.spawn(
   [
