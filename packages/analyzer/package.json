@@ -1,6 +1,6 @@
 {
   "name": "@knuckles/analyzer",
-  "version": "0.10.1",
+  "version": "0.10.3",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
