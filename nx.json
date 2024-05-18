@@ -67,7 +67,7 @@
     }
   ],
   "release": {
-    "projects": ["@knuckles/*"],
+    "projects": ["@knuckles/*", "!@knuckles/vscode"],
     "projectsRelationship": "independent"
   },
   "nxCloudAccessToken": "OWUzYjFlOWUtZWZlNS00OTA5LWEzYWEtYjFkMDM0MzU3MjdjfHJlYWQ="
