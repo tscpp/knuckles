@@ -31,9 +31,9 @@ export default class Scaffold {
       .nl(2)
       .write(
         `declare const $context: {
-          $parentContext: Knuckles.Ctx | undefined;
-          $parents: Knuckles.Ctx[];
-          $parent: Knuckles.Ctx | undefined;
+          $parentContext: Knuckles.BindingContext | undefined;
+          $parents: Knuckles.BindingContext[];
+          $parent: Knuckles.BindingContext | undefined;
           $root: ${this.#unknown};
           $data: ${this.#unknown};
           $rawData: ${this.#unknown};
