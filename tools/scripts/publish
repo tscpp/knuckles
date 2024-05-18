@@ -1,8 +1,11 @@
 #!/usr/bin/env bun
 
-const subprocess1 = Bun.spawn(["pnpm", "nx", "run-many", "-t=build"], {
-  stdio: ["ignore", "inherit", "inherit"],
-});
+const subprocess1 = Bun.spawn(
+  ["pnpm", "nx", "run-many", "--projects=@knuckles/*", "-t=build"],
+  {
+    stdio: ["ignore", "inherit", "inherit"],
+  },
+);
 if ((await subprocess1.exited) !== 0) {
   process.exit(1);
 }
