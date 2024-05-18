@@ -6,7 +6,7 @@
   "linked": [
     ["@knuckles/analyzer", "@knuckles/typescript", "@knuckles/eslint"]
   ],
-  "ignore": [],
+  "ignore": ["@tools/*", "@apps/*"],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
