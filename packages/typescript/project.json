@@ -21,11 +21,8 @@
           "exports": {
             ".": "./index.js",
             "./analyzer": "./analyzer.js",
-            "./types/loose": {
-              "types": "./types/loose.d.ts"
-            },
-            "./types/strict": {
-              "types": "./types/strict.d.ts"
+            "./types": {
+              "types": "./types/index.d.ts"
             }
           }
         }
