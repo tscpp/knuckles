@@ -5,18 +5,22 @@ type Unwrapped<T> = T extends ko.Observable<infer U> ? U : T;
 
 declare global {
   export namespace Knuckles {
-    export interface Ctx {
-      $parentContext: Ctx | undefined;
-      $parents: Ctx[];
-      $parent: Ctx | undefined;
+    export interface BindingContext {
+      $parentContext: BindingContext | undefined;
+      $parents: BindingContext[];
+      $parent: BindingContext | undefined;
       $root: unknown;
       $data: unknown;
       $rawData: unknown;
     }
 
-    export type Obs<T> = T | ko.Observable<T>;
+    export type Ambiguous<T> = T | ko.Observable<T>;
+    export type AmbiguousRecord<
+      K extends string | number | symbol,
+      T,
+    > = Readonly<Record<K, Ambiguous<T>>>;
 
-    export type Pre<V, E = Comment | Element> = <C extends Ctx>(
+    export type Binding<V, E = Comment | Element> = <C extends BindingContext>(
       n: E,
       v: V,
       c: C,
@@ -53,50 +57,55 @@ declare global {
 
     export namespace Strict {
       export interface Bindings extends Knuckles.Bindings {
-        attr: Pre<Obs<Readonly<Record<string, Obs<string>>>>>;
-        text: Pre<Obs<string>>;
-        html: Pre<Obs<string>>;
-        style: Pre<Obs<Readonly<Record<string, Obs<string>>>>>;
-        uniqueName: Pre<Obs<boolean>>;
+        attr: Binding<Ambiguous<AmbiguousRecord<string, string>>>;
+        text: Binding<Ambiguous<string>>;
+        html: Binding<Ambiguous<string>>;
+        style: Binding<Ambiguous<AmbiguousRecord<string, string>>>;
+        uniqueName: Binding<Ambiguous<boolean>>;
 
-        if: Pre<Obs<boolean>>;
-        ifnot: Pre<Obs<boolean>>;
+        if: Binding<Ambiguous<boolean>>;
+        ifnot: Binding<Ambiguous<boolean>>;
 
-        css: Pre<Obs<string | Obs<Readonly<Record<string, Obs<boolean>>>>>>;
-        class: Pre<Obs<string>>;
+        css: Binding<
+          Ambiguous<string | Ambiguous<AmbiguousRecord<string, boolean>>>
+        >;
+        class: Binding<Ambiguous<string>>;
 
-        hidden: Pre<Obs<boolean>>;
-        visible: Pre<Obs<boolean>>;
+        hidden: Binding<Ambiguous<boolean>>;
+        visible: Binding<Ambiguous<boolean>>;
 
         // Knockout will unwrap observables, but not react to them. It is
         // probably not intended to be used with observables.
-        valueUpdate: Pre<ValueUpdate, ElementWithValue>;
-        valueAllowUnset: Pre<boolean, ElementWithValue>;
+        valueUpdate: Binding<ValueUpdate, ElementWithValue>;
+        valueAllowUnset: Binding<boolean, ElementWithValue>;
 
         // Knockout supports any element with value, however documentation
         // states that is should be used exclusively with 'input' and
         // 'textarea' elements.
-        textInput: Pre<Obs<string>, HTMLInputElement | HTMLTextAreaElement>;
+        textInput: Binding<
+          Ambiguous<string>,
+          HTMLInputElement | HTMLTextAreaElement
+        >;
 
-        options: Pre<
-          Obs<readonly unknown[]> | ko.ObservableArray<unknown>,
+        options: Binding<
+          Ambiguous<readonly unknown[]> | ko.ObservableArray<unknown>,
           HTMLSelectElement
         >;
-        optionsCaption: Pre<unknown, HTMLSelectElement>;
+        optionsCaption: Binding<unknown, HTMLSelectElement>;
 
         // Knockout will unwrap observables, but not react to them. It is
         // probably not intended to be used with observables.
-        optionsText: Pre<
+        optionsText: Binding<
           string | ((entry: unknown) => string),
           HTMLSelectElement
         >;
-        optionsValue: Pre<
+        optionsValue: Binding<
           string | ((entry: unknown) => string),
           HTMLSelectElement
         >;
 
-        selectedOptions: Pre<
-          Obs<readonly string[]> | ko.ObservableArray<string>,
+        selectedOptions: Binding<
+          Ambiguous<readonly string[]> | ko.ObservableArray<string>,
           HTMLSelectElement
         >;
       }
@@ -104,46 +113,48 @@ declare global {
 
     export namespace Loose {
       export interface Bindings extends Knuckles.Bindings {
-        attr: Pre<Obs<Readonly<Record<string, any>>>, Element>;
-        text: Pre<any>;
-        html: Pre<any>;
-        style: Pre<Obs<Readonly<Record<string, any>>>>;
-        uniqueName: Pre<unknown>;
+        attr: Binding<Ambiguous<Readonly<Record<string, any>>>, Element>;
+        text: Binding<any>;
+        html: Binding<any>;
+        style: Binding<Ambiguous<Readonly<Record<string, any>>>>;
+        uniqueName: Binding<unknown>;
 
-        if: Pre<unknown>;
-        ifnot: Pre<unknown>;
+        if: Binding<unknown>;
+        ifnot: Binding<unknown>;
 
-        css: Pre<Obs<string | Obs<Readonly<Record<string, any>>>>>;
-        class: Pre<any>;
+        css: Binding<
+          Ambiguous<string | Ambiguous<Readonly<Record<string, any>>>>
+        >;
+        class: Binding<any>;
 
-        hidden: Pre<any, Element>;
-        visible: Pre<any, Element>;
+        hidden: Binding<any, Element>;
+        visible: Binding<any, Element>;
 
         // See strict definition for details.
-        valueUpdate: Pre<Obs<ValueUpdate>, ElementWithValue>;
-        valueAllowUnset: Pre<Obs<boolean>, ElementWithValue>;
+        valueUpdate: Binding<Ambiguous<ValueUpdate>, ElementWithValue>;
+        valueAllowUnset: Binding<Ambiguous<boolean>, ElementWithValue>;
 
         // See strict definition for details.
-        textInput: Pre<Obs<string>, ElementWithValue>;
+        textInput: Binding<Ambiguous<string>, ElementWithValue>;
 
-        options: Pre<
-          Obs<readonly any[]> | ko.ObservableArray<any>,
+        options: Binding<
+          Ambiguous<readonly any[]> | ko.ObservableArray<any>,
           HTMLSelectElement
         >;
-        optionsCaption: Pre<any, HTMLSelectElement>;
+        optionsCaption: Binding<any, HTMLSelectElement>;
 
         // See strict definition for details.
-        optionsText: Pre<
-          Obs<string | ((entry: any) => string)>,
+        optionsText: Binding<
+          Ambiguous<string | ((entry: any) => string)>,
           HTMLSelectElement
         >;
-        optionsValue: Pre<
-          Obs<string | ((entry: any) => string)>,
+        optionsValue: Binding<
+          Ambiguous<string | ((entry: any) => string)>,
           HTMLSelectElement
         >;
 
-        selectedOptions: Pre<
-          Obs<readonly string[] | Falsy> | ko.ObservableArray<string>,
+        selectedOptions: Binding<
+          Ambiguous<readonly string[] | Falsy> | ko.ObservableArray<string>,
           HTMLSelectElement
         >;
       }
@@ -152,7 +163,7 @@ declare global {
     export interface Bindings {
       event: {
         // Declared DOM events
-        <C extends Ctx>(
+        <C extends BindingContext>(
           n: Element,
           v: {
             readonly [K in keyof WindowEventMap]: (
@@ -164,7 +175,7 @@ declare global {
         ): C;
 
         // Index access for undeclared DOM events
-        <C extends Ctx>(
+        <C extends BindingContext>(
           n: Element,
           v: {
             readonly [key: string]: (this: C["$root"], event: Event) => void;
@@ -173,34 +184,34 @@ declare global {
         ): C;
       };
 
-      click: <C extends Ctx>(
+      click: <C extends BindingContext>(
         n: Element,
-        v: Obs<(this: C["$root"], event: MouseEvent) => void>,
+        v: Ambiguous<(this: C["$root"], event: MouseEvent) => void>,
         c: C,
       ) => C;
-      submit: <C extends Ctx>(
+      submit: <C extends BindingContext>(
         n: Element,
-        v: Obs<(this: C["$root"], event: SubmitEvent) => void>,
+        v: Ambiguous<(this: C["$root"], event: SubmitEvent) => void>,
         c: C,
       ) => C;
 
-      enable: Pre<Obs<boolean>, ElementWithDisabled>;
-      disable: Pre<Obs<boolean>, ElementWithDisabled>;
+      enable: Binding<Ambiguous<boolean>, ElementWithDisabled>;
+      disable: Binding<Ambiguous<boolean>, ElementWithDisabled>;
 
-      value: Pre<Obs<string>, ElementWithValue>;
+      value: Binding<Ambiguous<string>, ElementWithValue>;
 
-      hasFocus: Pre<Obs<boolean>, Element>;
+      hasFocus: Binding<Ambiguous<boolean>, Element>;
 
-      checked: Pre<
-        Obs<boolean | readonly string[]> | ko.ObservableArray<string>,
+      checked: Binding<
+        Ambiguous<boolean | readonly string[]> | ko.ObservableArray<string>,
         HTMLInputElement
       >;
-      checkedValue: Pre<Obs<string>, HTMLInputElement>;
+      checkedValue: Binding<Ambiguous<string>, HTMLInputElement>;
 
       foreach: <
         const K extends string,
         T extends readonly unknown[] | ko.Observable<readonly unknown[]>,
-        C extends Ctx,
+        C extends BindingContext,
       >(
         n: Comment | Element,
         v: { data: T; as: K } | T,
@@ -220,7 +231,7 @@ declare global {
       >;
 
       using: Bindings["with"];
-      with: <T extends object, C extends Ctx>(
+      with: <T extends object, C extends BindingContext>(
         n: Comment | Element,
         v: T | ko.Observable<T>,
         c: C,
@@ -235,15 +246,15 @@ declare global {
           $rawData: T;
         }
       >;
-      let: <T extends object, C extends Ctx>(
+      let: <T extends object, C extends BindingContext>(
         n: Comment | Element,
         v: T | ko.Observable<T>,
         c: C,
       ) => Overwrite<C, T>;
 
       // TODO: Untyped
-      template: Pre<any>;
-      component: Pre<any>;
+      template: Binding<any>;
+      component: Binding<any>;
     }
 
     export interface Settings {}
@@ -269,7 +280,7 @@ declare global {
 declare namespace ns {
   export const strict: Knuckles.Strict.Bindings;
   export const loose: Knuckles.Loose.Bindings & {
-    [name: string]: Knuckles.Pre<unknown>;
+    [name: string]: Knuckles.Binding<unknown>;
   };
   export const element: <K extends keyof ElementTagNameMap>(
     tagName: K,
@@ -279,7 +290,7 @@ declare namespace ns {
   export const hints: Hints;
 
   interface Hints {
-    with: <T, C extends Knuckles.Ctx>(
+    with: <T, C extends Knuckles.BindingContext>(
       v: T,
       c: C,
     ) => Overwrite<
