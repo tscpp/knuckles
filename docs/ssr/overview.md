@@ -91,4 +91,3 @@ ko.applyBindings(...);
 - [Webpack](https://webpack.js.org/) - `@knuckles/ssr/`
 
 [#10]: https://github.com/tscpp/knuckles/issues/10
-

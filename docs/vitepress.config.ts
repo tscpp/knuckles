@@ -1,6 +1,6 @@
-import { join } from "node:path";
 import { ThemeConfig } from "../apps/website/.vitepress/theme";
 import { readdirSync } from "node:fs";
+import { join } from "node:path";
 
 const config: ThemeConfig = {
   logo: "/knuckles-sharp.svg",
