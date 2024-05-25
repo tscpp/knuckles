@@ -37,7 +37,7 @@ See more about how to [importing view models](#importing-view-models).
 $ npm install --save-dev @knuckles/cli
 
 # This will configure the analyzer and typescript for you.
-$ npx ko add analyzer typescript
+$ npx ko add typescript
 ```
 
 ```sh [yarn]
@@ -45,7 +45,7 @@ $ npx ko add analyzer typescript
 $ yarn add --dev @knuckles/cli
 
 # This will configure the analyzer and typescript for you.
-$ yarn ko add analyzer typescript
+$ yarn ko add typescript
 ```
 
 ```sh [pnpm]
@@ -53,7 +53,7 @@ $ yarn ko add analyzer typescript
 $ pnpm add --save-dev @knuckles/cli
 
 # This will configure the analyzer and typescript for you.
-$ pnpm ko add analyzer typescript
+$ pnpm ko add typescript
 ```
 
 ```sh [bun]
@@ -61,7 +61,7 @@ $ pnpm ko add analyzer typescript
 $ bun add --save-dev @knuckles/cli
 
 # This will configure the analyzer and typescript for you.
-$ bun ko add analyzer typescript
+$ bun ko add typescript
 ```
 
 :::
