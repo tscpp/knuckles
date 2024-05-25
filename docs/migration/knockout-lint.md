@@ -31,7 +31,7 @@ The syntax used by Knockout itself has not been changed (obviously), but the syn
 
 ### Linking View Models
 
-You now link view models using the "with" directive. Notice the `#` before `ko` in the added code. The difference between Knockout's virtual elements and directives is that directives always start with `#`. Directives is the new (abstract) way to tell the analyzer (or other tools) about extra information.
+You now link view models using the "with" hint. Notice the `#` before `ko` in the added code. The difference between Knockout's virtual elements and hints is that hints always start with `#`. Hints is the new (abstract) way to tell the analyzer (or other tools) about extra information.
 
 :::tip
 
