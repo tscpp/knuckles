@@ -1,0 +1,9 @@
+{
+  "cfg-eslint": "/docs/analyzer/eslint.html",
+  "cfg-analyzer": "/docs/reference/config/analyzer.html",
+  "cfg-ssr": "/docs/ssr/overview.html",
+  "cfg": "/docs/reference/config/overview.html",
+  "eslint": "/docs/analyzer/eslint.html",
+  "analyzer": "/docs/analyzer/overview.html",
+  "ssr": "/docs/ssr/overview.html"
+}
