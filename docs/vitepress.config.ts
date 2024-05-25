@@ -1,12 +1,16 @@
 import { ThemeConfig } from "../apps/website/.vitepress/theme";
 import { readdirSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join } from "node:path";
 
 const config: ThemeConfig = {
   logo: "/knuckles-sharp.svg",
   search: { provider: "local" },
   editLink: {
     pattern: "https://github.com/tscpp/knuckles/edit/main/docs/:path",
+  },
+  docFooter: {
+    next: false,
+    prev: false,
   },
 
   nav: [
@@ -27,7 +31,7 @@ const config: ThemeConfig = {
   ],
 
   sidebar: {
-    [relative(".", __dirname)]: [
+    ".": [
       {
         text: "Toolkit",
         collapsed: false,
@@ -45,7 +49,7 @@ const config: ThemeConfig = {
         items: [
           //
           { text: "Overview", link: "overview" },
-          { text: "Setup", link: "setup" },
+          { text: "Standard Rules", link: "rules" },
           { text: "TypeScript", link: "typescript" },
           { text: "ESLint", link: "eslint" },
         ],
@@ -57,7 +61,6 @@ const config: ThemeConfig = {
         items: [
           //
           { text: "Overview", link: "overview" },
-          { text: "Setup", link: "setup" },
           { text: "Support", link: "support" },
           { text: "Plugins", link: "plugins" },
         ],
@@ -109,10 +112,10 @@ const config: ThemeConfig = {
         link: "https://github.com/tscpp/knuckles/discussions",
       },
     ],
-    "./packages/": [
+    "/packages/": [
       {
         text: "Documentation",
-        items: readdirSync("packages").map((name) => {
+        items: readdirSync(join(__dirname, "../packages")).map((name) => {
           return {
             text: name,
             link: `/packages/readme/${name}`,
@@ -121,7 +124,7 @@ const config: ThemeConfig = {
       },
       {
         text: "Changelogs",
-        items: readdirSync("packages").map((name) => {
+        items: readdirSync(join(__dirname, "../packages")).map((name) => {
           return {
             text: name,
             link: `/packages/changelog/${name}`,

@@ -80,6 +80,9 @@ const config: UserConfig<ThemeConfig> = {
       },
       chunkSizeWarningLimit: 0,
     },
+    server: {
+      hmr: false,
+    },
     resolve: {
       alias: readdirSync(
         fileURLToPath(new URL("./theme/components/", import.meta.url)),

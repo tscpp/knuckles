@@ -17,7 +17,7 @@ This guide will help you migrate your project to using [Knuckles SSR](/docs/ssr/
 
 ### Linking View Models
 
-Knuckles introduces an universal way to link view models to the decendants binding context using the ['with' directive](#).
+Knuckles introduces an universal way to link view models to the decendants binding context using the ['with' hint](/docs/reference/hints#with).
 
 <!-- prettier-ignore -->
 ```html

@@ -78,7 +78,7 @@ $ ko --help
 
 See setup guides for:
 
-- [Analyzer](/docs/analyzer/setup)
+- [Analyzer](/docs/analyzer/overview)
   - [TypeScript](/docs/analyzer/typescript)
   - [ESLint](/docs/analyzer/eslint)
-- [Server-side Render (SSR)](/docs/analyzer/setup)
+- [Server-side Render (SSR)](/docs/analyzer/overview)
