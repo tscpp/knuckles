@@ -1,5 +1,5 @@
 {
-  "name": "@knuckles/vscode",
+  "name": "knuckles-vscode",
   "displayName": "Knuckles",
   "version": "0.10.4",
   "private": true,
@@ -7,14 +7,21 @@
   "categories": [
     "Other"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tscpp/knuckles",
+    "directory": "packages/typescript-plugin"
+  },
+  "publisher": "tscpp",
   "type": "module",
-  "main": "./out/extension.js",
+  "main": "./dist/extension.cjs",
   "contributes": {},
   "activationEvents": [
-    "workspace:latest"
+    "*"
   ],
   "dependencies": {
     "@knuckles/language-server": "workspace:~",
+    "typescript": "^5.4.5",
     "vscode-languageclient": "^9.0.1"
   },
   "devDependencies": {
@@ -24,7 +31,8 @@
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",
     "@vscode/test-cli": "^0.0.9",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "esbuild": "^0.21.2"
   },
   "engines": {
     "vscode": "^1.88.0"

@@ -488,6 +488,9 @@ importers:
       '@knuckles/language-server':
         specifier: workspace:~
         version: link:../language-server
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
       vscode-languageclient:
         specifier: ^9.0.1
         version: 9.0.1
@@ -513,6 +516,15 @@ importers:
       '@vscode/test-electron':
         specifier: ^2.3.9
         version: 2.3.9
+      esbuild:
+        specifier: ^0.21.2
+        version: 0.21.2
+
+  samples/analyzer:
+    devDependencies:
+      '@knuckles/typescript':
+        specifier: workspace:*
+        version: link:../../packages/typescript
 
   tools/eslint:
     dependencies:
