@@ -522,6 +522,9 @@ importers:
 
   samples/analyzer:
     devDependencies:
+      '@knuckles/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@knuckles/typescript':
         specifier: workspace:*
         version: link:../../packages/typescript
