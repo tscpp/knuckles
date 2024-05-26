@@ -12,7 +12,7 @@ let client: LanguageClient;
 export function activate(context: ExtensionContext) {
   console.log("activate");
 
-  const serverModule = context.asAbsolutePath("language-server.cjs");
+  const serverModule = context.asAbsolutePath("./dist/language-server.cjs");
   console.log(serverModule);
   const debugOptions: ForkOptions = {
     execArgv: ["--nolazy", "--inspect=6009"],

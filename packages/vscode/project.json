@@ -4,26 +4,10 @@
   "sourceRoot": "{projectRoot}/src",
   "targets": {
     "build": {
-      "executor": "@tools/nx:build",
+      "executor": "nx:run-commands",
       "options": {
-        "entry": [
-          "{projectRoot}/src/extension.ts",
-          "{projectRoot}/src/language-server.ts"
-        ],
-        "format": "cjs",
-        "package": {
-          "type": "commonjs",
-          "main": "./extension.cjs"
-        },
-        "tsconfig": "tsconfig.json",
-        "declaration": false,
-        "sourceMap": true,
-        "tsup": {
-          "external": ["vscode"],
-          "skipNodeModulesBundle": false
-        },
-        "assets": ["{projectRoot}/README.md", "{workspaceRoot}/LICENSE"],
-        "outputPath": "{projectRoot}/dist"
+        "command": "bun ./scripts/build.js",
+        "cwd": "{projectRoot}"
       },
       "outputs": ["{projectRoot}/dist"]
     },

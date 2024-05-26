@@ -3,7 +3,12 @@
   "targetDefaults": {
     "build": {
       "executor": "@tools/nx:build",
-      "inputs": ["default", "^default", "{workspaceRoot}/tools/nx/**"],
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/tools/nx/**",
+        "{projectRoot}/esbuild.config.js"
+      ],
       "options": {
         "entry": "{projectRoot}/src/index.ts",
         "assets": ["{projectRoot}/README.md", "{workspaceRoot}/LICENSE"],
