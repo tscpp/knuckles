@@ -1,5 +1,6 @@
 {
   "active": "view.html",
+  "exclude": ["package.json"],
   "settings": {
     "analyzer": true,
     "ssr": false

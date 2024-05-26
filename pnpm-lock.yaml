@@ -520,6 +520,11 @@ importers:
         specifier: ^0.21.2
         version: 0.21.2
 
+  samples/analyzer:
+    devDependencies:
+      '@knuckles/typescript':
+        specifier: workspace:*
+        version: link:../../packages/typescript
 
   tools/eslint:
     dependencies:
