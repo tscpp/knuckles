@@ -58,6 +58,18 @@ export default class Renderer {
       this.#updateSourceFile();
     }
 
+    // Increment source file version
+    // https://github.com/dsherret/ts-morph/blob/886ad6/packages/common/src/compiler/DocumentRegistry.ts#L29
+    // prettier-ignore
+    (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.#project as any
+    )._context.compilerFactory.documentRegistry.createOrUpdateSourceFile(
+      this.sourceFile.getFilePath(),
+      this.#project.getCompilerOptions(),
+      ts.ScriptSnapshot.fromString(this.sourceFile.getFullText()),
+    );
+
     return this.#scaffold;
   }
 }

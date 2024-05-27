@@ -558,6 +558,7 @@ export function startLanguageServer(options?: LanguageServerOptions) {
     const resolvedConfigPaths = new Map<string, string | null>();
     const projectConfigs = new Map<string | null, NormalizedConfig>();
     const projectAnalyzers = new Map<string | null, Analyzer>();
+    const tsconfigToTranspiler = new Map<string | undefined, Transpiler>();
 
     const findConfig = async (path: string) => {
       if (resolvedConfigPaths.has(path)) {
@@ -617,9 +618,16 @@ export function startLanguageServer(options?: LanguageServerOptions) {
 
       async getTranspiler(path: string) {
         const tsConfigFilePath = ts.findConfigFile(path, ts.sys.fileExists);
-        const transpiler = new Transpiler({
-          tsConfig: tsConfigFilePath,
-        });
+
+        let transpiler = tsconfigToTranspiler.get(tsConfigFilePath);
+
+        if (!transpiler) {
+          transpiler = new Transpiler({
+            tsConfig: tsConfigFilePath,
+          });
+          tsconfigToTranspiler.set(tsConfigFilePath, transpiler);
+        }
+
         return transpiler;
       },
 
