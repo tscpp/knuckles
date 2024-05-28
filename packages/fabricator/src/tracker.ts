@@ -5,13 +5,14 @@ import type { Change, Chunk } from "./chunk.js";
  */
 export class Tracker {
   #chunk: Chunk;
-  #dismissed: Change[] = [];
+  #dismissed: Change[];
 
   /**
    * Use {@link Chunk.track} to create a new instance.
    */
   constructor(chunk: Chunk) {
     this.#chunk = chunk;
+    this.#dismissed = chunk.changes();
   }
 
   /**

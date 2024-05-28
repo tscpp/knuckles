@@ -186,7 +186,7 @@ export class Chunk {
   }
 
   changes(): Change[] {
-    return this.#history;
+    return this.#history.slice();
   }
 
   mappings(): DynamicMapping[] {
