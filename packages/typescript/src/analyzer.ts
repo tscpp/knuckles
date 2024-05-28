@@ -1,9 +1,5 @@
 import { Transpiler } from "./transpiler/transpiler.js";
-import {
-  AnalyzerSeverity,
-  Snapshot,
-  type AnalyzerPlugin,
-} from "@knuckles/analyzer";
+import { AnalyzerSeverity, type AnalyzerPlugin } from "@knuckles/analyzer";
 import { Position, Range } from "@knuckles/location";
 import { ts, type FileSystemHost } from "ts-morph";
 
@@ -23,20 +19,10 @@ export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
     name: "typescript",
 
     async analyze(c) {
-      const output = transpiler.transpile(
-        c.fileName,
-        c.text,
-        c.document,
-        options.mode,
-      );
+      const output = transpiler.transpile(c.fileName, c.document, options.mode);
       const sourceFile = output.sourceFile;
 
-      const snapshot = new Snapshot({
-        generated: output.generated,
-        original: c.text,
-        fileName: c.fileName,
-        mappings: output.mappings,
-      });
+      const snapshot = output.chunk.snapshot(c.text);
       c.snapshots.typescript = snapshot;
 
       if (process.env["KO_PRINT_GENERATED_TYPESCRIPT_SNAPSHOT"] === "true") {
@@ -64,18 +50,18 @@ export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
 
         if (startOffset !== undefined) {
           if (endOffset !== undefined) {
-            range = snapshot.getRealRangeInOriginal(
-              new Range(
+            range = snapshot.mirror({
+              generated: new Range(
                 Position.fromOffset(startOffset, snapshot.generated),
                 Position.fromOffset(endOffset, snapshot.generated),
               ),
-            );
+            });
           }
 
           if (!range) {
-            range = snapshot.blameOriginal(
-              Position.fromOffset(startOffset, snapshot.generated),
-            );
+            range = snapshot.blame({
+              generated: Position.fromOffset(startOffset, snapshot.generated),
+            });
           }
         }
 

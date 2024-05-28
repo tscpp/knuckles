@@ -1,18 +1,12 @@
 import { DynamicRange } from "./location.js";
-import { DynamicMapping, type Mapping } from "./mapping.js";
-import { DynamicMarker, type Marker } from "./marker.js";
+import { DynamicMapping } from "./mapping.js";
+import { DynamicMarker } from "./marker.js";
+import { Snapshot } from "./snapshot.js";
 import { Tracker } from "./tracker.js";
 import { isArray } from "./utils.js";
-import type { Range } from "@knuckles/location";
+import { type Range } from "@knuckles/location";
 
 const UNIVERSAL_NEWLINE_REGEX = /\r\n|\n\r|\n|\r/g;
-
-export interface Snapshot {
-  original: string;
-  generated: string;
-  mappings: Mapping[];
-  markers: Marker[];
-}
 
 /**
  * Represents the changes made to a range of text in a {@link Chunk}.
@@ -200,12 +194,12 @@ export class Chunk {
   }
 
   snapshot(original: string): Snapshot {
-    return {
+    return new Snapshot({
       original,
       generated: this.text(),
       mappings: this.mappings().map((mapping) => mapping.capture()),
       markers: this.markers().map((marker) => marker.capture()),
-    };
+    });
   }
 
   //#endregion

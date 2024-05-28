@@ -89,9 +89,13 @@ export default class Range {
     );
   }
 
-  contains(position: Position) {
-    return (
-      this.start.offset <= position.offset && position.offset <= this.end.offset
-    );
+  contains(locator: Position | Range): boolean {
+    if (locator instanceof Range) {
+      return this.contains(locator.start) && this.contains(locator.end);
+    } else {
+      return (
+        this.start.offset <= locator.offset && locator.offset <= this.end.offset
+      );
+    }
   }
 }
