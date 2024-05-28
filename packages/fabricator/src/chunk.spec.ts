@@ -1,6 +1,7 @@
 import { Chunk } from "./chunk.js";
 import { Range } from "@knuckles/location";
 import { describe, it, expect } from "bun:test";
+import assert from "node:assert/strict";
 
 describe("Chunk", () => {
   it("appends text", () => {
@@ -55,17 +56,12 @@ describe("Chunk", () => {
   describe("DynamicMapping", () => {
     it("maps changes", () => {
       const chunk = new Chunk() //
-        .append("Hi ");
+        .append("Hi ")
+        .while((chunk) => chunk.append("World"), { mirror: Range.zero })
+        .insert(3, "Beautiful ");
 
-      const dynamicMapping = chunk
-        .while((chunk) => {
-          chunk.append("World");
-        })
-        .real(Range.zero);
-
-      chunk.insert(3, "Beautiful ");
-
-      const mapping = dynamicMapping.capture();
+      const mapping = chunk.mappings()[0]?.capture();
+      assert(mapping);
 
       expect(mapping.generated.start.offset).toEqual(13);
       expect(mapping.generated.end.offset).toEqual(18);

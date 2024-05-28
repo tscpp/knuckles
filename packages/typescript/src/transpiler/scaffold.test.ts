@@ -13,14 +13,14 @@ describe("Scaffold", () => {
 
   test("transpiles element binding", () => {
     const chunk = render("<div data-bind='foo: bar'></div>");
-    expect(chunk.content).toContain("foo");
-    expect(chunk.content).toContain("bar");
+    expect(chunk.text()).toContain("foo");
+    expect(chunk.text()).toContain("bar");
   });
 
   test("renders 'with' directive", () => {
     const chunk = render(
       "<!-- ok with: default from 'viewmodel' --><div data-bind='text: text'></div><!-- /ok -->",
     );
-    expect(chunk.content).toContain('typeof import("viewmodel")');
+    expect(chunk.text()).toContain('typeof import("viewmodel")');
   });
 });
