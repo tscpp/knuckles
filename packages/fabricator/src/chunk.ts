@@ -213,9 +213,11 @@ export class Chunk {
   //#region Private methods
 
   #renderPendingNewlines() {
-    return (this.#newline + this.#indent.repeat(this.#indentSize)).repeat(
+    const text = (this.#newline + this.#indent.repeat(this.#indentSize)).repeat(
       this.#pendingNewlines,
     );
+    this.#pendingNewlines = 0;
+    return text;
   }
 
   #popEmptyLines(lines: string[]): number {
@@ -239,8 +241,14 @@ export class Chunk {
     if (lines.length > 0) {
       this.#text += this.#renderPendingNewlines();
 
+      const isEmptyLine =
+        this.#text.length === 0 || this.#text.charAt(-1) === "\n";
       const text = lines
-        .map((line) => this.#indent.repeat(this.#indentSize) + line)
+        .map((line, i) =>
+          isEmptyLine || i
+            ? this.#indent.repeat(this.#indentSize) + line
+            : line,
+        )
         .join(this.#newline);
 
       this.#text += text;
