@@ -1,5 +1,5 @@
-import { Position, Range } from "@knuckles/location";
 import type { Chunk } from "./chunk.js";
+import { Position, Range } from "@knuckles/location";
 
 export class DynamicPosition {
   #chunk: Chunk;

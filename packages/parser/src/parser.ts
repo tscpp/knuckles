@@ -187,7 +187,11 @@ export default class Parser {
 
     const namespace = new Identifier({
       value: nsText,
-      range: Range.fromOffsets(nsOffset, nsOffset + nsText.length, this.#string),
+      range: Range.fromOffsets(
+        nsOffset,
+        nsOffset + nsText.length,
+        this.#string,
+      ),
     });
 
     const name = new Identifier({
