@@ -32,12 +32,6 @@ describe("Chunk", () => {
     expect(chunk.text()).toBe("");
   });
 
-  it("adds indentation to appended text", () => {
-    const chunk = new Chunk();
-    chunk.indent().append("Hello\nWorld");
-    expect(chunk.text()).toBe("  Hello\n  World");
-  });
-
   describe("Tracker", () => {
     it("tracks changes", () => {
       const chunk = new Chunk();
@@ -60,7 +54,7 @@ describe("Chunk", () => {
         .while((chunk) => chunk.append("World"), { mirror: Range.zero })
         .insert(3, "Beautiful ");
 
-      const mapping = chunk.mappings()[0]?.capture();
+      const mapping = chunk.mappings()[0]?.capture(chunk.text());
       assert(mapping);
 
       expect(mapping.generated.start.offset).toEqual(13);

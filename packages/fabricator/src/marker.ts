@@ -1,21 +1,32 @@
-import type { DynamicRange } from "./location.js";
-import type { Range } from "@knuckles/location";
+import { DynamicPosition } from "./location.js";
+import { Position } from "@knuckles/location";
 
-export interface Marker {
-  id: string;
-  range: Range;
-}
-
-export class DynamicMarker {
+export class Marker extends Position {
   constructor(
     readonly id: string,
-    readonly range: DynamicRange,
-  ) {}
+    position: Position,
+  ) {
+    super(position);
+  }
+}
 
-  capture(): Marker {
-    return {
-      id: this.id,
-      range: this.range.capture(),
-    };
+export class DynamicMarker extends DynamicPosition {
+  constructor(
+    readonly id: string,
+    offset: number,
+  ) {
+    super(offset);
+  }
+
+  override capture(text: string): Marker {
+    return new Marker(this.id, super.capture(text));
+  }
+
+  override clone(): DynamicMarker {
+    return new DynamicMarker(this.id, this.captureOffset());
+  }
+
+  override copy() {
+    return this.clone();
   }
 }

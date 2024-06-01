@@ -1,4 +1,9 @@
-import Position from "./position.js";
+import Position, { type RawPosition } from "./position.js";
+
+export interface RawRange {
+  start: RawPosition;
+  end: RawPosition;
+}
 
 export default class Range {
   static zero = new Range(0, 0, 0, 0, 0, 0);
@@ -79,14 +84,7 @@ export default class Range {
   }
 
   copy() {
-    return new Range(
-      this.start.line,
-      this.start.column,
-      this.start.offset,
-      this.end.line,
-      this.end.column,
-      this.end.offset,
-    );
+    return this.clone();
   }
 
   contains(locator: Position | Range): boolean {
@@ -97,5 +95,20 @@ export default class Range {
         this.start.offset <= locator.offset && locator.offset <= this.end.offset
       );
     }
+  }
+
+  format() {
+    return `${this.start.format()}-${this.end.format()}`;
+  }
+
+  toString() {
+    return this.format();
+  }
+
+  toJSON(): RawRange {
+    return {
+      start: this.start.toJSON(),
+      end: this.end.toJSON(),
+    };
   }
 }

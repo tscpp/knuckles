@@ -36,10 +36,10 @@ export default class Renderer {
   render() {
     // Render destructured paramaters for $context and $data.
     for (const marker of this.#scaffold.markers(["context", "data"])) {
-      const range = marker.range.capture();
+      const pos = marker.capture(this.#scaffold.text());
 
       const declaration = this.sourceFile
-        .getDescendantAtPos(range.start.offset)
+        .getDescendantAtPos(pos.offset)
         ?.getParent()
         ?.getParent();
       if (
@@ -56,7 +56,7 @@ export default class Renderer {
         .map((symbol) => symbol.getName())
         .join(", ");
 
-      this.#scaffold.insert(range.start.offset + 1, " " + destructured);
+      this.#scaffold.insert(pos.offset + 1, " " + destructured);
       this.#updateSourceFile();
     }
 

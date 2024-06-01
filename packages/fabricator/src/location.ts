@@ -1,12 +1,11 @@
-import type { Chunk } from "./chunk.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Chunk } from "./chunk.js";
 import { Position, Range } from "@knuckles/location";
 
 export class DynamicPosition {
-  #chunk: Chunk;
   #offset: number;
 
-  constructor(chunk: Chunk, offset: number) {
-    this.#chunk = chunk;
+  constructor(offset: number) {
     this.#offset = offset;
   }
 
@@ -14,14 +13,22 @@ export class DynamicPosition {
     return this.#offset;
   }
 
-  capture() {
-    return Position.fromOffset(this.#offset, this.#chunk.text());
+  capture(text: string) {
+    return Position.fromOffset(this.#offset, text);
   }
 
   translate(offset: number, length: number) {
     if (this.#offset >= offset) {
       this.#offset += length;
     }
+  }
+
+  clone(): DynamicPosition {
+    return new DynamicPosition(this.#offset);
+  }
+
+  copy(): DynamicPosition {
+    return this.clone();
   }
 }
 
@@ -36,9 +43,9 @@ export class DynamicRange {
   /**
    * Use {@link Chunk.while} to create a new instance.
    */
-  constructor(chunk: Chunk, start: number, end: number) {
-    this.start = new DynamicPosition(chunk, start);
-    this.end = new DynamicPosition(chunk, end);
+  constructor(start: number, end: number) {
+    this.start = new DynamicPosition(start);
+    this.end = new DynamicPosition(end);
   }
 
   captureOffsets(): { start: number; end: number } {
@@ -52,8 +59,8 @@ export class DynamicRange {
    * Captures the range based on current state of the owner
    * {@link Chunk}.
    */
-  capture(): Range {
-    return new Range(this.start.capture(), this.end.capture());
+  capture(text: string): Range {
+    return new Range(this.start.capture(text), this.end.capture(text));
   }
 
   /**
@@ -63,5 +70,16 @@ export class DynamicRange {
   translate(offset: number, length: number) {
     this.start.translate(offset, length);
     this.end.translate(offset, length);
+  }
+
+  clone(): DynamicRange {
+    return new DynamicRange(
+      this.start.captureOffset(),
+      this.end.captureOffset(),
+    );
+  }
+
+  copy(): DynamicRange {
+    return this.clone();
   }
 }

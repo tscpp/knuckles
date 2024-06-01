@@ -1,6 +1,6 @@
 import type { Mapping } from "./mapping.js";
-import type { Marker } from "./marker.js";
 import { Position, Range } from "@knuckles/location";
+import type { Marker } from "./marker.js";
 
 export interface SnapshotInit {
   original: string;

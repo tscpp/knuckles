@@ -79,7 +79,6 @@ export default class Scaffold {
           .newline()
           .append("(($context) => ")
           .newline()
-          .indent()
           .append(`${ns}.hints.with(${ns}.type<typeof import(`)
           .append(quote(node.import.module.value))
           .append(")")
@@ -89,7 +88,6 @@ export default class Scaffold {
               : "[" + quote(node.import.identifier.value) + "]",
           )
           .append(">(), $context)")
-          .dedent()
           .newline()
           .append(")($context)");
       }
@@ -118,14 +116,10 @@ export default class Scaffold {
     return new Chunk()
       .append("(($context) => {")
       .newline()
-      .indent()
       .append(decendants)
-      .dedent()
       .append("})(")
       .newline()
-      .indent()
       .append(parent)
-      .dedent()
       .newline()
       .append(")");
   }
@@ -144,7 +138,6 @@ export default class Scaffold {
         chunk
           .append("(($context) => {")
           .newline()
-          .indent()
           .append("const ")
           .append("{")
           .marker("context")
@@ -175,14 +168,13 @@ export default class Scaffold {
 
     if (binding.parent instanceof Element) {
       chunk.append(
-        new Chunk({
-          mapping: { blame: binding.name },
-        })
+        new Chunk()
           .append(`${ns}.element("`)
           .append(binding.parent.tagName.value, {
             mirror: binding.parent.tagName,
           })
           .append('")'),
+        { blame: binding.name },
       );
     } else {
       chunk //
@@ -196,7 +188,6 @@ export default class Scaffold {
       .append(binding.param.value, { mirror: binding.param })
       .append(", $context)")
       .append(";")
-      .dedent()
       .newline()
       .append("})");
   }

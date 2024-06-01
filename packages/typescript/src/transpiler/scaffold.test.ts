@@ -23,4 +23,12 @@ describe("Scaffold", () => {
     );
     expect(chunk.text()).toContain('typeof import("viewmodel")');
   });
+
+  test("generates mappings", () => {
+    const chunk = render("<div data-bind='foo: bar'></div>");
+    const mappings = chunk
+      .mappings()
+      .map((mapping) => mapping.capture(chunk.text()));
+    expect(mappings.length).toBeGreaterThan(0);
+  });
 });

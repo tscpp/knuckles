@@ -17,11 +17,23 @@ export class DynamicMapping {
     readonly mirror = false,
   ) {}
 
-  capture(): Mapping {
+  capture(text: string): Mapping {
     return {
       original: this.original,
-      generated: this.generated.capture(),
+      generated: this.generated.capture(text),
       mirror: this.mirror,
     };
+  }
+
+  clone(): DynamicMapping {
+    return new DynamicMapping(this.original, this.generated, this.mirror);
+  }
+
+  copy(): DynamicMapping {
+    return new DynamicMapping(
+      this.original.copy(),
+      this.generated.copy(),
+      this.mirror,
+    );
   }
 }

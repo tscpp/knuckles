@@ -6,14 +6,11 @@ import { Tracker } from "./tracker.js";
 import { isArray } from "./utils.js";
 import { type Range } from "@knuckles/location";
 
-const UNIVERSAL_NEWLINE_REGEX = /\r\n|\n\r|\n|\r/g;
-
 /**
  * Represents the changes made to a range of text in a {@link Chunk}.
  */
 export interface Change {
   start: number;
-  end: number;
   oldText: string;
   newText: string;
 }
@@ -28,41 +25,22 @@ export type MappingOptions =
 
 export type ChunkLike = string | Chunk | readonly Chunk[];
 
-export interface ChunkOptions {
-  /**
-   * The string or number of spaces to use for indentation in the chunk.
-   */
-  indent?: string | number | undefined;
-
-  /**
-   * The string to use for newlines in the chunk.
-   */
-  newline?: string | undefined;
-
-  mapping?: MappingOptions;
-}
-
 /**
  * Represents a chunk of text that can be manipulated.
  */
 export class Chunk {
-  #indent: string;
-  #newline: string;
-  #indentSize = 0;
-  #pendingNewlines = 0;
+  static concat(...chunks: ChunkLike[]): Chunk {
+    const parent = new Chunk();
+    for (const chunk of chunks.flat()) {
+      parent.append(chunk);
+    }
+    return parent;
+  }
+
   #text = "";
   #mappings = new Set<DynamicMapping>();
   #history: Change[] = [];
   #markers = new Set<DynamicMarker>();
-
-  constructor(options?: ChunkOptions) {
-    this.#indent =
-      typeof options?.indent === "number"
-        ? " ".repeat(options.indent)
-        : options?.indent ?? "  ";
-    this.#newline = options?.newline ?? "\n";
-    this.#map(new DynamicRange(this, 0, 0), options?.mapping);
-  }
 
   //#region Public methods
 
@@ -70,7 +48,7 @@ export class Chunk {
    * Get the current text content.
    */
   text(): string {
-    return this.#text + this.#renderPendingNewlines();
+    return this.#text;
   }
 
   /**
@@ -85,23 +63,7 @@ export class Chunk {
    * Appends a newline to the end of the chunk.
    */
   newline(count = 1): this {
-    this.#pendingNewlines += count;
-    return this;
-  }
-
-  /**
-   * Increases the current indent size for appended text by one level.
-   */
-  indent(): this {
-    this.#indentSize++;
-    return this;
-  }
-
-  /**
-   * Decreases the current indent size for appended text by one level.
-   */
-  dedent(): this {
-    this.#indentSize--;
+    this.append("\n".repeat(count));
     return this;
   }
 
@@ -110,18 +72,13 @@ export class Chunk {
    */
   append(chunk: ChunkLike, options?: MappingOptions): this {
     const tracker = this.track();
-    this.#write(this.#text.length, chunk);
+    this.#write(this.#text.length, this.#text.length, chunk);
     this.#mapChanges(tracker.flush(), options);
     return this;
   }
 
   marker(id: string): this {
-    this.#markers.add(
-      new DynamicMarker(
-        id,
-        new DynamicRange(this, this.#text.length, this.#text.length),
-      ),
-    );
+    this.#markers.add(new DynamicMarker(id, this.#text.length));
     return this;
   }
 
@@ -130,7 +87,7 @@ export class Chunk {
    */
   insert(offset: number, chunk: ChunkLike, options?: MappingOptions): this {
     const tracker = this.track();
-    this.#write(offset, chunk);
+    this.#write(offset, offset, chunk);
     this.#mapChanges(tracker.flush(), options);
     return this;
   }
@@ -139,9 +96,15 @@ export class Chunk {
    * Updates the text content by replacing the specified range with the new
    * chunk or string.
    */
-  update(start: number, end: number, chunk: ChunkLike): this {
-    this.#removeTextAt(start, end);
-    this.insert(start, chunk);
+  update(
+    start: number,
+    end: number,
+    chunk: ChunkLike,
+    options?: MappingOptions,
+  ): this {
+    const tracker = this.track();
+    this.#write(start, end, chunk);
+    this.#mapChanges(tracker.flush(), options);
     return this;
   }
 
@@ -154,7 +117,6 @@ export class Chunk {
 
     this.#history.push({
       start,
-      end,
       oldText,
       newText: "",
     });
@@ -197,99 +159,77 @@ export class Chunk {
     return new Snapshot({
       original,
       generated: this.text(),
-      mappings: this.mappings().map((mapping) => mapping.capture()),
-      markers: this.markers().map((marker) => marker.capture()),
+      mappings: this.mappings().map((mapping) => mapping.capture(this.#text)),
+      markers: this.markers().map((marker) => marker.capture(this.#text)),
     });
+  }
+
+  clone(): Chunk {
+    const chunk = new Chunk();
+    chunk.#text = this.#text;
+    chunk.#mappings = this.#mappings;
+    chunk.#history = this.#history;
+    chunk.#markers = this.#markers;
+    return chunk;
+  }
+
+  copy(): Chunk {
+    const chunk = new Chunk();
+    chunk.#text = this.#text;
+    chunk.#mappings = new Set(
+      Array.from(this.#mappings).map((mapping) => mapping.copy()),
+    );
+    chunk.#history = this.#history.map((change) => ({ ...change }));
+    chunk.#markers = new Set(
+      Array.from(this.#markers).map((marker) => marker.copy()),
+    );
+    return chunk;
   }
 
   //#endregion
 
   //#region Private methods
 
-  #renderPendingNewlines() {
-    const text = (this.#newline + this.#indent.repeat(this.#indentSize)).repeat(
-      this.#pendingNewlines,
-    );
-    this.#pendingNewlines = 0;
-    return text;
-  }
-
-  #popEmptyLines(lines: string[]): number {
-    let emptyLines = 0;
-
-    for (let i = lines.length - 1; i >= 0; i--) {
-      if (lines[i]!.trim() === "") {
-        lines.pop();
-        emptyLines++;
-      } else {
-        break;
-      }
-    }
-
-    return emptyLines;
-  }
-
-  #appendText(text: string) {
-    const lines = text.split(UNIVERSAL_NEWLINE_REGEX);
-    const emptyLines = this.#popEmptyLines(lines);
-    if (lines.length > 0) {
-      this.#text += this.#renderPendingNewlines();
-
-      const isEmptyLine =
-        this.#text.length === 0 || this.#text.charAt(-1) === "\n";
-      const text = lines
-        .map((line, i) =>
-          isEmptyLine || i
-            ? this.#indent.repeat(this.#indentSize) + line
-            : line,
-        )
-        .join(this.#newline);
-
-      this.#text += text;
-    }
-    this.#pendingNewlines += emptyLines;
-  }
-
-  #writeTextAt(offset: number, text: string) {
-    const before = this.#text;
-
-    if (offset === this.#text.length) {
-      this.#appendText(text);
-    } else {
-      this.#text =
-        this.#text.slice(0, offset) + text + this.#text.slice(offset);
-    }
-
-    const length = this.#text.length - before.length;
-    const oldText = before.slice(offset, offset + length);
-    const newText = this.#text.slice(offset, offset + length);
-
+  #translate(offset: number, length: number) {
     for (const mapping of this.#mappings) {
       mapping.generated.translate(offset, length);
     }
 
+    for (const marker of this.#markers) {
+      marker.translate(offset, length);
+    }
+  }
+
+  #writeTextAt(start: number, end: number, newText: string) {
+    const oldText = this.#text.slice(start, end);
+    this.#text = this.#text.slice(0, start) + newText + this.#text.slice(end);
+    this.#translate(start, newText.length);
     this.#history.push({
-      start: offset,
-      end: offset + length,
+      start,
       oldText,
       newText,
     });
   }
 
-  #write(offset: number, chunk: ChunkLike) {
+  #write(start: number, end: number, chunk: ChunkLike) {
     if (isArray(chunk)) {
-      for (const child of chunk) {
-        this.#write(offset, child);
-      }
+      this.#write(start, end, Chunk.concat(chunk));
     } else if (chunk instanceof Chunk) {
-      for (const mapping of chunk.#mappings) {
-        mapping.generated.translate(0, this.#text.length);
+      this.#writeTextAt(start, end, chunk.text());
+
+      for (let mapping of chunk.#mappings) {
+        mapping = mapping.copy();
+        mapping.generated.translate(0, start);
         this.#mappings.add(mapping);
       }
 
-      this.#writeTextAt(offset, chunk.text());
+      for (let marker of chunk.#markers) {
+        marker = marker.copy();
+        marker.translate(0, start);
+        this.#markers.add(marker);
+      }
     } else {
-      this.#writeTextAt(offset, chunk);
+      this.#writeTextAt(start, end, chunk);
     }
   }
 
@@ -321,28 +261,30 @@ export class Chunk {
     const ranges = new Set<DynamicRange>();
 
     for (const change of changes) {
-      const touching = new Set<[number, number]>([[change.start, change.end]]);
+      const changeStart = change.start;
+      const changeEnd = changeStart + change.newText.length;
+      const touching = new Set<[number, number]>([[changeStart, changeEnd]]);
 
       for (const range of ranges) {
         const { start, end } = range.captureOffsets();
 
         if (
-          (start >= change.start && start <= change.end) ||
-          (end >= change.start && end <= change.end)
+          (start >= changeStart && start <= changeEnd) ||
+          (end >= changeStart && end <= changeEnd)
         ) {
           touching.add([start, end]);
           ranges.delete(range);
         }
       }
 
-      const start = Array.from(touching)
+      const rangeStart = Array.from(touching)
         .map((v) => v[0])
         .reduce((a, b) => Math.min(a, b));
-      const end = Array.from(touching)
+      const rangeEnd = Array.from(touching)
         .map((v) => v[1])
         .reduce((a, b) => Math.max(a, b));
 
-      const range = new DynamicRange(this, start, end);
+      const range = new DynamicRange(rangeStart, rangeEnd);
       ranges.add(range);
     }
 
