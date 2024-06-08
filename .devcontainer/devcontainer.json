@@ -26,7 +26,8 @@
         "ms-azuretools.vscode-docker",
         "bierner.lit-html",
         "wayou.vscode-todo-highlight",
-        "Gruntfuggly.todo-tree"
+        "Gruntfuggly.todo-tree",
+        "firsttris.vscode-jest-runner"
       ],
       "settings": {
         "explorer.fileNesting.enabled": true
