@@ -1,6 +1,7 @@
 {
   "name": "@knuckles/eslint",
   "version": "0.10.1",
+  "description": "ESLint plugin for the Knuckles analyzer.",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",

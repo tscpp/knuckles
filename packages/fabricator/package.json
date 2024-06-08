@@ -1,6 +1,7 @@
 {
   "name": "@knuckles/fabricator",
   "version": "0.10.1",
+  "description": "Utillity for generating snapshots with mappings.",
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {

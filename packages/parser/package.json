@@ -1,6 +1,7 @@
 {
   "name": "@knuckles/parser",
   "version": "0.10.1",
+  "description": "Parses knockout views.",
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
