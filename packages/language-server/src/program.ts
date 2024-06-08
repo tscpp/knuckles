@@ -176,7 +176,6 @@ export class Program {
       const hasTypeScriptPlugin = config.analyzer.plugins.some(
         (plugin) => plugin.name === "typescript",
       );
-      console.log(config);
       const plugins = hasTypeScriptPlugin
         ? config.analyzer.plugins
         : [

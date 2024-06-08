@@ -33,7 +33,6 @@ export class LanguageService {
     this.#_connection = connection;
 
     this.documents.onDidOpen(async (event) => {
-      console.log(event.document.uri);
       // Create document state
       const { document } = event;
       const provider = new DocumentStateProvider(
