@@ -3,9 +3,9 @@
 [![Knuckles: Development Toolkit for Knockout.js](./assets/knuckles-banner.svg)](https://knuckles.elsk.dev)
 
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tscpp/knuckles/checks.yml?style=for-the-badge&logo=github&label=checks)](https://github.com/tscpp/knuckles/actions/workflows/checks.yml)
+[![Coveralls](https://img.shields.io/coverallsCoverage/github/tscpp/knuckles?style=for-the-badge)](https://coveralls.io/github/tscpp/knuckles)
 [![GitHub License](https://img.shields.io/github/license/tscpp/knuckles?style=for-the-badge)](https://github.com/tscpp/knuckles?tab=MIT-1-ov-file#readme)
 [![NPM Downloads](https://img.shields.io/npm/dm/%40knuckles%2Fcli?style=for-the-badge&logo=npm)](https://www.npmjs.com/package/@knuckles/cli)
-[![Open in Dev Container](https://img.shields.io/static/v1?style=for-the-badge&label=Dev+Container&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/tscpp/knuckles)
 
 </div>
 

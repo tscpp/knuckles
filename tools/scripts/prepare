@@ -1,4 +1,0 @@
-#!/bin/bash
-
-tools/scripts/generate-tsconfig \
-&& tools/scripts/revise-docs

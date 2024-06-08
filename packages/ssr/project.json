@@ -51,11 +51,7 @@
         }
       }
     },
-    "test": {
-      "options": {
-        "pattern": "test/**/*.test.ts"
-      }
-    },
+    "test": {},
     "e2e": {
       "executor": "@nx/playwright:playwright",
       "options": {

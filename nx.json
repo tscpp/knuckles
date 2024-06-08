@@ -25,7 +25,18 @@
       "cache": true
     },
     "test": {
-      "executor": "@tools/nx:test",
+      "executor": "@nx/jest:jest",
+      "inputs": [
+        "default",
+        "^default",
+        "{projectRoot}/jest.config.ts",
+        "{workspaceRoot}/jest.config.ts",
+        "{workspaceRoot}/jest.preset.cjs"
+      ],
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.ts",
+        "passWithNoTests": true
+      },
       "cache": true
     },
     "e2e": {
@@ -69,11 +80,16 @@
         "previewTargetName": "preview",
         "serveStaticTargetName": "serve-static"
       }
+    },
+    {
+      "plugin": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      }
     }
   ],
   "release": {
     "projects": ["@knuckles/*", "!@knuckles/vscode"],
     "projectsRelationship": "independent"
-  },
-  "nxCloudAccessToken": "OWUzYjFlOWUtZWZlNS00OTA5LWEzYWEtYjFkMDM0MzU3MjdjfHJlYWQ="
+  }
 }

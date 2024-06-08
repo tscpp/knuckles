@@ -3,6 +3,7 @@ dist
 build
 !/docs/node_modules
 /.nx/cache
+.nx/workspace-data
 *.tsbuildinfo
 /tmp
 .vscode-test
@@ -11,3 +12,4 @@ build
 **/.vitepress/dist
 **/ko.*.log
 **/playwright-report
+coverage

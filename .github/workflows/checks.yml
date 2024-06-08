@@ -26,11 +26,6 @@ jobs:
           node-version: 20.x
           cache: pnpm
 
-      - name: Setup Bun 1.x
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: 1
-
       - name: Install
         run: pnpm install --frozen-lockfile
 
@@ -56,19 +51,22 @@ jobs:
           node-version: 20.x
           cache: pnpm
 
-      - name: Setup Bun 1.x
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: 1
-
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Test
-        run: pnpm run test
+      - name: Run unit tests
+        run: pnpm exec nx run-many -t test --coverage
 
-  format:
-    name: Format
+      - name: Collect coverage
+        run: echo "COVERAGE=$(tools/scripts/list-coverage)" >> $GITHUB_ENV
+
+      - name: Report coverage
+        uses: coverallsapp/github-action@v2
+        with:
+          files: ${{ env.COVERAGE }}
+
+  e2e:
+    name: End-to-end
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository (deep)
@@ -90,6 +88,34 @@ jobs:
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: 1
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Install browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run end-to-end tests
+        run: pnpm exec nx run-many -t e2e
+
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository (deep)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          cache: pnpm
 
       - name: Install
         run: pnpm install --frozen-lockfile

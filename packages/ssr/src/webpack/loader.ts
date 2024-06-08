@@ -85,7 +85,7 @@ const loader: LoaderDefinitionFunction = function (source) {
         this.emitWarning(new Error(formatDiagnostic(warning)));
       }
 
-      return result.modified ?? undefined;
+      callback(undefined, result.modified ?? undefined);
     })
     .catch(callback);
 };

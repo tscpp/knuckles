@@ -1,11 +1,9 @@
 import js from "@eslint/js";
-import nx from "@nx/eslint-plugin";
 import { config, references } from "@tools/eslint";
 import prettier from "eslint-config-prettier";
 import imprt from "eslint-plugin-import";
 import playwright from "eslint-plugin-playwright";
 import globals from "globals";
-import jsonc from "jsonc-eslint-parser";
 import ts from "typescript-eslint";
 
 export default config([
@@ -17,8 +15,11 @@ export default config([
       "**/*.d.ts",
       "**/samples/",
       "**/dist/",
+      "**/build/",
       "**/.vscode-test/",
       "**/vite.config.*",
+      "**/jest.config.ts",
+      "**/coverage/",
 
       // documentation
       "docs/**/*",
@@ -78,22 +79,6 @@ export default config([
         },
       ],
       "@typescript-eslint/no-explicit-any": "warn",
-    },
-  },
-  {
-    files: [
-      "tools/nx/package.json",
-      "tools/nx/generators.json",
-      "tools/nx/executors.json",
-    ],
-    plugins: {
-      "@nx": nx,
-    },
-    languageOptions: {
-      parser: jsonc,
-    },
-    rules: {
-      "@nx/nx-plugin-checks": "error",
     },
   },
   {

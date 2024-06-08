@@ -2,7 +2,6 @@ dist
 coverage
 /.nx/cache
 node_modules
-/tsconfig.json
 pnpm-lock.yaml
 package-lock.json
 .pnpm-store
@@ -11,4 +10,4 @@ packages/legacy-compiler/lib/parser.cjs
 **/.vitepress/cache
 packages/*/README.md
 apps/playground/src/assets/
-# packages/typescript/types/index.d.ts
+/.nx/workspace-data
