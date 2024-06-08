@@ -13,7 +13,7 @@ import { normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as morph from "ts-morph";
 import { ts } from "ts-morph";
-import { TextDocument } from "vscode-languageserver-textdocument";
+import type { TextDocument } from "vscode-languageserver-textdocument";
 import * as vscode from "vscode-languageserver/node.js";
 
 const POLLING_DELAY = 250;
