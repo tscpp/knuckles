@@ -11,4 +11,5 @@
 "@knuckles/syntax-tree": minor
 "@knuckles/typescript": minor
 "@knuckles/typescript-plugin": minor
+"knuckles-vscode": minor
 ---
