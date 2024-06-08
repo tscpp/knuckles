@@ -1,4 +1,4 @@
-import { type ExtensionContext } from "vscode";
+import * as vscode from "vscode";
 import {
   type ForkOptions,
   LanguageClient,
@@ -9,7 +9,7 @@ import {
 
 let client: LanguageClient;
 
-export function activate(context: ExtensionContext) {
+export function activate(context: vscode.ExtensionContext) {
   console.log("activate");
 
   const serverModule = context.asAbsolutePath("./dist/language-server.cjs");
@@ -37,6 +37,11 @@ export function activate(context: ExtensionContext) {
         language: "html",
       },
     ],
+    synchronize: {
+      fileEvents: vscode.workspace.createFileSystemWatcher(
+        "**/knuckles.config.*",
+      ),
+    },
   };
 
   client = new LanguageClient(
@@ -47,6 +52,14 @@ export function activate(context: ExtensionContext) {
   );
 
   client.start();
+
+  vscode.window.onDidChangeActiveTextEditor((editor) => {
+    if (editor) {
+      client.sendNotification("workspace/didChangeActiveTextEditor", {
+        uri: editor.document.uri.toString(),
+      });
+    }
+  });
 }
 
 export function deactivate(): Thenable<void> | undefined {

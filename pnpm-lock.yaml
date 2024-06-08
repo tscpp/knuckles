@@ -337,6 +337,9 @@ importers:
       '@knuckles/config':
         specifier: workspace:~
         version: link:../config
+      '@knuckles/fabricator':
+        specifier: workspace:~
+        version: link:../fabricator
       '@knuckles/location':
         specifier: workspace:~
         version: link:../location
