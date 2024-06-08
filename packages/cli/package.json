@@ -21,10 +21,10 @@
     "@types/yargs": "^17.0.32"
   },
   "peerDependencies": {
-    "@knuckles/analyzer": "workspace:latest",
-    "@knuckles/config": "workspace:latest",
-    "@knuckles/ssr": "workspace:latest",
-    "@knuckles/typescript": "workspace:latest"
+    "@knuckles/analyzer": "workspace:~",
+    "@knuckles/config": "workspace:~",
+    "@knuckles/ssr": "workspace:~",
+    "@knuckles/typescript": "workspace:~"
   },
   "peerDependenciesMeta": {
     "@knuckles/typescript": {
