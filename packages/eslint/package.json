@@ -12,10 +12,10 @@
     "@knuckles/location": "workspace:~"
   },
   "devDependencies": {
+    "@knuckles/analyzer": "workspace:~",
     "@knuckles/typescript": "workspace:~"
   },
   "peerDependencies": {
-    "@knuckles/analyzer": "workspace:~",
     "eslint": "^9.2.0"
   },
   "publishConfig": {

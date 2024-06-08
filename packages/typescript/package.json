@@ -17,11 +17,9 @@
     "ts-morph": "^22.0.0"
   },
   "devDependencies": {
+    "@knuckles/analyzer": "workspace:~",
     "@knuckles/parser": "workspace:~",
     "knockout": "3.5.1"
-  },
-  "peerDependencies": {
-    "@knuckles/analyzer": "workspace:~"
   },
   "publishConfig": {
     "access": "public"

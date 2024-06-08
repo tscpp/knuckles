@@ -4,7 +4,7 @@
   "description": "Config utillities.",
   "type": "module",
   "exports": "./src/index.ts",
-  "peerDependencies": {
+  "devDependencies": {
     "@knuckles/analyzer": "workspace:~"
   },
   "publishConfig": {
