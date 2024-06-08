@@ -52,12 +52,12 @@ describe("Chunk", () => {
       const chunk = new Chunk() //
         .append("Hi ")
         .while((chunk) => chunk.append("World"), { mirror: Range.zero })
-        .insert(3, "Beautiful ");
+        .insert(4, "Beautiful ");
 
       const mapping = chunk.mappings()[0]?.capture(chunk.text());
       assert(mapping);
 
-      expect(mapping.generated.start.offset).toEqual(13);
+      expect(mapping.generated.start.offset).toEqual(3);
       expect(mapping.generated.end.offset).toEqual(18);
     });
   });

@@ -219,13 +219,13 @@ export class Chunk {
 
       for (let mapping of chunk.#mappings) {
         mapping = mapping.copy();
-        mapping.generated.translate(0, start);
+        mapping.generated.translate(-1, start);
         this.#mappings.add(mapping);
       }
 
       for (let marker of chunk.#markers) {
         marker = marker.copy();
-        marker.translate(0, start);
+        marker.translate(-1, start);
         this.#markers.add(marker);
       }
     } else {

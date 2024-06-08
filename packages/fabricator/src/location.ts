@@ -18,7 +18,7 @@ export class DynamicPosition {
   }
 
   translate(offset: number, length: number) {
-    if (this.#offset >= offset) {
+    if (this.#offset > offset) {
       this.#offset += length;
     }
   }
