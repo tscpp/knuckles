@@ -1,6 +1,6 @@
-import type { Snapshot } from "@knuckles/fabricator";
 import VisualizerDocument from "./document";
 import styles from "./visualizer.module.css";
+import type { Snapshot } from "@knuckles/fabricator";
 import * as ko from "knockout";
 import { Component } from "~/lib/component";
 import html from "~/lib/html";
