@@ -27,6 +27,12 @@ The `with` hint allows you to define the data/type of the descendant binding con
 <!-- /ok -->
 ```
 
+### Scenarios
+
+- **Type-checking a view:** You need the typings for the view model. You have two options: either import a class that defines both the type and the data, or import only the types using [type-only imports](#type-only-imports).
+
+- **Server-side rendering a view:** You need the actual runtime data of the view model. In this case, import the module that exports the actual data. If the types for the view model are defined in another module, you can wrap the [decendants](/docs/reference/glossary#descendant) in an additional hint with a [type-only import](#type-only-imports).
+
 ### Importing
 
 You can import a view model (or essentially anything) by specifying the identifier and module. This is **not** the same syntax as ESM.
@@ -55,7 +61,7 @@ You can import a view model (or essentially anything) by specifying the identifi
 
 :::
 
-### Types
+### Type-only imports
 
 You can also import only the type by prefixing the identifier with "type".
 
