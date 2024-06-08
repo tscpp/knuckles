@@ -24,6 +24,7 @@ export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
 
       const snapshot = output.chunk.snapshot(c.text);
       c.snapshots.typescript = snapshot;
+      c.metadata["tsSourceFile"] = sourceFile;
 
       if (process.env["KO_PRINT_GENERATED_TYPESCRIPT_SNAPSHOT"] === "true") {
         process.stderr.write(snapshot.generated + "\n");

@@ -12,8 +12,8 @@ export interface AnalyzeContext {
   readonly fileName: string;
   readonly text: string;
   readonly document: Document;
-
   readonly snapshots: AnalyzerSnapshots;
+  readonly metadata: Record<string, unknown>;
 
   report(issue: AnalyzerIssue): void;
 }

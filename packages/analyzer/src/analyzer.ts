@@ -26,6 +26,8 @@ export interface AnalyzeCache {
 export interface AnalyzeResult {
   issues: AnalyzerIssue[];
   snapshots: Partial<AnalyzerSnapshots>;
+  metadata: Record<string, unknown>;
+  document: Document | null;
 }
 
 export class Analyzer {
@@ -68,6 +70,7 @@ export class Analyzer {
   ): Promise<AnalyzeResult> {
     const issues: AnalyzerIssue[] = [];
     const snapshots = (options?.cache?.snapshots ?? {}) as AnalyzerSnapshots;
+    const metadata = {};
 
     let document: Document;
     if (options?.cache?.document) {
@@ -80,6 +83,8 @@ export class Analyzer {
         return {
           issues: result.errors.map(parserErrorToAnalyzerIssue),
           snapshots: {},
+          metadata,
+          document: result.document,
         };
       } else {
         assert(result.document);
@@ -92,6 +97,7 @@ export class Analyzer {
       text,
       document,
       snapshots,
+      metadata,
       report(issue) {
         issues.push(issue);
       },
@@ -104,6 +110,8 @@ export class Analyzer {
     return {
       issues,
       snapshots: context.snapshots,
+      metadata,
+      document: document,
     };
   }
 
