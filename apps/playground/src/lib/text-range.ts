@@ -1,5 +1,5 @@
+import type { Snapshot } from "@knuckles/fabricator";
 import type { OffsetArray } from "./location";
-import type { Snapshot } from "@knuckles/analyzer";
 
 export type TextRange = {
   range: OffsetArray;

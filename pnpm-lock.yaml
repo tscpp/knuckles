@@ -143,6 +143,9 @@ importers:
       '@knuckles/analyzer':
         specifier: workspace:~
         version: link:../../packages/analyzer
+      '@knuckles/fabricator':
+        specifier: workspace:~
+        version: link:../../packages/fabricator
       '@knuckles/location':
         specifier: workspace:~
         version: link:../../packages/location
