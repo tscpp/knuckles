@@ -436,15 +436,16 @@ export function startLanguageServer(options?: LanguageServerOptions) {
     const config = await provider.getConfig(path);
 
     const parseResult = parse(original);
+    const parserDiagnostics = parseResult.errors.map((error) =>
+      analyzerIssueToVscodeDiagnostic(
+        parserErrorToAnalyzerIssue(error),
+        original,
+      ),
+    );
 
     connection.sendDiagnostics({
       uri: document.uri,
-      diagnostics: parseResult.errors.map((error) =>
-        analyzerIssueToVscodeDiagnostic(
-          parserErrorToAnalyzerIssue(error),
-          original,
-        ),
-      ),
+      diagnostics: parserDiagnostics,
     });
 
     if (!parseResult.document) {
@@ -481,9 +482,9 @@ export function startLanguageServer(options?: LanguageServerOptions) {
 
     connection.sendDiagnostics({
       uri: document.uri,
-      diagnostics: result.issues.map((issue) =>
-        analyzerIssueToVscodeDiagnostic(issue, original),
-      ),
+      diagnostics: result.issues
+        .map((issue) => analyzerIssueToVscodeDiagnostic(issue, original))
+        .concat(parserDiagnostics),
     });
 
     const endTime = performance.now();
@@ -601,6 +602,7 @@ export function startLanguageServer(options?: LanguageServerOptions) {
                   await analyzerTypeScriptPlugin({
                     // TODO: resolve tsconfig
                     tsconfig: undefined,
+                    mode: config.analyzer.mode,
                   }),
                   ...config.analyzer.plugins,
                 ],
