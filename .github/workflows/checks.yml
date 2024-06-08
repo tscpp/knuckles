@@ -40,6 +40,8 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    outputs:
+      coverage:
     steps:
       - name: Checkout Repository (deep)
         uses: actions/checkout@v4
@@ -65,7 +67,15 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Test
-        run: pnpm exec nx run-many -t test,e2e
+        run: pnpm exec nx run-many -t test,e2e --coverage
+
+      - name: Collect coverage
+        run: echo "COVERAGE=$(tools/scripts/list-coverage)" >> $GITHUB_ENV
+
+      - name: Report coverage
+        uses: coverallsapp/github-action@v2
+        with:
+          files: ${{ env.COVERAGE }}
 
   format:
     name: Format

@@ -49,6 +49,7 @@
     "@types/jest": "^29.4.0",
     "@types/node": "20.12.7",
     "@vitest/ui": "^1.3.1",
+    "coveralls": "^3.1.1",
     "escape-string-regexp": "^5.0.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.1.0",

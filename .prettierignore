@@ -13,3 +13,4 @@ apps/playground/src/assets/
 # packages/typescript/types/index.d.ts
 
 /.nx/workspace-data
+coverage

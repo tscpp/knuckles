@@ -12,3 +12,4 @@ build
 **/.vitepress/dist
 **/ko.*.log
 **/playwright-report
+coverage
