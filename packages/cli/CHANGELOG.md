@@ -1,5 +1,11 @@
 # @knuckles/cli
 
+## 1.0.1
+
+### Patch Changes
+
+- 2e9e1e4: Bump over previously deleted version
+
 ## 1.0.0
 
 ### Minor Changes
