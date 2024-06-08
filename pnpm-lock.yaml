@@ -214,6 +214,9 @@ importers:
       esbuild-wasm:
         specifier: 0.21.2
         version: 0.21.2
+      is-ci:
+        specifier: ^3.0.1
+        version: 3.0.1
       monaco-editor:
         specifier: 0.48.0
         version: 0.48.0

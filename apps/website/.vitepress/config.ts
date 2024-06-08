@@ -7,12 +7,14 @@ import { UserConfig } from "vitepress";
 import footnote from "markdown-it-footnote";
 import themeConfig from "../docs/vitepress.config.js";
 import { createLogger } from "vite";
+import isCI from "is-ci";
 
 // https://vitepress.dev/reference/site-config
 const config: UserConfig<ThemeConfig> = {
   title: "Knuckles",
   base: "/",
   lastUpdated: true,
+  ignoreDeadLinks: isCI,
 
   head: [
     [

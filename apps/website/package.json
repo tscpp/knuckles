@@ -11,7 +11,8 @@
   "dependencies": {
     "@apps/playground": "workspace:*",
     "esbuild-wasm": "0.21.2",
-    "monaco-editor": "0.48.0"
+    "monaco-editor": "0.48.0",
+    "is-ci": "^3.0.1"
   },
   "devDependencies": {
     "vitepress": "^1.1.3"
