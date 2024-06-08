@@ -1,7 +1,7 @@
 # Migrating from knockout-ssr
 
 :::warning
-`knockout-ssr` is no longer maintained.
+Knuckles has taken `knockout-ssr`'s place which is no longer maintained.
 :::
 
 <!-- @include: @/docs/parts/migration-intro.md -->
@@ -29,14 +29,18 @@ Knuckles introduces an universal way to link view models to the decendants bindi
 
 ### Toggle Rendering
 
-<!-- You can [configure](/docs/ssr/config) the SSR to render by default, or by explicitly enabling for certain parts of the project. -->
+You can [configure](/docs/ssr/config) the SSR to render by default, or by explicitly enabling for certain parts of the project, like in the example below.
 
 <!-- prettier-ignore -->
+```html
+<!-- ok ssr: true --> // [!code ++]
+  ...
+<!-- /ok --> // [!code ++]
 ```
-<!-- ko ssr: './viewmodel.js' --> // [!code --]
-<!-- ok with: default from './viewmodel.js' -->
-  <!-- ok ssr --> // [!code ++]
-    ...
-  <!-- /ok --> // [!code ++]
-<!-- /ok -->
-```
+
+## What's next?
+
+If you have any questions, feel free to [start a discussion](https://github.com/tscpp/knuckles/discussions).
+
+- [Getting started](/docs/getting-started)
+- [SSR overview](/docs/ssr/overview)
