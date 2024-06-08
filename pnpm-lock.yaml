@@ -296,16 +296,13 @@ importers:
         version: 17.0.32
 
   packages/config:
-    dependencies:
+    devDependencies:
       '@knuckles/analyzer':
         specifier: workspace:~
         version: link:../analyzer
 
   packages/eslint:
     dependencies:
-      '@knuckles/analyzer':
-        specifier: workspace:~
-        version: link:../analyzer
       '@knuckles/fabricator':
         specifier: workspace:~
         version: link:../fabricator
@@ -316,6 +313,9 @@ importers:
         specifier: ^9.2.0
         version: 9.2.0
     devDependencies:
+      '@knuckles/analyzer':
+        specifier: workspace:~
+        version: link:../analyzer
       '@knuckles/typescript':
         specifier: workspace:~
         version: link:../typescript
@@ -480,9 +480,6 @@ importers:
 
   packages/typescript:
     dependencies:
-      '@knuckles/analyzer':
-        specifier: workspace:~
-        version: link:../analyzer
       '@knuckles/fabricator':
         specifier: workspace:~
         version: link:../fabricator
@@ -496,6 +493,9 @@ importers:
         specifier: ^22.0.0
         version: 22.0.0
     devDependencies:
+      '@knuckles/analyzer':
+        specifier: workspace:~
+        version: link:../analyzer
       '@knuckles/parser':
         specifier: workspace:~
         version: link:../parser
