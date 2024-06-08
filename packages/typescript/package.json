@@ -21,7 +21,7 @@
     "knockout": "3.5.1"
   },
   "peerDependencies": {
-    "@knuckles/analyzer": "workspace:latest"
+    "@knuckles/analyzer": "workspace:~"
   },
   "publishConfig": {
     "access": "public"
