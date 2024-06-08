@@ -57,7 +57,7 @@ export default class Scaffold {
         for (const binding of node.bindings) {
           closure = new Chunk()
             .append(this.#renderBindingComment(binding))
-            .append(this.#renderBindingClosure(binding))
+            .append(this.#renderBindingClosure(binding), { blame: binding })
             .append("(")
             .append(closure ?? new Chunk().append("$context"))
             .append(")");
@@ -67,7 +67,9 @@ export default class Scaffold {
       if (node instanceof KoVirtualElement) {
         closure = new Chunk()
           .append(this.#renderBindingComment(node.binding))
-          .append(this.#renderBindingClosure(node.binding))
+          .append(this.#renderBindingClosure(node.binding), {
+            blame: node.binding,
+          })
           .append("($context)");
       }
 
@@ -133,26 +135,22 @@ export default class Scaffold {
   }
 
   #renderBindingClosure(binding: Binding) {
-    const chunk = new Chunk().while(
-      (chunk) =>
-        chunk
-          .append("(($context) => {")
-          .newline()
-          .append("const ")
-          .append("{")
-          .marker("context")
-          .append("}")
-          .append(" = $context;")
-          .newline()
-          .append("const ")
-          .append("{")
-          .marker("data")
-          .append("}")
-          .append(" = $context.$data;")
-          .newline(2)
-          .append(`return ${ns}.${this.#mode}`),
-      { blame: binding },
-    );
+    const chunk = new Chunk()
+      .append("(($context) => {")
+      .newline()
+      .append("const ")
+      .append("{")
+      .marker("context")
+      .append("}")
+      .append(" = $context;")
+      .newline()
+      .append("const ")
+      .append("{")
+      .marker("data")
+      .append("}")
+      .append(" = $context.$data;")
+      .newline(2)
+      .append(`return ${ns}.${this.#mode}`);
     if (/^[a-z$_][a-z$_0-9]*$/i.test(binding.name.value)) {
       chunk //
         .append(".")

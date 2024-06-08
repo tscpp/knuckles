@@ -56,7 +56,7 @@ export default class Renderer {
         .map((symbol) => symbol.getName())
         .join(", ");
 
-      this.#scaffold.insert(pos.offset + 1, " " + destructured);
+      this.#scaffold.insert(pos.offset, " " + destructured + " ");
       this.#updateSourceFile();
     }
 
