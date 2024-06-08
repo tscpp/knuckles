@@ -1,5 +1,4 @@
 import { html, render } from "./common.js";
-import { test, describe } from "bun:test";
 import assert from "node:assert/strict";
 
 describe("non-strict", () => {
@@ -20,7 +19,7 @@ describe("non-strict", () => {
     assert(modified.includes("><"));
   });
 
-  test.todo("handles invalid binding expression", async () => {
+  test.failing("handles invalid binding expression", async () => {
     const text = html`
       <!-- ok with: {} -->
       <div data-bind="text: ???"></div>

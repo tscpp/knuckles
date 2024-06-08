@@ -65,7 +65,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Test
-        run: pnpm run test
+        run: pnpm exec nx run-many -t test,e2e
 
   format:
     name: Format

@@ -1,0 +1,13 @@
+{
+  "extends": "./node.json",
+  "compilerOptions": {
+    "types": ["jest", "node"],
+    "verbatimModuleSyntax": false,
+    "moduleDetection": "force",
+    "moduleResolution": "bundler"
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  }
+}

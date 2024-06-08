@@ -1,6 +1,5 @@
 import { Chunk } from "./chunk.js";
 import { Range } from "@knuckles/location";
-import { describe, it, expect } from "bun:test";
 import assert from "node:assert/strict";
 
 describe("Chunk", () => {

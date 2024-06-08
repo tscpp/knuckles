@@ -19,6 +19,7 @@ export default config([
       "**/dist/",
       "**/.vscode-test/",
       "**/vite.config.*",
+      "**/jest.config.ts",
 
       // documentation
       "docs/**/*",

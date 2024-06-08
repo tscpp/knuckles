@@ -1,0 +1,5 @@
+{
+  "extends": ["@tools/tsconfig/jest.json"],
+  "include": ["test"],
+  "exclude": ["**/__fixtures__"]
+}

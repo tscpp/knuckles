@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parser Deep virtual elements 1`] = `
+{
+  "end": {
+    "column": 64,
+    "line": 0,
+    "offset": 64,
+  },
+  "start": {
+    "column": 0,
+    "line": 0,
+    "offset": 0,
+  },
+}
+`;
+
+exports[`parser Element bindings 1`] = `
+{
+  "end": {
+    "column": 30,
+    "line": 0,
+    "offset": 30,
+  },
+  "start": {
+    "column": 0,
+    "line": 0,
+    "offset": 0,
+  },
+}
+`;

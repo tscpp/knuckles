@@ -1,6 +1,5 @@
 import Scaffold from "./scaffold.js";
 import { parse } from "@knuckles/parser";
-import { describe, test, expect } from "bun:test";
 import assert from "node:assert/strict";
 
 describe("Scaffold", () => {

@@ -1,6 +1,5 @@
 import * as ssr from "../src/node/index.js";
 import { html, render } from "./common.js";
-import { test, describe } from "bun:test";
 import assert from "node:assert/strict";
 
 describe("server-side rendering", () => {
