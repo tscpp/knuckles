@@ -203,7 +203,7 @@ export class Chunk {
   #writeTextAt(start: number, end: number, newText: string) {
     const oldText = this.#text.slice(start, end);
     this.#text = this.#text.slice(0, start) + newText + this.#text.slice(end);
-    this.#translate(start, newText.length);
+    this.#translate(start, newText.length - oldText.length);
     this.#history.push({
       start,
       oldText,
