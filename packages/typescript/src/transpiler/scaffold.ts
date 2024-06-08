@@ -18,7 +18,9 @@ export default class Scaffold {
   }
 
   get #unknown() {
-    return this.#mode === "strict" ? "unknown" : "any";
+    // TODO: revise
+    // return this.#mode === "strict" ? "unknown" : "any";
+    return "any";
   }
 
   render(document: Document) {
