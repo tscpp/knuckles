@@ -67,8 +67,9 @@ export class LanguageService {
       (params) => {
         const uri = params.uri;
         const document = this.documents.get(uri);
-        assert(document);
-        touch(document);
+        if (document) {
+          touch(document);
+        }
       },
     );
 
