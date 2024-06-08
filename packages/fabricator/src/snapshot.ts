@@ -1,6 +1,6 @@
 import type { Mapping } from "./mapping.js";
-import { Position, Range } from "@knuckles/location";
 import type { Marker } from "./marker.js";
+import { Position, Range } from "@knuckles/location";
 
 export interface SnapshotInit {
   original: string;
@@ -34,7 +34,7 @@ export class Snapshot {
     ]!;
 
     const mappings = this.mappings.filter((mapping) =>
-      mapping[target].contains(position),
+      mapping[source].contains(position),
     );
 
     if (mappings.length === 0) {
@@ -64,7 +64,7 @@ export class Snapshot {
     )[source]!;
 
     const mappings = this.mappings.filter(
-      (mapping) => mapping.mirror && mapping[target].contains(locator),
+      (mapping) => mapping.mirror && mapping[source].contains(locator),
     );
 
     if (mappings.length === 0) {
