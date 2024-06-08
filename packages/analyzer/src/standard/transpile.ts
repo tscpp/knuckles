@@ -12,14 +12,16 @@ export function transpile(document: Document) {
 
   const render = (binding: Binding) => {
     chunk
-      .write(`// ${binding.name.value}: ${binding.param.value}`)
-      .nl()
-      .write("{ ")
-      .write(binding.param.value, {
-        range: binding.param,
-        bidirectional: true,
-      })
-      .write(" }");
+      .append(`// ${binding.name.value}: ${binding.param.value}`)
+      .newline()
+      .while(
+        (chunk) =>
+          chunk
+            .append("{ ") //
+            .append(binding.param.value, { mirror: binding.param })
+            .append(" }"),
+        { blame: binding },
+      );
   };
 
   visit(document, Element, (node) => {

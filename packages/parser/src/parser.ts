@@ -58,7 +58,7 @@ export default class Parser {
   }
 
   #range(start: number, end: number) {
-    return Range.fromOffset(start, end, this.#string);
+    return Range.fromOffsets(start, end, this.#string);
   }
   //#endregion
 
@@ -187,12 +187,16 @@ export default class Parser {
 
     const namespace = new Identifier({
       value: nsText,
-      range: Range.fromOffset(nsOffset, nsOffset + nsText.length, this.#string),
+      range: Range.fromOffsets(
+        nsOffset,
+        nsOffset + nsText.length,
+        this.#string,
+      ),
     });
 
     const name = new Identifier({
       value: nameText,
-      range: Range.fromOffset(
+      range: Range.fromOffsets(
         nameOffset,
         nameOffset + nameText.length,
         this.#string,
@@ -201,7 +205,7 @@ export default class Parser {
 
     const param = new Expression({
       value: paramText,
-      range: Range.fromOffset(
+      range: Range.fromOffsets(
         paramOffset,
         paramOffset + paramText.length,
         this.#string,
@@ -318,7 +322,7 @@ export default class Parser {
 
     const tagName = new Identifier({
       value: node.tagName,
-      range: Range.fromOffset(
+      range: Range.fromOffsets(
         range.start.offset + 1,
         range.start.offset + 1 + node.tagName.length,
         this.#string,
@@ -452,7 +456,7 @@ export default class Parser {
         } catch (error) {
           if (isAcornSyntaxError(error)) {
             this.#error(
-              Range.fromOffset(
+              Range.fromOffsets(
                 translate(error.pos),
                 translate(error.pos + 1),
                 this.#string,
@@ -471,7 +475,7 @@ export default class Parser {
         }
 
         this.#error(
-          Range.fromOffset(
+          Range.fromOffsets(
             translate(error.pos),
             translate(error.pos + 1),
             this.#string,
@@ -494,7 +498,7 @@ export default class Parser {
       .map((prop) => {
         if (prop.type === "SpreadElement") {
           this.#error(
-            Range.fromOffset(
+            Range.fromOffsets(
               translate(prop.range![0]),
               translate(prop.range![1]),
               this.#string,
@@ -506,7 +510,7 @@ export default class Parser {
 
         if (prop.computed) {
           this.#error(
-            Range.fromOffset(
+            Range.fromOffsets(
               translate(prop.range![0]),
               translate(prop.range![1]),
               this.#string,
@@ -524,7 +528,7 @@ export default class Parser {
           name = prop.key.raw;
         } else {
           this.#error(
-            Range.fromOffset(
+            Range.fromOffsets(
               translate(prop.key.range![0]),
               translate(prop.key.range![1]),
               this.#string,
@@ -537,7 +541,7 @@ export default class Parser {
         return new Binding({
           name: new Identifier({
             value: name,
-            range: Range.fromOffset(
+            range: Range.fromOffsets(
               translate(prop.key.range![0]),
               translate(prop.key.range![1]),
               this.#string,
@@ -545,7 +549,7 @@ export default class Parser {
           }),
           param: new Expression({
             value: expressionText.slice(...prop.value.range!),
-            range: Range.fromOffset(
+            range: Range.fromOffsets(
               translate(prop.value.range![0]),
               translate(prop.value.range![1]),
               this.#string,
@@ -585,7 +589,7 @@ export default class Parser {
 
     return new Identifier({
       value,
-      range: Range.fromOffset(start, iter.index(), this.#string),
+      range: Range.fromOffsets(start, iter.index(), this.#string),
     });
   }
 
@@ -631,7 +635,7 @@ export default class Parser {
     return new StringLiteral({
       value,
       quote,
-      range: Range.fromOffset(start, iter.index(), this.#string),
+      range: Range.fromOffsets(start, iter.index(), this.#string),
     });
   }
   //#endregion
@@ -657,7 +661,7 @@ export default class Parser {
       );
     }
 
-    return Range.fromOffset(start, iter.index(), this.#string);
+    return Range.fromOffsets(start, iter.index(), this.#string);
   }
   //#endregion
 }

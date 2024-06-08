@@ -1,8 +1,8 @@
+import type { Snapshot } from "../../fabricator/src/snapshot.js";
 import { createAsyncDebounce } from "./utils/debounce.js";
 import {
   Analyzer,
   AnalyzerSeverity,
-  Snapshot,
   parserErrorToAnalyzerIssue,
   type AnalyzerIssue,
 } from "@knuckles/analyzer";
@@ -136,8 +136,9 @@ export function startLanguageServer(options?: LanguageServerOptions) {
       params.position.character,
       state.snapshot.original,
     );
-    const generatedPosition =
-      state.snapshot.getRealPositionInGenerated(originalPosition);
+    const generatedPosition = state.snapshot.mirror({
+      original: originalPosition,
+    });
 
     if (generatedPosition) {
       const definitions = state.service.getDefinitionsAtPosition(
@@ -155,7 +156,7 @@ export function startLanguageServer(options?: LanguageServerOptions) {
           const path = sourceFile.getFilePath();
           const uri = pathToFileURL(path).toString();
           const span = definition.getTextSpan();
-          const range1 = Range.fromOffset(
+          const range1 = Range.fromOffsets(
             span.getStart(),
             span.getEnd(),
             sourceFile.getFullText(),
@@ -179,8 +180,9 @@ export function startLanguageServer(options?: LanguageServerOptions) {
             generatedStartOffset,
             state.snapshot.generated,
           );
-          const originalPosition =
-            state.snapshot.getRealPositionInOriginal(generatedPosition);
+          const originalPosition = state.snapshot.mirror({
+            generated: generatedPosition,
+          });
 
           if (originalPosition) {
             const generatedEndOffset = node.getEnd();
@@ -231,15 +233,16 @@ export function startLanguageServer(options?: LanguageServerOptions) {
       params.position.character,
       state.snapshot.original,
     );
-    const generatedPosition =
-      state.snapshot.getRealPositionInGenerated(originalPosition);
+    const generatedRange = state.snapshot.mirror({
+      original: originalPosition,
+    });
 
-    if (generatedPosition) {
+    if (generatedRange) {
       let quickInfo: ts.QuickInfo | undefined;
 
       const [definition] = state.service.getDefinitionsAtPosition(
         state.sourceFile,
-        generatedPosition.offset,
+        generatedRange.offset,
       );
 
       if (definition) {
@@ -253,8 +256,9 @@ export function startLanguageServer(options?: LanguageServerOptions) {
             generatedStartOffset,
             state.snapshot.generated,
           );
-          const originalPosition =
-            state.snapshot.getRealPositionInGenerated(generatedPosition);
+          const originalPosition = state.snapshot.mirror({
+            generated: generatedPosition,
+          });
 
           if (!originalPosition) {
             const [definition] = state.service.getDefinitions(node);
@@ -271,7 +275,7 @@ export function startLanguageServer(options?: LanguageServerOptions) {
 
       quickInfo ??= state.service.compilerObject.getQuickInfoAtPosition(
         state.sourceFile.getFilePath(),
-        generatedPosition.offset,
+        generatedRange.offset,
       );
 
       if (quickInfo) {
@@ -309,8 +313,9 @@ export function startLanguageServer(options?: LanguageServerOptions) {
       params.position.character,
       state.snapshot.original,
     );
-    const generatedPosition =
-      state.snapshot.getRealPositionInGenerated(originalPosition);
+    const generatedPosition = state.snapshot.mirror({
+      original: originalPosition,
+    });
 
     if (generatedPosition) {
       const completions = state.service.compilerObject.getCompletionsAtPosition(
@@ -449,21 +454,15 @@ export function startLanguageServer(options?: LanguageServerOptions) {
     }
 
     const transpiler = await provider.getTranspiler(path);
-    const { generated, mappings, sourceFile } = transpiler.transpile(
+    const { chunk, sourceFile } = transpiler.transpile(
       path,
-      original,
       parseResult.document,
       config.analyzer.mode,
     );
 
     writeFileSync(path + ".generated.ts", sourceFile.getFullText(), "utf8");
 
-    const snapshot = new Snapshot({
-      fileName: path,
-      original,
-      generated,
-      mappings,
-    });
+    const snapshot = chunk.snapshot(original);
 
     const project = sourceFile.getProject();
     const service = project.getLanguageService();

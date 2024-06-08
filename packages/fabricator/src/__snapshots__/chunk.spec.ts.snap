@@ -1,0 +1,26 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Chunk Tracker tracks changes 1`] = `
+[
+  {
+    "newText": "Hello",
+    "oldText": "",
+    "start": 0,
+  },
+  {
+    "newText": " World",
+    "oldText": "",
+    "start": 5,
+  },
+  {
+    "newText": "Hi",
+    "oldText": "Hello",
+    "start": 0,
+  },
+  {
+    "newText": "",
+    "oldText": "Hi",
+    "start": 0,
+  },
+]
+`;

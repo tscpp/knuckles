@@ -24,20 +24,22 @@ export default class Renderer {
 
     this.sourceFile = this.#project.createSourceFile(
       fileName + ".ts",
-      this.#scaffold.content,
+      this.#scaffold.text(),
       { overwrite: true },
     );
   }
 
   #updateSourceFile() {
-    this.sourceFile.replaceWithText(this.#scaffold.content);
+    this.sourceFile.replaceWithText(this.#scaffold.text());
   }
 
   render() {
     // Render destructured paramaters for $context and $data.
-    for (const occurrence of this.#scaffold.occurrences("context", "data")) {
+    for (const marker of this.#scaffold.markers(["context", "data"])) {
+      const pos = marker.capture(this.#scaffold.text());
+
       const declaration = this.sourceFile
-        .getDescendantAtPos(occurrence.start)
+        .getDescendantAtPos(pos.offset)
         ?.getParent()
         ?.getParent();
       if (
@@ -54,7 +56,7 @@ export default class Renderer {
         .map((symbol) => symbol.getName())
         .join(", ");
 
-      this.#scaffold.insert(occurrence.start + 1, " " + destructured);
+      this.#scaffold.insert(pos.offset, " " + destructured + " ");
       this.#updateSourceFile();
     }
 

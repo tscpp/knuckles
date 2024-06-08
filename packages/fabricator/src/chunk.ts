@@ -1,331 +1,297 @@
-import { Range } from "@knuckles/location";
+import { DynamicRange } from "./location.js";
+import { DynamicMapping } from "./mapping.js";
+import { DynamicMarker } from "./marker.js";
+import { Snapshot } from "./snapshot.js";
+import { Tracker } from "./tracker.js";
+import { isArray } from "./utils.js";
+import { type Range } from "@knuckles/location";
 
-const UNIVERSAL_NEWLINE_REGEX = /\r\n|\n\r|\n|\r/g;
-
-export interface OffsetMapping {
-  original: OffsetRange;
-  generated: OffsetRange | undefined;
-  uniform: boolean;
-  name: string | undefined;
-}
-
-export interface Mapping {
-  original: Range;
-  generated: Range;
-  uniform: boolean;
-  name: string | undefined;
-}
-
-export interface MappingOptions {
-  range?: OffsetRange | Range;
-  bidirectional?: boolean;
-  name?: string;
-}
-
-export interface OffsetRange {
+/**
+ * Represents the changes made to a range of text in a {@link Chunk}.
+ */
+export interface Change {
   start: number;
-  end: number;
+  oldText: string;
+  newText: string;
 }
 
-export interface ChunkOptions {
-  indent?: string | number | undefined;
-  eol?: string | undefined;
-  mapping?: MappingOptions;
-}
-
-function toOffsetRange(range: OffsetRange | Range): OffsetRange {
-  return range instanceof Range
-    ? { start: range.start.offset, end: range.end.offset }
-    : range;
-}
-
-export class Chunk {
-  #content = "";
-  #mappings: OffsetMapping[] = [];
-  #locators = new Map<string, OffsetRange[]>();
-  #indentCount = 0;
-  #eol: string;
-  #indent: string;
-
-  constructor(options?: ChunkOptions) {
-    this.#eol = options?.eol ?? "\n";
-    this.#indent =
-      typeof options?.indent === "number"
-        ? " ".repeat(options.indent)
-        : options?.indent ?? "  ";
-    if (options?.mapping?.range) {
-      this.#mappings.push({
-        generated: undefined,
-        original: toOffsetRange(options.mapping.range),
-        uniform: options.mapping.bidirectional ?? false,
-        name: options.mapping.name,
-      });
+export type MappingOptions =
+  | {
+      blame?: Range;
     }
+  | {
+      mirror?: Range;
+    };
+
+export type ChunkLike = string | Chunk | readonly Chunk[];
+
+/**
+ * Represents a chunk of text that can be manipulated.
+ */
+export class Chunk {
+  static concat(...chunks: ChunkLike[]): Chunk {
+    const parent = new Chunk();
+    for (const chunk of chunks.flat()) {
+      parent.append(chunk);
+    }
+    return parent;
   }
 
+  #text = "";
+  #mappings = new Set<DynamicMapping>();
+  #history: Change[] = [];
+  #markers = new Set<DynamicMarker>();
+
+  //#region Public methods
+
   /**
-   * Source content as text.
+   * Get the current text content.
    */
-  get content(): string {
-    return this.#content;
+  text(): string {
+    return this.#text;
   }
 
   /**
-   * The current offset.
+   * Get the current length of the text content. Can be used to get the current
+   * offset of the chunk.
    */
-  get length() {
-    return this.content.length;
+  length(): number {
+    return this.#text.length;
   }
 
   /**
-   * Clones the chunk. Used to avoid mutating the original chunk.
+   * Appends a newline to the end of the chunk.
+   */
+  newline(count = 1): this {
+    this.append("\n".repeat(count));
+    return this;
+  }
+
+  /**
+   * Appends a chunk or string to the end of the current text content.
+   */
+  append(chunk: ChunkLike, options?: MappingOptions): this {
+    const tracker = this.track();
+    this.#write(this.#text.length, this.#text.length, chunk);
+    this.#mapChanges(tracker.flush(), options);
+    return this;
+  }
+
+  marker(id: string): this {
+    this.#markers.add(new DynamicMarker(id, this.#text.length));
+    return this;
+  }
+
+  /**
+   * Inserts a chunk or string to the right at the specified offset.
+   */
+  insert(offset: number, chunk: ChunkLike, options?: MappingOptions): this {
+    const tracker = this.track();
+    this.#write(offset, offset, chunk);
+    this.#mapChanges(tracker.flush(), options);
+    return this;
+  }
+
+  /**
+   * Updates the text content by replacing the specified range with the new
+   * chunk or string.
+   */
+  update(
+    start: number,
+    end: number,
+    chunk: ChunkLike,
+    options?: MappingOptions,
+  ): this {
+    const tracker = this.track();
+    this.#write(start, end, chunk);
+    this.#mapChanges(tracker.flush(), options);
+    return this;
+  }
+
+  /**
+   * Removes the specified range from the text content.
+   */
+  remove(start: number, end: number): this {
+    const oldText = this.#text.slice(start, end);
+    this.#removeTextAt(start, end);
+
+    this.#history.push({
+      start,
+      oldText,
+      newText: "",
+    });
+
+    return this;
+  }
+
+  while(callback: (chunk: this) => void, options: MappingOptions): this {
+    const tracker = this.track();
+    callback(this);
+    this.#mapChanges(tracker.flush(), options);
+    return this;
+  }
+
+  /**
+   * Creates a new tracker that can be used to get the changes made to the
+   * chunk.
    *
-   * @returns The cloned chunk.
+   * @see {@link Tracker}
    */
+  track(): Tracker {
+    return new Tracker(this);
+  }
+
+  changes(): Change[] {
+    return this.#history.slice();
+  }
+
+  mappings(): DynamicMapping[] {
+    return Array.from(this.#mappings);
+  }
+
+  markers(filter?: string | readonly string[] | undefined): DynamicMarker[] {
+    return Array.from(this.#markers).filter((marker) =>
+      filter ? (isArray(filter) ? filter : [filter]).includes(marker.id) : true,
+    );
+  }
+
+  snapshot(original: string): Snapshot {
+    return new Snapshot({
+      original,
+      generated: this.text(),
+      mappings: this.mappings().map((mapping) => mapping.capture(this.#text)),
+      markers: this.markers().map((marker) => marker.capture(this.#text)),
+    });
+  }
+
   clone(): Chunk {
     const chunk = new Chunk();
-    chunk.#content = this.#content;
+    chunk.#text = this.#text;
     chunk.#mappings = this.#mappings;
-    chunk.#locators = this.#locators;
-    chunk.#indentCount = this.#indentCount;
-    chunk.#indent = this.#eol;
-    chunk.#indent = this.#indent;
+    chunk.#history = this.#history;
+    chunk.#markers = this.#markers;
     return chunk;
   }
 
-  /**
-   * Writes content to the current offset.
-   *
-   * @param content The new content.
-   */
-  write(content: string, mapping?: MappingOptions): this {
-    const generatedStart = this.length;
-
-    const indent = this.#indent.repeat(this.#indentCount);
-
-    if (this.#content.endsWith("\n")) {
-      this.#content += indent;
-    }
-
-    const lines = content.split(UNIVERSAL_NEWLINE_REGEX);
-    this.#content += lines.shift();
-    this.#content += lines
-      .map((line) => (line.trim() === "" ? "\n" : "\n" + indent + line))
-      .join("");
-
-    if (mapping?.range) {
-      this.#mappings.push({
-        generated: {
-          start: generatedStart,
-          end: this.length,
-        },
-        original: toOffsetRange(mapping.range),
-        uniform: mapping.bidirectional ?? false,
-        name: mapping.name,
-      });
-    }
-
-    return this;
-  }
-
-  #occurrences(locator: string): OffsetRange[] {
-    let occurrences = this.#locators.get(locator);
-    if (!occurrences) {
-      this.#locators.set(locator, (occurrences = []));
-    }
-    return occurrences;
-  }
-
-  /**
-   * Finds all the occurances of the locators added using {@link locator}.
-   *
-   * @param locator The identifier of the locator. Same as passed to {@link locator}.
-   */
-  occurrences(
-    ...locators: (string | readonly string[])[]
-  ): Iterable<OffsetRange> {
-    return {
-      [Symbol.iterator]: () => {
-        let i = 0;
-
-        return {
-          next: () => {
-            const occurrences = locators
-              .flat()
-              .flatMap((locator) => this.#occurrences(locator));
-
-            if (i < occurrences.length) {
-              return { done: false, value: occurrences[i++]! };
-            } else {
-              return { done: true, value: undefined };
-            }
-          },
-        };
-      },
-    };
-  }
-
-  /**
-   * Adds a locator in the chunk. The occurances of the locator is stored in
-   * the chunk and can be accessed using {@link occurances}.
-   *
-   * @param name The identifier of the locator.
-   */
-  locate(name: string, callback: (chunk: this) => void): this {
-    const start = this.length;
-    callback(this);
-    const end = this.length;
-    this.#occurrences(name).push({ start, end });
-    return this;
-  }
-
-  /**
-   * Adds newline(s) (by default 1) at the current offset.
-   *
-   * @param count The number of newlines to add.
-   */
-  nl(count = 1) {
-    this.#content += "\n".repeat(count);
-    return this;
-  }
-
-  /**
-   * Increases indentation by the specificed offset (by default 1).
-   *
-   * @param offset The offset to apply to the indentation.
-   * @returns
-   */
-  indent(offset = 1) {
-    this.#indentCount = Math.max(this.#indentCount + offset, 0);
-    return this;
-  }
-
-  /**
-   * Decreases indentation by the specificed offset (by default 1). Opposite of
-   * {@link indent}.
-   *
-   * @param offset The negated offset to apply to the indentation.
-   */
-  dedent(offset = 1): this {
-    this.indent(-offset);
-    return this;
-  }
-
-  /**
-   * Inserts content at a specific offset in the chunk, and {@link translate}s
-   * the positions accordingly.
-   *
-   * @param offset The offset of where to insert the new content.
-   * @param string The new content to insert.
-   */
-  insert(offset: number, string: string) {
-    this.translate(offset, string.length);
-
-    this.#content =
-      this.#content.slice(0, offset) + string + this.#content.slice(offset);
-
-    return this;
-  }
-
-  /**
-   * Translates the chunk's positions (mappings and locators) by a certain length.
-   *
-   * @param offset From where to translate. Everything below this offset is untouched.
-   * @param length The length to translate the positions with.
-   */
-  translate(offset: number, length: number) {
-    // Translate mappings.
-    for (const mapping of this.#mappings) {
-      if (!mapping.generated) continue;
-
-      if (mapping.generated.start >= offset) {
-        mapping.generated.start += length;
-      }
-
-      if (mapping.generated.end >= offset) {
-        mapping.generated.end += length;
-      }
-    }
-
-    // Translate locators.
-    for (const occurrences of this.#locators.values()) {
-      for (let i = 0; i < occurrences.length; ++i) {
-        if (occurrences[i]!.start >= offset) {
-          occurrences[i]!.start += length;
-          occurrences[i]!.end += length;
-        } else if (occurrences[i]!.end >= offset) {
-          occurrences[i]!.end += length;
-        }
-      }
-    }
-
-    return this;
-  }
-
-  /**
-   * Adds chunk(s) to the current offset. Content is {@link translate}d accordingly.
-   *
-   * @param chunks
-   * @returns
-   */
-  add(...chunks: (Chunk | readonly Chunk[])[]): this {
-    for (let chunk of chunks.flat()) {
-      // Copy chunk to avoid mutating the original.
-      chunk = chunk.clone();
-
-      // Indent all content in chunk.
-      let offset = 0,
-        first = true;
-      for (const line of chunk.content.split(UNIVERSAL_NEWLINE_REGEX)) {
-        const indent = this.#indent.repeat(this.#indentCount);
-        if (!first) {
-          chunk.insert(offset, indent);
-          first = false;
-        }
-        offset += indent.length + line.length + 1;
-      }
-
-      // Translate everything in chunk to current offset.
-      chunk.translate(0, this.length);
-
-      // Copy mappings.
-      this.#mappings.push(
-        ...chunk.#mappings.map((mapping) => ({
-          ...mapping,
-          generated: mapping.generated ?? {
-            start: this.length,
-            end: this.length + chunk.length,
-          },
-        })),
-      );
-
-      // Copy locators.
-      for (const [locator, occurrences] of chunk.#locators) {
-        this.#occurrences(locator).push(...occurrences);
-      }
-
-      // Push content.
-      this.#content += chunk.#content;
-    }
-
-    return this;
-  }
-
-  getMappings(original: string): Mapping[] {
-    return this.#mappings.map(
-      (mapping): Mapping => ({
-        ...mapping,
-        generated: Range.fromOffset(
-          mapping.generated?.start ?? 0,
-          mapping.generated?.end ?? this.length,
-          this.#content,
-        ),
-        original: Range.fromOffset(
-          mapping.original.start,
-          mapping.original.end,
-          original,
-        ),
-      }),
+  copy(): Chunk {
+    const chunk = new Chunk();
+    chunk.#text = this.#text;
+    chunk.#mappings = new Set(
+      Array.from(this.#mappings).map((mapping) => mapping.copy()),
     );
+    chunk.#history = this.#history.map((change) => ({ ...change }));
+    chunk.#markers = new Set(
+      Array.from(this.#markers).map((marker) => marker.copy()),
+    );
+    return chunk;
   }
+
+  //#endregion
+
+  //#region Private methods
+
+  #translate(offset: number, length: number) {
+    for (const mapping of this.#mappings) {
+      mapping.generated.translate(offset, length);
+    }
+
+    for (const marker of this.#markers) {
+      marker.translate(offset, length);
+    }
+  }
+
+  #writeTextAt(start: number, end: number, newText: string) {
+    const oldText = this.#text.slice(start, end);
+    this.#text = this.#text.slice(0, start) + newText + this.#text.slice(end);
+    this.#translate(start, newText.length - oldText.length);
+    this.#history.push({
+      start,
+      oldText,
+      newText,
+    });
+  }
+
+  #write(start: number, end: number, chunk: ChunkLike) {
+    if (isArray(chunk)) {
+      this.#write(start, end, Chunk.concat(chunk));
+    } else if (chunk instanceof Chunk) {
+      this.#writeTextAt(start, end, chunk.text());
+
+      for (let mapping of chunk.#mappings) {
+        mapping = mapping.copy();
+        mapping.generated.translate(-1, start);
+        this.#mappings.add(mapping);
+      }
+
+      for (let marker of chunk.#markers) {
+        marker = marker.copy();
+        marker.translate(-1, start);
+        this.#markers.add(marker);
+      }
+    } else {
+      this.#writeTextAt(start, end, chunk);
+    }
+  }
+
+  #removeTextAt(start: number, end: number) {
+    this.#text = this.#text.slice(0, start) + this.#text.slice(end);
+    const length = end - start;
+
+    for (const range of this.#mappings.values()) {
+      range.generated.translate(start, -length);
+    }
+  }
+
+  #map(generated: DynamicRange, options?: MappingOptions) {
+    if (!options || !("mirror" in options || "blame" in options)) {
+      return;
+    }
+    const mirror = "mirror" in options;
+    const original = ((options as { mirror?: Range }).mirror ??
+      (options as { blame?: Range }).blame)!;
+
+    this.#mappings.add(new DynamicMapping(original, generated, mirror));
+  }
+
+  #mapChanges(changes: Change[], options?: MappingOptions) {
+    if (!options || !("mirror" in options || "blame" in options)) {
+      return;
+    }
+
+    const ranges = new Set<DynamicRange>();
+
+    for (const change of changes) {
+      const changeStart = change.start;
+      const changeEnd = changeStart + change.newText.length;
+      const touching = new Set<[number, number]>([[changeStart, changeEnd]]);
+
+      for (const range of ranges) {
+        const { start, end } = range.captureOffsets();
+
+        if (
+          (start >= changeStart && start <= changeEnd) ||
+          (end >= changeStart && end <= changeEnd)
+        ) {
+          touching.add([start, end]);
+          ranges.delete(range);
+        }
+      }
+
+      const rangeStart = Array.from(touching)
+        .map((v) => v[0])
+        .reduce((a, b) => Math.min(a, b));
+      const rangeEnd = Array.from(touching)
+        .map((v) => v[1])
+        .reduce((a, b) => Math.max(a, b));
+
+      const range = new DynamicRange(rangeStart, rangeEnd);
+      ranges.add(range);
+    }
+
+    for (const range of ranges) {
+      this.#map(range, options);
+    }
+  }
+
+  //#endregion
 }

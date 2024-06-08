@@ -1,5 +1,5 @@
 import Renderer from "./renderer.js";
-import type { Mapping } from "@knuckles/fabricator";
+import type { Chunk } from "@knuckles/fabricator";
 import type { Document } from "@knuckles/syntax-tree";
 import {
   Project,
@@ -9,8 +9,7 @@ import {
 } from "ts-morph";
 
 export type TranspileOutput = {
-  generated: string;
-  mappings: Mapping[];
+  chunk: Chunk;
   sourceFile: SourceFile;
 };
 
@@ -34,7 +33,6 @@ export class Transpiler {
 
   transpile(
     source: string,
-    original: string,
     document: Document,
     mode?: "strict" | "loose",
   ): TranspileOutput {
@@ -53,8 +51,7 @@ export class Transpiler {
     const chunk = renderer.render();
 
     return {
-      generated: chunk.content,
-      mappings: chunk.getMappings(original),
+      chunk,
       sourceFile: renderer.sourceFile,
     };
   }

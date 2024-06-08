@@ -1,5 +1,5 @@
 import type { AnalyzerIssue } from "./issue.js";
-import type { Snapshot } from "./snapshot.js";
+import type { Snapshot } from "@knuckles/fabricator";
 import type { Document } from "@knuckles/syntax-tree";
 
 export interface AnalyzerSnapshots {

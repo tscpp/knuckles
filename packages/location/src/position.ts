@@ -1,5 +1,11 @@
 import { detectNewline } from "detect-newline";
 
+export interface RawPosition {
+  line: number;
+  column: number;
+  offset: number;
+}
+
 export default class Position {
   static zero = new Position(0, 0, 0);
 
@@ -66,14 +72,28 @@ export default class Position {
     return Position.fromOffset(position.offset + offset, text);
   }
 
-  constructor(
-    /** zero-indexed */
-    public line: number,
-    /** zero-indexed */
-    public column: number,
-    /** zero-indexed */
-    public offset: number,
-  ) {}
+  /** zero-indexed */
+  public line: number;
+  /** zero-indexed */
+  public column: number;
+  /** zero-indexed */
+  public offset: number;
+
+  constructor(line: number, column: number, offset: number);
+  constructor(position: Position);
+  constructor(...args: [number, number, number] | [Position]) {
+    if (args.length === 1) {
+      const [position] = args;
+      this.line = position.line;
+      this.column = position.column;
+      this.offset = position.offset;
+    } else {
+      const [line, column, offset] = args;
+      this.line = line;
+      this.column = column;
+      this.offset = offset;
+    }
+  }
 
   format() {
     return `${this.line + 1}:${this.column + 1}`;
@@ -85,5 +105,17 @@ export default class Position {
 
   copy() {
     return this.clone();
+  }
+
+  toJSON(): RawPosition {
+    return {
+      line: this.line,
+      column: this.column,
+      offset: this.offset,
+    };
+  }
+
+  toString() {
+    return this.format();
   }
 }

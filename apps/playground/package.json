@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@knuckles/analyzer": "workspace:~",
+    "@knuckles/fabricator": "workspace:~",
     "@knuckles/location": "workspace:~",
     "@knuckles/ssr": "workspace:~",
     "@knuckles/typescript": "workspace:~",

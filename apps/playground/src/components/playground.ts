@@ -6,7 +6,8 @@ import Workspace, {
   type Marker,
   type WorkspaceFile,
 } from "./workspace";
-import { Analyzer, AnalyzerSeverity, type Snapshot } from "@knuckles/analyzer";
+import { Analyzer, AnalyzerSeverity } from "@knuckles/analyzer";
+import type { Snapshot } from "@knuckles/fabricator";
 import { Position, Range } from "@knuckles/location";
 import * as ssr from "@knuckles/ssr";
 import AnalyzerTypeScriptPlugin from "@knuckles/typescript/analyzer";

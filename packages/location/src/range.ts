@@ -1,14 +1,21 @@
-import Position from "./position.js";
+import Position, { type RawPosition } from "./position.js";
+
+export interface RawRange {
+  start: RawPosition;
+  end: RawPosition;
+}
 
 export default class Range {
-  static fromOffset(start: number, end: number, text: string): Range {
+  static zero = new Range(0, 0, 0, 0, 0, 0);
+
+  static fromOffsets(start: number, end: number, text: string): Range {
     return new Range(
       Position.fromOffset(start, text),
       Position.fromOffset(end, text),
     );
   }
 
-  static fromLineAndColumn(
+  static fromLinesAndColumns(
     startLine: number,
     startColumn: number,
     endLine: number,
@@ -77,19 +84,31 @@ export default class Range {
   }
 
   copy() {
-    return new Range(
-      this.start.line,
-      this.start.column,
-      this.start.offset,
-      this.end.line,
-      this.end.column,
-      this.end.offset,
-    );
+    return this.clone();
   }
 
-  contains(position: Position) {
-    return (
-      this.start.offset <= position.offset && position.offset <= this.end.offset
-    );
+  contains(locator: Position | Range): boolean {
+    if (locator instanceof Range) {
+      return this.contains(locator.start) && this.contains(locator.end);
+    } else {
+      return (
+        this.start.offset <= locator.offset && locator.offset <= this.end.offset
+      );
+    }
+  }
+
+  format() {
+    return `${this.start.format()}-${this.end.format()}`;
+  }
+
+  toString() {
+    return this.format();
+  }
+
+  toJSON(): RawRange {
+    return {
+      start: this.start.toJSON(),
+      end: this.end.toJSON(),
+    };
   }
 }

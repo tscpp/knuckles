@@ -27,9 +27,9 @@ export default class Scaffold {
 
   #renderDocument(document: Document) {
     return new Chunk()
-      .write(`import ${ns} from '@knuckles/typescript/types';`)
-      .nl(2)
-      .write(
+      .append(`import ${ns} from '@knuckles/typescript/types';`)
+      .newline(2)
+      .append(
         `declare const $context: {
           $parentContext: Knuckles.BindingContext | undefined;
           $parents: Knuckles.BindingContext[];
@@ -39,8 +39,8 @@ export default class Scaffold {
           $rawData: ${this.#unknown};
         };`,
       )
-      .nl(2)
-      .add(this.#renderNodes(document.children));
+      .newline(2)
+      .append(this.#renderNodes(document.children));
   }
 
   #renderNodes(nodes: readonly Node[]): Chunk[] {
@@ -56,42 +56,42 @@ export default class Scaffold {
       if (node instanceof Element) {
         for (const binding of node.bindings) {
           closure = new Chunk()
-            .add(this.#renderBindingComment(binding))
-            .add(this.#renderBindingClosure(binding))
-            .write("(")
-            .add(closure ?? new Chunk().write("$context"))
-            .write(")");
+            .append(this.#renderBindingComment(binding))
+            .append(this.#renderBindingClosure(binding), { blame: binding })
+            .append("(")
+            .append(closure ?? new Chunk().append("$context"))
+            .append(")");
         }
       }
 
       if (node instanceof KoVirtualElement) {
         closure = new Chunk()
-          .add(this.#renderBindingComment(node.binding))
-          .add(this.#renderBindingClosure(node.binding))
-          .write("($context)");
+          .append(this.#renderBindingComment(node.binding))
+          .append(this.#renderBindingClosure(node.binding), {
+            blame: node.binding,
+          })
+          .append("($context)");
       }
 
       if (node instanceof WithVirtualElement) {
         closure = new Chunk()
-          .write(
+          .append(
             `// "${rmnl(node.name.value)}: ${rmnl(node.param.value)}" (${node.name.start.format()})`,
           )
-          .nl()
-          .write("(($context) => ")
-          .nl()
-          .indent()
-          .write(`${ns}.hints.with(${ns}.type<typeof import(`)
-          .write(quote(node.import.module.value))
-          .write(")")
-          .write(
+          .newline()
+          .append("(($context) => ")
+          .newline()
+          .append(`${ns}.hints.with(${ns}.type<typeof import(`)
+          .append(quote(node.import.module.value))
+          .append(")")
+          .append(
             node.import.identifier.value === "*"
               ? ""
               : "[" + quote(node.import.identifier.value) + "]",
           )
-          .write(">(), $context)")
-          .dedent()
-          .nl()
-          .write(")($context)");
+          .append(">(), $context)")
+          .newline()
+          .append(")($context)");
       }
 
       const decendants = this.#renderNodes(node.children);
@@ -99,15 +99,15 @@ export default class Scaffold {
       if (closure) {
         if (decendants.length > 0) {
           return this.#renderDecendantClosure(closure, decendants) //
-            .write(";")
-            .nl(2);
+            .append(";")
+            .newline(2);
         } else {
           return closure //
-            .write(";")
-            .nl(2);
+            .append(";")
+            .newline(2);
         }
       } else {
-        return new Chunk().add(decendants);
+        return new Chunk().append(decendants);
       }
     }
 
@@ -116,97 +116,77 @@ export default class Scaffold {
 
   #renderDecendantClosure(parent: Chunk, decendants: Chunk[]) {
     return new Chunk()
-      .write("(($context) => {")
-      .nl()
-      .indent()
-      .add(decendants)
-      .dedent()
-      .write("})(")
-      .nl()
-      .indent()
-      .add(parent)
-      .dedent()
-      .nl()
-      .write(")");
+      .append("(($context) => {")
+      .newline()
+      .append(decendants)
+      .append("})(")
+      .newline()
+      .append(parent)
+      .newline()
+      .append(")");
   }
 
   #renderBindingComment(binding: Binding) {
     return new Chunk()
-      .write(
+      .append(
         `// "${rmnl(binding.name.value)}: ${rmnl(binding.param.value)}" (${binding.start.format()})`,
       )
-      .nl();
+      .newline();
   }
 
   #renderBindingClosure(binding: Binding) {
-    const chunk = new Chunk({
-      mapping: {
-        range: binding,
-      },
-    })
-      .write("(($context) => {")
-      .nl()
-      .indent()
-      .write("const ")
-      .locate("context", (c) => c.write("{ }"))
-      .write(" = $context;")
-      .nl()
-      .write("const ")
-      .locate("data", (c) => c.write("{ }"))
-      .write(" = $context.$data;")
-      .nl(2)
-      .write(`return ${ns}.${this.#mode}`);
-
+    const chunk = new Chunk()
+      .append("(($context) => {")
+      .newline()
+      .append("const ")
+      .append("{")
+      .marker("context")
+      .append("}")
+      .append(" = $context;")
+      .newline()
+      .append("const ")
+      .append("{")
+      .marker("data")
+      .append("}")
+      .append(" = $context.$data;")
+      .newline(2)
+      .append(`return ${ns}.${this.#mode}`);
     if (/^[a-z$_][a-z$_0-9]*$/i.test(binding.name.value)) {
       chunk //
-        .write(".")
-        .write(binding.name.value, {
-          range: binding.name,
-          bidirectional: true,
-        });
+        .append(".")
+        .append(binding.name.value, { mirror: binding.name });
     } else {
       chunk //
-        .write("[")
-        .write(binding.name.value, {
-          range: binding.name,
-          bidirectional: true,
-        })
-        .write("]");
+        .append("[")
+        .append(binding.name.value, { mirror: binding.name })
+        .append("]");
     }
 
-    chunk.write("(");
+    chunk.append("(");
 
     if (binding.parent instanceof Element) {
-      chunk.add(
-        new Chunk({
-          mapping: {
-            range: binding.name,
-          },
-        })
-          .write(`${ns}.element("`)
-          .write(binding.parent.tagName.value, {
-            range: binding.parent.tagName,
-            bidirectional: true,
+      chunk.append(
+        new Chunk()
+          .append(`${ns}.element("`)
+          .append(binding.parent.tagName.value, {
+            mirror: binding.parent.tagName,
           })
-          .write('")'),
+          .append('")'),
+        { blame: binding.name },
       );
     } else {
       chunk //
-        .write(`${ns}.comment()`, {
-          range: binding.parent,
+        .append(`${ns}.comment()`, {
+          blame: binding.parent,
         });
     }
 
     return chunk
-      .write(", ") //
-      .write(binding.param.value, {
-        range: binding.param,
-        bidirectional: true,
-      })
-      .write(", $context)")
-      .write(";")
-      .dedent()
-      .nl()
-      .write("})");
+      .append(", ") //
+      .append(binding.param.value, { mirror: binding.param })
+      .append(", $context)")
+      .append(";")
+      .newline()
+      .append("})");
   }
 }
