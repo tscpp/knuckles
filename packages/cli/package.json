@@ -1,6 +1,7 @@
 {
   "name": "@knuckles/cli",
   "version": "0.11.0",
+  "description": "The command-line interface (CLI) for Knuckles.",
   "type": "module",
   "exports": "./src/index.ts",
   "bin": {

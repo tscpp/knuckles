@@ -1,6 +1,7 @@
 {
   "name": "@knuckles/typescript-plugin",
   "version": "0.10.1",
+  "description": "TypeScript language service plugin for Knuckles.",
   "type": "module",
   "exports": "./src/index.ts",
   "publishConfig": {

@@ -1,6 +1,7 @@
 {
   "name": "@knuckles/language-server",
   "version": "0.10.4",
+  "description": "Implements the language service protocol (LSP) for Knuckles.",
   "repository": {
     "type": "git",
     "url": "https://github.com/tscpp/knuckles",
