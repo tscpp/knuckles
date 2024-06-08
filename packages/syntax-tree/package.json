@@ -1,6 +1,6 @@
 {
   "name": "@knuckles/syntax-tree",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "description": "Abstract syntax tree for knockout views.",
   "type": "module",
   "exports": "./src/index.ts",

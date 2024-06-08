@@ -1,6 +1,6 @@
 {
   "name": "@knuckles/language-server",
-  "version": "0.10.4",
+  "version": "0.11.0",
   "description": "Implements the language service protocol (LSP) for Knuckles.",
   "repository": {
     "type": "git",
