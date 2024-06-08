@@ -7,7 +7,8 @@
     "./analyzer": "./src/analyzer.ts"
   },
   "dependencies": {
-    "@knuckles/location": "workspace:~"
+    "@knuckles/location": "workspace:~",
+    "@knuckles/fabricator": "workspace:~"
   },
   "devDependencies": {
     "@knuckles/typescript": "workspace:~"

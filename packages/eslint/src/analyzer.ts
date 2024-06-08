@@ -1,8 +1,5 @@
-import {
-  type AnalyzerPlugin,
-  type Snapshot,
-  AnalyzerSeverity,
-} from "@knuckles/analyzer";
+import { type AnalyzerPlugin, AnalyzerSeverity } from "@knuckles/analyzer";
+import type { Snapshot } from "@knuckles/fabricator";
 import { Position, Range } from "@knuckles/location";
 import { Linter } from "eslint";
 
@@ -79,28 +76,28 @@ export default function (options: Options): AnalyzerPlugin {
           diagnostic.endLine !== undefined &&
           diagnostic.endColumn !== undefined
         ) {
-          range = snapshot.getRealRangeInOriginal(
-            Range.fromLineAndColumn(
+          range = snapshot.mirror({
+            generated: Range.fromLinesAndColumns(
               diagnostic.line,
               diagnostic.column,
               diagnostic.endLine,
               diagnostic.endColumn,
               snapshot.generated,
             ),
-          );
+          });
         }
 
         if (!range) {
-          range = snapshot.blameOriginal(
-            Position.fromLineAndColumn(
+          range = snapshot.blame({
+            generated: Position.fromLineAndColumn(
               diagnostic.line,
               diagnostic.column,
               snapshot.generated,
             ),
-          );
+          });
         }
 
-        range ??= Range.fromOffset(0, 1, snapshot.generated);
+        range ??= Range.fromOffsets(0, 1, snapshot.generated);
 
         let severity: AnalyzerSeverity;
         switch (diagnostic.severity) {
