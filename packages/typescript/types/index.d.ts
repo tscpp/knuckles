@@ -14,11 +14,11 @@ declare global {
       $rawData: unknown;
     }
 
-    export type Ambiguous<T> = T | ko.Observable<T>;
-    export type AmbiguousRecord<
+    export type MaybeSubscribable<T> = T | ko.Subscribable<T>;
+    export type MaybeSubscribableRecord<
       K extends string | number | symbol,
       T,
-    > = Readonly<Record<K, Ambiguous<T>>>;
+    > = Readonly<Record<K, MaybeSubscribable<T>>>;
 
     export type Binding<V, E = Comment | Element> = <C extends BindingContext>(
       n: E,
@@ -57,22 +57,28 @@ declare global {
 
     export namespace Strict {
       export interface Bindings extends Knuckles.Bindings {
-        attr: Binding<Ambiguous<AmbiguousRecord<string, string>>>;
-        text: Binding<Ambiguous<string>>;
-        html: Binding<Ambiguous<string>>;
-        style: Binding<Ambiguous<AmbiguousRecord<string, string>>>;
-        uniqueName: Binding<Ambiguous<boolean>>;
+        attr: Binding<
+          MaybeSubscribable<MaybeSubscribableRecord<string, string>>
+        >;
+        text: Binding<MaybeSubscribable<string>>;
+        html: Binding<MaybeSubscribable<string>>;
+        style: Binding<
+          MaybeSubscribable<MaybeSubscribableRecord<string, string>>
+        >;
+        uniqueName: Binding<MaybeSubscribable<boolean>>;
 
-        if: Binding<Ambiguous<boolean>>;
-        ifnot: Binding<Ambiguous<boolean>>;
+        if: Binding<MaybeSubscribable<boolean>>;
+        ifnot: Binding<MaybeSubscribable<boolean>>;
 
         css: Binding<
-          Ambiguous<string | Ambiguous<AmbiguousRecord<string, boolean>>>
+          MaybeSubscribable<
+            string | MaybeSubscribable<MaybeSubscribableRecord<string, boolean>>
+          >
         >;
-        class: Binding<Ambiguous<string>>;
+        class: Binding<MaybeSubscribable<string>>;
 
-        hidden: Binding<Ambiguous<boolean>>;
-        visible: Binding<Ambiguous<boolean>>;
+        hidden: Binding<MaybeSubscribable<boolean>>;
+        visible: Binding<MaybeSubscribable<boolean>>;
 
         // Knockout will unwrap observables, but not react to them. It is
         // probably not intended to be used with observables.
@@ -83,12 +89,12 @@ declare global {
         // states that is should be used exclusively with 'input' and
         // 'textarea' elements.
         textInput: Binding<
-          Ambiguous<string>,
+          MaybeSubscribable<string>,
           HTMLInputElement | HTMLTextAreaElement
         >;
 
         options: Binding<
-          Ambiguous<readonly unknown[]> | ko.ObservableArray<unknown>,
+          MaybeSubscribable<readonly unknown[]> | ko.ObservableArray<unknown>,
           HTMLSelectElement
         >;
         optionsCaption: Binding<unknown, HTMLSelectElement>;
@@ -105,7 +111,7 @@ declare global {
         >;
 
         selectedOptions: Binding<
-          Ambiguous<readonly string[]> | ko.ObservableArray<string>,
+          MaybeSubscribable<readonly string[]> | ko.ObservableArray<string>,
           HTMLSelectElement
         >;
       }
@@ -113,17 +119,22 @@ declare global {
 
     export namespace Loose {
       export interface Bindings extends Knuckles.Bindings {
-        attr: Binding<Ambiguous<Readonly<Record<string, any>>>, Element>;
+        attr: Binding<
+          MaybeSubscribable<Readonly<Record<string, any>>>,
+          Element
+        >;
         text: Binding<any>;
         html: Binding<any>;
-        style: Binding<Ambiguous<Readonly<Record<string, any>>>>;
+        style: Binding<MaybeSubscribable<Readonly<Record<string, any>>>>;
         uniqueName: Binding<unknown>;
 
         if: Binding<unknown>;
         ifnot: Binding<unknown>;
 
         css: Binding<
-          Ambiguous<string | Ambiguous<Readonly<Record<string, any>>>>
+          MaybeSubscribable<
+            string | MaybeSubscribable<Readonly<Record<string, any>>>
+          >
         >;
         class: Binding<any>;
 
@@ -131,30 +142,31 @@ declare global {
         visible: Binding<any, Element>;
 
         // See strict definition for details.
-        valueUpdate: Binding<Ambiguous<ValueUpdate>, ElementWithValue>;
-        valueAllowUnset: Binding<Ambiguous<boolean>, ElementWithValue>;
+        valueUpdate: Binding<MaybeSubscribable<ValueUpdate>, ElementWithValue>;
+        valueAllowUnset: Binding<MaybeSubscribable<boolean>, ElementWithValue>;
 
         // See strict definition for details.
-        textInput: Binding<Ambiguous<string>, ElementWithValue>;
+        textInput: Binding<MaybeSubscribable<string>, ElementWithValue>;
 
         options: Binding<
-          Ambiguous<readonly any[]> | ko.ObservableArray<any>,
+          MaybeSubscribable<readonly any[]> | ko.ObservableArray<any>,
           HTMLSelectElement
         >;
         optionsCaption: Binding<any, HTMLSelectElement>;
 
         // See strict definition for details.
         optionsText: Binding<
-          Ambiguous<string | ((entry: any) => string)>,
+          MaybeSubscribable<string | ((entry: any) => string)>,
           HTMLSelectElement
         >;
         optionsValue: Binding<
-          Ambiguous<string | ((entry: any) => string)>,
+          MaybeSubscribable<string | ((entry: any) => string)>,
           HTMLSelectElement
         >;
 
         selectedOptions: Binding<
-          Ambiguous<readonly string[] | Falsy> | ko.ObservableArray<string>,
+          | MaybeSubscribable<readonly string[] | Falsy>
+          | ko.ObservableArray<string>,
           HTMLSelectElement
         >;
       }
@@ -186,31 +198,32 @@ declare global {
 
       click: <C extends BindingContext>(
         n: Element,
-        v: Ambiguous<(this: C["$root"], event: MouseEvent) => void>,
+        v: MaybeSubscribable<(this: C["$root"], event: MouseEvent) => void>,
         c: C,
       ) => C;
       submit: <C extends BindingContext>(
         n: Element,
-        v: Ambiguous<(this: C["$root"], event: SubmitEvent) => void>,
+        v: MaybeSubscribable<(this: C["$root"], event: SubmitEvent) => void>,
         c: C,
       ) => C;
 
-      enable: Binding<Ambiguous<boolean>, ElementWithDisabled>;
-      disable: Binding<Ambiguous<boolean>, ElementWithDisabled>;
+      enable: Binding<MaybeSubscribable<boolean>, ElementWithDisabled>;
+      disable: Binding<MaybeSubscribable<boolean>, ElementWithDisabled>;
 
-      value: Binding<Ambiguous<string>, ElementWithValue>;
+      value: Binding<MaybeSubscribable<string>, ElementWithValue>;
 
-      hasFocus: Binding<Ambiguous<boolean>, Element>;
+      hasFocus: Binding<MaybeSubscribable<boolean>, Element>;
 
       checked: Binding<
-        Ambiguous<boolean | readonly string[]> | ko.ObservableArray<string>,
+        | MaybeSubscribable<boolean | readonly string[]>
+        | ko.ObservableArray<string>,
         HTMLInputElement
       >;
-      checkedValue: Binding<Ambiguous<string>, HTMLInputElement>;
+      checkedValue: Binding<MaybeSubscribable<string>, HTMLInputElement>;
 
       foreach: <
         const K extends string,
-        T extends readonly unknown[] | ko.Observable<readonly unknown[]>,
+        T extends MaybeSubscribable<unknown[] | readonly unknown[]>,
         C extends BindingContext,
       >(
         n: Comment | Element,
