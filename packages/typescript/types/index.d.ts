@@ -57,17 +57,23 @@ declare global {
 
     export namespace Strict {
       export interface Bindings extends Knuckles.Bindings {
-        attr: Binding<MaybeSubscribable<MaybeSubscribableRecord<string, string>>>;
+        attr: Binding<
+          MaybeSubscribable<MaybeSubscribableRecord<string, string>>
+        >;
         text: Binding<MaybeSubscribable<string>>;
         html: Binding<MaybeSubscribable<string>>;
-        style: Binding<MaybeSubscribable<MaybeSubscribableRecord<string, string>>>;
+        style: Binding<
+          MaybeSubscribable<MaybeSubscribableRecord<string, string>>
+        >;
         uniqueName: Binding<MaybeSubscribable<boolean>>;
 
         if: Binding<MaybeSubscribable<boolean>>;
         ifnot: Binding<MaybeSubscribable<boolean>>;
 
         css: Binding<
-          MaybeSubscribable<string | MaybeSubscribable<MaybeSubscribableRecord<string, boolean>>>
+          MaybeSubscribable<
+            string | MaybeSubscribable<MaybeSubscribableRecord<string, boolean>>
+          >
         >;
         class: Binding<MaybeSubscribable<string>>;
 
@@ -113,7 +119,10 @@ declare global {
 
     export namespace Loose {
       export interface Bindings extends Knuckles.Bindings {
-        attr: Binding<MaybeSubscribable<Readonly<Record<string, any>>>, Element>;
+        attr: Binding<
+          MaybeSubscribable<Readonly<Record<string, any>>>,
+          Element
+        >;
         text: Binding<any>;
         html: Binding<any>;
         style: Binding<MaybeSubscribable<Readonly<Record<string, any>>>>;
@@ -123,7 +132,9 @@ declare global {
         ifnot: Binding<unknown>;
 
         css: Binding<
-          MaybeSubscribable<string | MaybeSubscribable<Readonly<Record<string, any>>>>
+          MaybeSubscribable<
+            string | MaybeSubscribable<Readonly<Record<string, any>>>
+          >
         >;
         class: Binding<any>;
 
@@ -154,7 +165,8 @@ declare global {
         >;
 
         selectedOptions: Binding<
-          MaybeSubscribable<readonly string[] | Falsy> | ko.ObservableArray<string>,
+          | MaybeSubscribable<readonly string[] | Falsy>
+          | ko.ObservableArray<string>,
           HTMLSelectElement
         >;
       }
@@ -203,7 +215,8 @@ declare global {
       hasFocus: Binding<MaybeSubscribable<boolean>, Element>;
 
       checked: Binding<
-        MaybeSubscribable<boolean | readonly string[]> | ko.ObservableArray<string>,
+        | MaybeSubscribable<boolean | readonly string[]>
+        | ko.ObservableArray<string>,
         HTMLInputElement
       >;
       checkedValue: Binding<MaybeSubscribable<string>, HTMLInputElement>;
