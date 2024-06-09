@@ -5,7 +5,7 @@ import {
   type Project,
   type SourceFile,
   ts,
-  Symbol,
+  type Symbol,
   SyntaxKind,
 } from "ts-morph";
 
@@ -83,6 +83,7 @@ export default class Renderer {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 function isPrivateProperty(symbol: Symbol) {
   const declarations = symbol.getDeclarations();
   for (const declaration of declarations) {
