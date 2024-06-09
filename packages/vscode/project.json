@@ -6,9 +6,10 @@
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "vsce package --no-dependencies --allow-star-activation",
+        "command": "pnpm exec vsce package --no-dependencies --allow-star-activation",
         "cwd": "{projectRoot}"
-      }
+      },
+      "dependsOn": ["build"]
     },
     "build": {
       "executor": "nx:run-commands",
