@@ -269,6 +269,7 @@ export default class Parser {
     let identifier: Identifier;
 
     if (iter.char() === "*") {
+      iter.next();
       identifier = new Identifier({
         value: "*",
         range: this.#range(start, iter.index()),

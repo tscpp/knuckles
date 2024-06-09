@@ -17,4 +17,8 @@ describe("parser", () => {
     const { errors } = parse("<div data-bind='foo: bar)'></div>");
     expect(errors.length).toEqual(1);
   });
+
+  test("Import statement with *", () => {
+    parse("<!-- ok with: * from 'foo' --><!-- /ok -->");
+  });
 });
