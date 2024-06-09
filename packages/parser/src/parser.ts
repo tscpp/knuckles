@@ -157,7 +157,7 @@ export default class Parser {
     const children: ChildNode[] = [];
     let endComment: Comment | undefined;
 
-    const endCommentRegex = new RegExp(`^\\s*\\/${nsText}\\s[^]*$`);
+    const endCommentRegex = new RegExp(`^\\s*\\/${nsText}(\\s|$)`);
 
     let result: IteratorResult<p5t.Node> | undefined;
     while (!(result = iter.next()).done) {
