@@ -1,7 +1,13 @@
 import Scaffold from "./scaffold.js";
 import type { Chunk } from "@knuckles/fabricator";
 import type { Document } from "@knuckles/syntax-tree";
-import { type Project, type SourceFile, ts } from "ts-morph";
+import {
+  type Project,
+  type SourceFile,
+  ts,
+  Symbol,
+  SyntaxKind,
+} from "ts-morph";
 
 export default class Renderer {
   #scaffold: Chunk;
@@ -53,6 +59,7 @@ export default class Renderer {
       const type = initializer.getType();
       const destructured = type
         .getProperties()
+        .filter((symbol) => !isPrivateProperty(symbol))
         .map((symbol) => symbol.getName())
         .join(", ");
 
@@ -74,4 +81,17 @@ export default class Renderer {
 
     return this.#scaffold;
   }
+}
+
+function isPrivateProperty(symbol: Symbol) {
+  const declarations = symbol.getDeclarations();
+  for (const declaration of declarations) {
+    if (declaration.getKind() === SyntaxKind.PropertyDeclaration) {
+      const modifierFlags = declaration.getCombinedModifierFlags();
+      if (modifierFlags & ts.ModifierFlags.Private) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
