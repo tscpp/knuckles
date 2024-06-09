@@ -1,5 +1,12 @@
 # @knuckles/typescript
 
+## 0.11.1
+
+### Patch Changes
+
+- ab142eb: Ignore deconstruction of private properties
+  - @knuckles/syntax-tree@0.11.1
+
 ## 0.11.0
 
 ### Minor Changes

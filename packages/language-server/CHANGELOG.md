@@ -1,5 +1,16 @@
 # @knuckles/language-server
 
+## 0.11.1
+
+### Patch Changes
+
+- Updated dependencies [b543b23]
+- Updated dependencies [ab142eb]
+  - @knuckles/parser@0.11.1
+  - @knuckles/typescript@0.11.1
+  - @knuckles/analyzer@0.11.1
+  - @knuckles/config@0.11.0
+
 ## 0.11.0
 
 ### Minor Changes

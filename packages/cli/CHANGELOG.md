@@ -1,5 +1,15 @@
 # @knuckles/cli
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies [ab142eb]
+  - @knuckles/typescript@0.11.1
+  - @knuckles/analyzer@0.11.1
+  - @knuckles/ssr@0.11.1
+  - @knuckles/config@0.11.0
+
 ## 1.0.1
 
 ### Patch Changes
