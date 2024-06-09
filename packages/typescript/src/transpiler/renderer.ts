@@ -87,9 +87,16 @@ export default class Renderer {
 function isPrivateProperty(symbol: Symbol) {
   const declarations = symbol.getDeclarations();
   for (const declaration of declarations) {
-    if (declaration.getKind() === SyntaxKind.PropertyDeclaration) {
+    const kind = declaration.getKind();
+    if (
+      kind === SyntaxKind.PropertyDeclaration ||
+      kind === SyntaxKind.MethodDeclaration
+    ) {
       const modifierFlags = declaration.getCombinedModifierFlags();
-      if (modifierFlags & ts.ModifierFlags.Private) {
+      if (
+        modifierFlags & ts.ModifierFlags.Private ||
+        modifierFlags & ts.ModifierFlags.Protected
+      ) {
         return true;
       }
     }
