@@ -346,6 +346,9 @@ importers:
       '@knuckles/parser':
         specifier: workspace:~
         version: link:../parser
+      '@knuckles/syntax-tree':
+        specifier: workspace:~
+        version: link:../syntax-tree
       '@knuckles/typescript':
         specifier: workspace:~
         version: link:../typescript
