@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Chunk Tracker tracks changes 1`] = `
+exports[`Tracker tracks changes 1`] = `
 [
   {
     "newText": "Hello",
