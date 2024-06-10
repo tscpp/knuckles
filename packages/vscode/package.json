@@ -14,7 +14,13 @@
   "publisher": "tscpp",
   "type": "module",
   "main": "./dist/extension.cjs",
-  "contributes": {},
+  "contributes": {
+    "commands": [
+      {
+        "command": "_knuckles.openJsDocLink"
+      }
+    ]
+  },
   "activationEvents": [
     "*"
   ],
