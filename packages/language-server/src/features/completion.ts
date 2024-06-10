@@ -1,5 +1,6 @@
 import type { LanguageService } from "../language-service.js";
 import { Position } from "@knuckles/location";
+import { Element } from "@knuckles/syntax-tree";
 import { ts } from "ts-morph";
 import * as vscode from "vscode-languageserver/node.js";
 
@@ -10,47 +11,78 @@ export default async function getCompletion(
   const state = await service.getState(params.textDocument);
   if (state.broken) return [];
 
-  const originalPosition = Position.fromLineAndColumn(
-    params.position.line,
-    params.position.character,
-    state.snapshot.original,
-  );
+  const originalPosition = convertPosition(params.position);
   const generatedPosition = state.snapshot.mirror({
     original: originalPosition,
   });
-
-  if (generatedPosition) {
-    const completions = state.service.compilerObject.getCompletionsAtPosition(
-      state.sourceFile.getFilePath(),
-      generatedPosition.offset,
-      {
-        includeCompletionsForImportStatements: false,
-        includeCompletionsForModuleExports: false,
-        allowRenameOfImportPath: false,
-        // TODO: get quote from current binding attribute
-        quotePreference: "auto",
-        triggerCharacter: params.context?.triggerCharacter as
-          | ts.CompletionsTriggerCharacter
-          | undefined,
-        triggerKind: params.context?.triggerKind,
-      },
-    );
-
-    if (completions) {
-      return completions.entries.map((entry): vscode.CompletionItem => {
-        return {
-          label: entry.name,
-          kind: convertKind(entry.kind),
-          preselect: entry.isRecommended,
-          insertText: entry.insertText,
-          filterText: entry.filterText,
-          sortText: entry.sortText,
-        };
-      });
-    }
+  if (!generatedPosition) {
+    return [];
   }
 
-  return [];
+  const quotePreference = getQuotePreferenceAt(originalPosition);
+
+  const completions = state.service!.compilerObject.getCompletionsAtPosition(
+    state.sourceFile!.getFilePath(),
+    generatedPosition.offset,
+    {
+      includeCompletionsForImportStatements: false,
+      includeCompletionsForModuleExports: false,
+      allowRenameOfImportPath: false,
+      // TODO: get quote from current binding attribute
+      quotePreference,
+      triggerCharacter: params.context?.triggerCharacter as
+        | ts.CompletionsTriggerCharacter
+        | undefined,
+      triggerKind: params.context?.triggerKind,
+    },
+  );
+  if (!completions) {
+    return [];
+  }
+
+  return completions.entries.map(convertCompletion);
+
+  function convertPosition(position: vscode.Position): Position {
+    return Position.fromLineAndColumn(
+      position.line,
+      position.character,
+      state.snapshot!.original,
+    );
+  }
+
+  function convertCompletion(entry: ts.CompletionEntry): vscode.CompletionItem {
+    return {
+      label: entry.name,
+      kind: convertKind(entry.kind),
+      preselect: entry.isRecommended,
+      insertText: entry.insertText,
+      filterText: entry.filterText,
+      sortText: entry.sortText,
+    };
+  }
+
+  function getQuotePreferenceAt(
+    position: Position,
+  ): "auto" | "double" | "single" {
+    let quotePreference: "auto" | "double" | "single" = "auto";
+
+    const node = state.syntaxTree!.getNodeAt(position);
+    if (node instanceof Element) {
+      const attr = node.attributes.find((attr) => attr.contains(position));
+      if (attr) {
+        switch (attr.value.quote) {
+          case "'":
+            quotePreference = "double";
+            break;
+
+          case '"':
+            quotePreference = "single";
+            break;
+        }
+      }
+    }
+    return quotePreference;
+  }
 }
 
 // https://github.com/microsoft/vscode/blob/77e5788/extensions/typescript-language-features/src/languageFeatures/completions.ts#L440
