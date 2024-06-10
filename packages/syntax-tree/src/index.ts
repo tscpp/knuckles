@@ -6,5 +6,3 @@ export * from "./syntax-tree/node.js";
 export * from "./syntax-tree/primitives.js";
 export * from "./syntax-tree/text.js";
 export * from "./syntax-tree/virtual-element.js";
-export * from "./collections.js";
-export * from "./visit.js";

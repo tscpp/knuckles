@@ -8,6 +8,7 @@ export interface BindingInit {
   param: Expression;
   attribute?: Attribute | null | undefined;
   parent: Element | KoVirtualElement;
+  incomplete?: boolean | undefined;
 }
 
 export class Binding extends Range {
@@ -15,6 +16,7 @@ export class Binding extends Range {
   param: Expression;
   attribute: Attribute | null;
   parent: Element | KoVirtualElement;
+  incomplete: boolean;
 
   constructor(init: BindingInit) {
     super(init.name.start, init.param.end);
@@ -22,5 +24,6 @@ export class Binding extends Range {
     this.param = init.param;
     this.attribute = init.attribute ?? null;
     this.parent = init.parent;
+    this.incomplete = init.incomplete ?? false;
   }
 }

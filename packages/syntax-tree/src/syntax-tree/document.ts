@@ -1,16 +1,9 @@
-import { Node } from "./node.js";
-import type { Range } from "@knuckles/location";
+import { ParentNode, type ParentNodeInit } from "./node.js";
 
-export interface DocumentInit {
-  children: Iterable<Node>;
-  range: Range;
-}
+export interface DocumentInit extends ParentNodeInit {}
 
-export class Document extends Node {
-  children: Node[];
-
+export class Document extends ParentNode {
   constructor(init: DocumentInit) {
     super(init);
-    this.children = Array.from(init.children);
   }
 }

@@ -1,36 +1,31 @@
 import type { Binding } from "./binding.js";
 import type { Comment } from "./comment.js";
-import { Node } from "./node.js";
+import { ParentNode, type ParentNodeInit } from "./node.js";
 import type { Expression, Identifier, StringLiteral } from "./primitives.js";
 import { Range } from "@knuckles/location";
 
-export interface VirtualElementInit {
+export interface VirtualElementInit extends ParentNodeInit {
   namespace: Identifier;
   name: Identifier;
   param: Expression;
   startComment: Comment;
-  children: Iterable<Node>;
   endComment: Comment;
 }
 
-export class VirtualElement extends Node {
+export class VirtualElement extends ParentNode {
   namespace: Identifier;
   name: Identifier;
   param: Expression;
   startComment: Comment;
-  children: Node[];
   endComment: Comment;
   inner: Range;
 
   constructor(init: VirtualElementInit) {
-    super({
-      range: new Range(init.startComment.start, init.endComment.end),
-    });
+    super(init);
     this.namespace = init.namespace;
     this.name = init.name;
     this.param = init.param;
     this.startComment = init.startComment;
-    this.children = Array.from(init.children);
     this.endComment = init.endComment;
     this.inner = new Range(init.startComment.end, init.endComment.start);
   }

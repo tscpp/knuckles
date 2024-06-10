@@ -1,7 +1,6 @@
 import { Chunk } from "@knuckles/fabricator";
 import {
   type Document,
-  visit,
   Element,
   type Binding,
   KoVirtualElement,
@@ -24,15 +23,21 @@ export function transpile(document: Document) {
       );
   };
 
-  visit(document, Element, (node) => {
-    for (const binding of node.bindings) {
-      render(binding);
-    }
-  });
+  document.visit(
+    (node) => {
+      for (const binding of node.bindings) {
+        render(binding);
+      }
+    },
+    { filter: Element },
+  );
 
-  visit(document, KoVirtualElement, (node) => {
-    render(node.binding);
-  });
+  document.visit(
+    (node) => {
+      render(node.binding);
+    },
+    { filter: KoVirtualElement },
+  );
 
   return chunk;
 }
