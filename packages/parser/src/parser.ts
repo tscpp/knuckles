@@ -21,7 +21,6 @@ import {
   Attribute,
   Binding,
   VirtualElement,
-  type ChildNode,
   Identifier,
   Expression,
   KoVirtualElement,
@@ -154,7 +153,7 @@ export default class Parser {
       range: parse5NodeToRange(node),
     });
 
-    const children: ChildNode[] = [];
+    const children: Node[] = [];
     let endComment: Comment | undefined;
 
     const endCommentRegex = new RegExp(`^\\s*\\/${nsText}(\\s|$)`);
@@ -173,7 +172,7 @@ export default class Parser {
         }
       }
 
-      children.push(this.#parseNode(childNode, iter) as ChildNode);
+      children.push(this.#parseNode(childNode, iter) as Node);
     }
 
     if (!endComment) {
@@ -221,6 +220,7 @@ export default class Parser {
         startComment,
         children,
         endComment,
+        range: new Range(startComment.start, endComment.end),
       });
 
       const binding = new Binding({
@@ -247,6 +247,7 @@ export default class Parser {
           startComment,
           children,
           endComment,
+          range: new Range(startComment.start, endComment.end),
         });
       }
     }
@@ -258,6 +259,7 @@ export default class Parser {
       startComment,
       children,
       endComment,
+      range: new Range(startComment.start, endComment.end),
     });
   }
 
@@ -500,8 +502,8 @@ export default class Parser {
         if (prop.type === "SpreadElement") {
           this.#error(
             Range.fromOffsets(
-              translate(prop.range![0]),
-              translate(prop.range![1]),
+              translate(prop.start),
+              translate(prop.end),
               this.#string,
             ),
             "Spread syntax is not supported in bindings.",
@@ -512,8 +514,8 @@ export default class Parser {
         if (prop.computed) {
           this.#error(
             Range.fromOffsets(
-              translate(prop.range![0]),
-              translate(prop.range![1]),
+              translate(prop.start),
+              translate(prop.end),
               this.#string,
             ),
             "Computed property as binding is not supported.",
@@ -530,8 +532,8 @@ export default class Parser {
         } else {
           this.#error(
             Range.fromOffsets(
-              translate(prop.key.range![0]),
-              translate(prop.key.range![1]),
+              translate(prop.key.start),
+              translate(prop.key.end),
               this.#string,
             ),
             "Unsupported property key in binding.",
@@ -539,25 +541,41 @@ export default class Parser {
           return null;
         }
 
+        const incomplete =
+          prop.shorthand || prop.value.start - prop.value.end === 0;
+
+        const placeholderExpression = () =>
+          new Expression({
+            value: "",
+            range: Range.fromOffsets(
+              translate(prop.start),
+              translate(prop.end),
+              this.#string,
+            ),
+          });
+
         return new Binding({
           name: new Identifier({
             value: name,
             range: Range.fromOffsets(
-              translate(prop.key.range![0]),
-              translate(prop.key.range![1]),
+              translate(prop.key.start),
+              translate(prop.key.end),
               this.#string,
             ),
           }),
-          param: new Expression({
-            value: expressionText.slice(...prop.value.range!),
-            range: Range.fromOffsets(
-              translate(prop.value.range![0]),
-              translate(prop.value.range![1]),
-              this.#string,
-            ),
-          }),
+          param: incomplete
+            ? placeholderExpression()
+            : new Expression({
+                value: expressionText.slice(...prop.value.range!),
+                range: Range.fromOffsets(
+                  translate(prop.value.start),
+                  translate(prop.value.end),
+                  this.#string,
+                ),
+              }),
           attribute: attr,
           parent: attr.parent,
+          incomplete,
         });
       })
       .filter((v): v is Binding => v !== null);

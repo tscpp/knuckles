@@ -1,9 +1,7 @@
-import { Node } from "./node.js";
-import type { Range } from "@knuckles/location";
+import { Node, type NodeInit } from "./node.js";
 
-export interface TextInit {
+export interface TextInit extends NodeInit {
   content: string;
-  range: Range;
 }
 
 export class Text extends Node {

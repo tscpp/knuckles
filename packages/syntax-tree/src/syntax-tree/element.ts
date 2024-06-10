@@ -1,22 +1,20 @@
 import type { Binding } from "./binding.js";
-import { Node } from "./node.js";
+import { type Node, ParentNode, type ParentNodeInit } from "./node.js";
 import type { Identifier, StringLiteral } from "./primitives.js";
 import { Range } from "@knuckles/location";
 
-export interface ElementInit {
+export interface ElementInit extends ParentNodeInit {
   tagName: Identifier;
   attributes: Iterable<Attribute>;
   bindings: Iterable<Binding>;
   children: Iterable<Node>;
-  range: Range;
   inner: Range;
 }
 
-export class Element extends Node {
+export class Element extends ParentNode {
   tagName: Identifier;
   attributes: Attribute[];
   bindings: Binding[];
-  children: Node[];
   inner: Range;
 
   constructor(init: ElementInit) {
@@ -24,7 +22,6 @@ export class Element extends Node {
     this.tagName = init.tagName;
     this.attributes = Array.from(init.attributes);
     this.bindings = Array.from(init.bindings);
-    this.children = Array.from(init.children);
     this.inner = init.inner;
   }
 }
@@ -37,6 +34,8 @@ export interface AttributeInit {
   range: Range;
   parent: Element;
 }
+
+export type Quotation = "single" | "double";
 
 export class Attribute extends Range {
   name: Identifier;
