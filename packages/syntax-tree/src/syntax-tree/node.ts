@@ -1,4 +1,4 @@
-import { Position, Range } from "@knuckles/location";
+import { type Position, Range } from "@knuckles/location";
 
 export interface NodeInit {
   range: Range;

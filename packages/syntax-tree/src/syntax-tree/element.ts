@@ -1,5 +1,5 @@
 import type { Binding } from "./binding.js";
-import { Node, ParentNode, type ParentNodeInit } from "./node.js";
+import { type Node, ParentNode, type ParentNodeInit } from "./node.js";
 import type { Identifier, StringLiteral } from "./primitives.js";
 import { Range } from "@knuckles/location";
 
