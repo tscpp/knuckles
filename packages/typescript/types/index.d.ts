@@ -57,59 +57,169 @@ declare global {
 
     export namespace Strict {
       export interface Bindings extends Knuckles.Bindings {
+        /**
+         * Binds the provided record to the element's attributes.
+         *
+         * @see https://knockoutjs.com/documentation/attr-binding.html
+         */
         attr: Binding<
-          MaybeSubscribable<MaybeSubscribableRecord<string, string>>
+          MaybeSubscribable<MaybeSubscribableRecord<string, string>>,
+          Element
         >;
+        /**
+         * Replaces the node's content with the provided text.
+         *
+         * @see https://knockoutjs.com/documentation/text-binding.html
+         */
         text: Binding<MaybeSubscribable<string>>;
+        /**
+         * Replaces the node's content with the provided html.
+         *
+         * @see https://knockoutjs.com/documentation/html-binding.html
+         */
         html: Binding<MaybeSubscribable<string>>;
+        /**
+         * Binds the provided record to the element's "style" attribute.
+         *
+         * @see https://knockoutjs.com/documentation/style-binding.html
+         */
         style: Binding<
-          MaybeSubscribable<MaybeSubscribableRecord<string, string>>
+          MaybeSubscribable<MaybeSubscribableRecord<string, string>>,
+          Element
         >;
-        uniqueName: Binding<MaybeSubscribable<boolean>>;
+        /**
+         * Binds a unique value to the "name" attribute.
+         *
+         * @see https://knockoutjs.com/documentation/uniqueName-binding.html
+         */
+        uniqueName: Binding<MaybeSubscribable<boolean>, Element>;
 
+        /**
+         * Controls whether the descendants is present, based on a specified
+         * condition.
+         *
+         * @see {@link ifnot}
+         * @see https://knockoutjs.com/documentation/if-binding.html
+         */
         if: Binding<MaybeSubscribable<boolean>>;
+        /**
+         * Controls whether the descendants is not present, based on a
+         * specified condition.
+         *
+         * @see {@link if}
+         * @see https://knockoutjs.com/documentation/if-binding.html
+         */
         ifnot: Binding<MaybeSubscribable<boolean>>;
 
+        /**
+         * Dynamically applies or removes the provided classes to an element.
+         *
+         * @see https://knockoutjs.com/documentation/css-binding.html
+         */
         css: Binding<
           MaybeSubscribable<
             string | MaybeSubscribable<MaybeSubscribableRecord<string, boolean>>
-          >
+          >,
+          Element
         >;
-        class: Binding<MaybeSubscribable<string>>;
+        /**
+         * Appends the provided class to the element.
+         *
+         * @see https://knockoutjs.com/documentation/css-binding.html
+         */
+        class: Binding<MaybeSubscribable<string>, Element>;
 
-        hidden: Binding<MaybeSubscribable<boolean>>;
-        visible: Binding<MaybeSubscribable<boolean>>;
+        /**
+         * Controls weather the element is visible or not, based on the
+         * provided condition.
+         *
+         * @see {@link visible}
+         * @see https://knockoutjs.com/documentation/visible-binding.html
+         */
+        hidden: Binding<MaybeSubscribable<boolean>, Element>;
+        /**
+         * Controls weather the element is visible or not, based on the
+         * provided condition.
+         *
+         * @see {@link hidden}
+         * @see https://knockoutjs.com/documentation/visible-binding.html
+         */
+        visible: Binding<MaybeSubscribable<boolean>, Element>;
 
         // Knockout will unwrap observables, but not react to them. It is
         // probably not intended to be used with observables.
+        /**
+         * @see {@link value}
+         * @see https://knockoutjs.com/documentation/value-binding.html
+         */
         valueUpdate: Binding<ValueUpdate, ElementWithValue>;
+        /**
+         * @see {@link value}
+         * @see https://knockoutjs.com/documentation/value-binding.html
+         */
         valueAllowUnset: Binding<boolean, ElementWithValue>;
 
         // Knockout supports any element with value, however documentation
         // states that is should be used exclusively with 'input' and
         // 'textarea' elements.
+        /**
+         * Synchronizes a `<input>` or `<textarea>` with a view model property
+         * bidirectionally, with immediate updates between the provided
+         * observable and the element’s value. Unlike the {@link value}
+         * binding, `textInput` ensures instantaneous updates from the DOM for
+         * various user inputs like autocomplete, drag-and-drop, and clipboard
+         * events.
+         *
+         * @see https://knockoutjs.com/documentation/textinput-binding.html
+         */
         textInput: Binding<
           MaybeSubscribable<string>,
           HTMLInputElement | HTMLTextAreaElement
         >;
 
+        /**
+         * The options binding manages the selection choices for a `<select>`
+         * element or multi-select list (e.g., `<select size='6'>`).
+         *
+         * @see {@link optionsCaption}
+         * @see {@link optionsText}
+         * @see {@link optionsValue}
+         * @see {@link selectedOptions}
+         * @see https://knockoutjs.com/documentation/options-binding.html
+         */
         options: Binding<
           MaybeSubscribable<readonly unknown[]> | ko.ObservableArray<unknown>,
           HTMLSelectElement
         >;
+        /**
+         * @see {@link options}
+         * @see https://knockoutjs.com/documentation/options-binding.html
+         */
         optionsCaption: Binding<unknown, HTMLSelectElement>;
 
         // Knockout will unwrap observables, but not react to them. It is
         // probably not intended to be used with observables.
+        /**
+         * @see {@link options}
+         * @see https://knockoutjs.com/documentation/options-binding.html
+         */
         optionsText: Binding<
           string | ((entry: unknown) => string),
           HTMLSelectElement
         >;
+        /**
+         * @see {@link options}
+         * @see https://knockoutjs.com/documentation/options-binding.html
+         */
         optionsValue: Binding<
           string | ((entry: unknown) => string),
           HTMLSelectElement
         >;
 
+        /**
+         * @see {@link options}
+         * @see https://knockoutjs.com/documentation/options-binding.html
+         */
         selectedOptions: Binding<
           MaybeSubscribable<readonly string[]> | ko.ObservableArray<string>,
           HTMLSelectElement
@@ -119,51 +229,162 @@ declare global {
 
     export namespace Loose {
       export interface Bindings extends Knuckles.Bindings {
+        /**
+         * Binds the provided record to the element's attributes.
+         *
+         * @see https://knockoutjs.com/documentation/attr-binding.html
+         */
         attr: Binding<
           MaybeSubscribable<Readonly<Record<string, any>>>,
           Element
         >;
+        /**
+         * Replaces the node's content with the provided text.
+         *
+         * @see https://knockoutjs.com/documentation/text-binding.html
+         */
         text: Binding<any>;
+        /**
+         * Replaces the node's content with the provided html.
+         *
+         * @see https://knockoutjs.com/documentation/html-binding.html
+         */
         html: Binding<any>;
-        style: Binding<MaybeSubscribable<Readonly<Record<string, any>>>>;
-        uniqueName: Binding<unknown>;
+        /**
+         * Binds the provided record to the element's "style" attribute.
+         *
+         * @see https://knockoutjs.com/documentation/style-binding.html
+         */
+        style: Binding<
+          MaybeSubscribable<Readonly<Record<string, any>>>,
+          Element
+        >;
+        /**
+         * Binds a unique value to the "name" attribute.
+         *
+         * @see https://knockoutjs.com/documentation/uniqueName-binding.html
+         */
+        uniqueName: Binding<unknown, Element>;
 
+        /**
+         * Controls whether the descendants is present, based on a specified
+         * condition.
+         *
+         * @see {@link ifnot}
+         * @see https://knockoutjs.com/documentation/if-binding.html
+         */
         if: Binding<unknown>;
+        /**
+         * Controls whether the descendants is not present, based on a
+         * specified condition.
+         *
+         * @see {@link if}
+         * @see https://knockoutjs.com/documentation/if-binding.html
+         */
         ifnot: Binding<unknown>;
 
+        /**
+         * Dynamically applies or removes the provided classes to an element.
+         *
+         * @see https://knockoutjs.com/documentation/css-binding.html
+         */
         css: Binding<
           MaybeSubscribable<
             string | MaybeSubscribable<Readonly<Record<string, any>>>
-          >
+          >,
+          Element
         >;
-        class: Binding<any>;
+        /**
+         * Appends the provided class to the element.
+         *
+         * @see https://knockoutjs.com/documentation/css-binding.html
+         */
+        class: Binding<any, Element>;
 
+        /**
+         * Controls weather the element is visible or not, based on the
+         * provided condition.
+         *
+         * @see {@link visible}
+         * @see https://knockoutjs.com/documentation/visible-binding.html
+         */
         hidden: Binding<any, Element>;
+        /**
+         * Controls weather the element is visible or not, based on the
+         * provided condition.
+         *
+         * @see {@link hidden}
+         * @see https://knockoutjs.com/documentation/visible-binding.html
+         */
         visible: Binding<any, Element>;
 
         // See strict definition for details.
+        /**
+         * @see {@link value}
+         * @see https://knockoutjs.com/documentation/value-binding.html
+         */
         valueUpdate: Binding<MaybeSubscribable<ValueUpdate>, ElementWithValue>;
+        /**
+         * @see {@link value}
+         * @see https://knockoutjs.com/documentation/value-binding.html
+         */
         valueAllowUnset: Binding<MaybeSubscribable<boolean>, ElementWithValue>;
 
         // See strict definition for details.
+        /**
+         * Synchronizes a `<input>` or `<textarea>` with a view model property
+         * bidirectionally, with immediate updates between the provided
+         * observable and the element’s value. Unlike the {@link value}
+         * binding, `textInput` ensures instantaneous updates from the DOM for
+         * various user inputs like autocomplete, drag-and-drop, and clipboard
+         * events.
+         *
+         * @see https://knockoutjs.com/documentation/textinput-binding.html
+         */
         textInput: Binding<MaybeSubscribable<string>, ElementWithValue>;
 
+        /**
+         * The options binding manages the selection choices for a `<select>`
+         * element or multi-select list (e.g., `<select size='6'>`).
+         *
+         * @see {@link optionsCaption}
+         * @see {@link optionsText}
+         * @see {@link optionsValue}
+         * @see {@link selectedOptions}
+         * @see https://knockoutjs.com/documentation/options-binding.html
+         */
         options: Binding<
           MaybeSubscribable<readonly any[]> | ko.ObservableArray<any>,
           HTMLSelectElement
         >;
+        /**
+         * @see {@link options}
+         * @see https://knockoutjs.com/documentation/options-binding.html
+         */
         optionsCaption: Binding<any, HTMLSelectElement>;
 
         // See strict definition for details.
+        /**
+         * @see {@link options}
+         * @see https://knockoutjs.com/documentation/options-binding.html
+         */
         optionsText: Binding<
           MaybeSubscribable<string | ((entry: any) => string)>,
           HTMLSelectElement
         >;
+        /**
+         * @see {@link options}
+         * @see https://knockoutjs.com/documentation/options-binding.html
+         */
         optionsValue: Binding<
           MaybeSubscribable<string | ((entry: any) => string)>,
           HTMLSelectElement
         >;
 
+        /**
+         * @see {@link options}
+         * @see https://knockoutjs.com/documentation/options-binding.html
+         */
         selectedOptions: Binding<
           | MaybeSubscribable<readonly string[] | Falsy>
           | ko.ObservableArray<string>,
@@ -173,6 +394,14 @@ declare global {
     }
 
     export interface Bindings {
+      /**
+       * Adds event listeners for each entry in the provided record on the
+       * element.
+       *
+       * @see {@link click}
+       * @see {@link submit}
+       * @see https://knockoutjs.com/documentation/event-binding.html
+       */
       event: {
         // Declared DOM events
         <C extends BindingContext>(
@@ -196,31 +425,74 @@ declare global {
         ): C;
       };
 
+      /**
+       * Adds the "click" event listener to the element.
+       *
+       * @see https://knockoutjs.com/documentation/click-binding.html
+       */
       click: <C extends BindingContext>(
         n: Element,
         v: MaybeSubscribable<(this: C["$root"], event: MouseEvent) => void>,
         c: C,
       ) => C;
+      /**
+       * Adds the "submit" event listener to the element.
+       *
+       * @see https://knockoutjs.com/documentation/submit-binding.html
+       */
       submit: <C extends BindingContext>(
         n: Element,
         v: MaybeSubscribable<(this: C["$root"], event: SubmitEvent) => void>,
         c: C,
       ) => C;
 
+      /**
+       * Adds the boolean `disabled` attributes based on the specified
+       * condition.
+       *
+       * @see https://knockoutjs.com/documentation/enable-binding.html
+       */
       enable: Binding<MaybeSubscribable<boolean>, ElementWithDisabled>;
+
+      enable2: {
+        input: MaybeSubscribable<boolean>;
+      };
+
+      /**
+       * Adds the boolean `disabled` attributes based on the specified
+       * condition.
+       *
+       * @see https://knockoutjs.com/documentation/enable-binding.html
+       */
       disable: Binding<MaybeSubscribable<boolean>, ElementWithDisabled>;
 
+      /**
+       * @see https://knockoutjs.com/documentation/value-binding.html
+       */
       value: Binding<MaybeSubscribable<string>, ElementWithValue>;
 
+      /**
+       * @see https://knockoutjs.com/documentation/hasfocus-binding.html
+       */
       hasFocus: Binding<MaybeSubscribable<boolean>, Element>;
 
+      /**
+       * @see {@link checkedValue}
+       * @see https://knockoutjs.com/documentation/checked-binding.html
+       */
       checked: Binding<
         | MaybeSubscribable<boolean | readonly string[]>
         | ko.ObservableArray<string>,
         HTMLInputElement
       >;
+      /**
+       * @see https://knockoutjs.com/documentation/checked-binding.html
+       */
       checkedValue: Binding<MaybeSubscribable<string>, HTMLInputElement>;
 
+      /**
+       * @see https://knockoutjs.com/documentation/foreach-binding.html
+       */
       foreach: <
         const K extends string,
         T extends MaybeSubscribable<unknown[] | readonly unknown[]>,
@@ -243,7 +515,13 @@ declare global {
         } & (K extends string ? Record<K, T> : {})
       >;
 
+      /**
+       * @see https://knockoutjs.com/documentation/with-binding.html
+       */
       using: Bindings["with"];
+      /**
+       * @see https://knockoutjs.com/documentation/with-binding.html
+       */
       with: <T extends object, C extends BindingContext>(
         n: Comment | Element,
         v: T | ko.Observable<T>,
@@ -259,6 +537,9 @@ declare global {
           $rawData: T;
         }
       >;
+      /**
+       * @see https://knockoutjs.com/documentation/let-binding.html
+       */
       let: <T extends object, C extends BindingContext>(
         n: Comment | Element,
         v: T | ko.Observable<T>,
@@ -266,7 +547,13 @@ declare global {
       ) => Overwrite<C, T>;
 
       // TODO: Untyped
+      /**
+       * @see https://knockoutjs.com/documentation/template-binding.html
+       */
       template: Binding<any>;
+      /**
+       * @see https://knockoutjs.com/documentation/component-binding.html
+       */
       component: Binding<any>;
     }
 
