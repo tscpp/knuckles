@@ -18,8 +18,7 @@ import { type Range } from "@knuckles/location";
 import { parse } from "@knuckles/parser";
 import {
   Element,
-  type ParentNode,
-  isParentNode,
+  ParentNode,
   WithVirtualElement,
   type StringLiteral,
   type ImportStatement,
@@ -279,7 +278,7 @@ export class Renderer {
     } else {
       // Continue to scan decendants
       for (const child of node.children) {
-        if (isParentNode(child)) {
+        if (child instanceof ParentNode) {
           await this.scan(child);
         }
       }
@@ -311,7 +310,7 @@ export class Renderer {
           continue;
         }
 
-        if (isParentNode(child)) {
+        if (child instanceof ParentNode) {
           await this.renderParent(child, context, modified);
           continue;
         }
