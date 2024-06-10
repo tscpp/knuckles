@@ -1,6 +1,6 @@
 import { AnalyzerSeverity } from "../../issue.js";
 import type { Rule } from "../rule.js";
-import { Binding, Element } from "@knuckles/syntax-tree";
+import { type Binding, Element } from "@knuckles/syntax-tree";
 
 export default {
   name: "duplicate-binding",
