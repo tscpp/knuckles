@@ -18,8 +18,10 @@ export interface Change {
 export type MappingOptions =
   | {
       blame?: Range;
+      mirror?: undefined;
     }
   | {
+      blame?: undefined;
       mirror?: Range;
     };
 
@@ -243,7 +245,7 @@ export class Chunk {
   }
 
   #map(generated: DynamicRange, options?: MappingOptions) {
-    if (!options || !("mirror" in options || "blame" in options)) {
+    if (!(options?.blame || options?.mirror)) {
       return;
     }
     const mirror = "mirror" in options;
@@ -254,7 +256,7 @@ export class Chunk {
   }
 
   #mapChanges(changes: Change[], options?: MappingOptions) {
-    if (!options || !("mirror" in options || "blame" in options)) {
+    if (!(options?.blame || options?.mirror)) {
       return;
     }
 
