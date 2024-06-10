@@ -7,6 +7,7 @@ import {
   defaultConfig,
 } from "@knuckles/config";
 import type { Snapshot } from "@knuckles/fabricator";
+import type { Document } from "@knuckles/syntax-tree";
 import analyzerTypeScriptPlugin from "@knuckles/typescript/analyzer";
 import assert from "node:assert";
 import { normalize } from "node:path";
@@ -24,18 +25,19 @@ export type DocumentState = (
       snapshot?: undefined;
       sourceFile?: undefined;
       service?: undefined;
-      document?: undefined;
       checker?: undefined;
+      syntaxTree?: undefined;
     }
   | {
       broken: false;
       snapshot: Snapshot;
       sourceFile: morph.SourceFile;
       service: morph.LanguageService;
-      document: TextDocument;
       checker: morph.TypeChecker;
+      syntaxTree: Document;
     }
 ) & {
+  document: TextDocument;
   issues: AnalyzerIssue[];
 };
 
@@ -82,11 +84,13 @@ export class DocumentStateProvider {
         service,
         checker,
         issues: result.issues,
+        syntaxTree: result.document,
       };
     } else {
       return {
         broken: true,
         issues: result.issues,
+        document: this.document,
       };
     }
   }
@@ -95,9 +99,15 @@ export class DocumentStateProvider {
 
   touch() {
     if (!this.#debounce) {
+      this.#debounce = true;
       this.#state = new Promise((resolve, reject) => {
         setTimeout(() => {
-          this.#refresh().then(resolve).catch(reject);
+          this.#refresh()
+            .then(resolve)
+            .catch(reject)
+            .finally(() => {
+              this.#debounce = false;
+            });
         }, POLLING_DELAY);
       });
     }

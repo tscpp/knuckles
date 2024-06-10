@@ -39,3 +39,7 @@ export function startLanguageServer(options?: LanguageServerOptions) {
   connection.listen();
   connection.console.log("Listening...");
 }
+
+export function createLanguageServer() {
+  
+}

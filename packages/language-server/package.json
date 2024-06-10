@@ -16,6 +16,7 @@
     "@knuckles/fabricator": "workspace:~",
     "@knuckles/location": "workspace:~",
     "@knuckles/parser": "workspace:~",
+    "@knuckles/syntax-tree": "workspace:~",
     "@knuckles/typescript": "workspace:~",
     "minimatch": "^9.0.4",
     "ts-morph": "^22.0.0",

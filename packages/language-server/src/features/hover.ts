@@ -1,6 +1,8 @@
 import type { LanguageService } from "../language-service.js";
+import { quickInfoToMarkdown } from "../utils/text-rendering.js";
 import { Position } from "@knuckles/location";
-import type { ts } from "ts-morph";
+import { Element } from "@knuckles/syntax-tree";
+import assert from "node:assert/strict";
 import type * as vscode from "vscode-languageserver/node.js";
 
 export default async function getHover(
@@ -16,64 +18,76 @@ export default async function getHover(
     params.position.character,
     state.snapshot.original,
   );
-  const generatedRange = state.snapshot.mirror({
+  const generatedPosition = state.snapshot.mirror({
     original: originalPosition,
   });
-  if (!generatedRange) return null;
+  if (!generatedPosition) return null;
 
-  let quickInfo: ts.QuickInfo | undefined;
+  const definition = getAbsoluteDefinitionAt(generatedPosition);
 
-  // To avoid display hover info for the local definition of a property
-  // (deconstructed from $data or $context), we'll try to get the definition.
-  const [definition] = state.service.getDefinitionsAtPosition(
-    state.sourceFile,
-    generatedRange.offset,
-  );
-  if (definition) {
-    const node = definition.getNode();
+  const node = state.syntaxTree.getNodeAt(originalPosition);
+  const binding =
+    node instanceof Element
+      ? node.bindings.find((binding) => binding.contains(originalPosition))
+      : undefined;
 
-    if (node.getSourceFile().getFilePath() === state.sourceFile.getFilePath()) {
-      const generatedStartOffset = node.getStart();
-      const generatedPosition = Position.fromOffset(
-        generatedStartOffset,
-        state.snapshot.generated,
+  const quickInfo = definition
+    ? state.service.compilerObject.getQuickInfoAtPosition(
+        definition.getSourceFile().getFilePath(),
+        definition.getTextSpan().getStart(),
+      )
+    : state.service.compilerObject.getQuickInfoAtPosition(
+        state.sourceFile.getFilePath(),
+        generatedPosition.offset,
       );
-      const originalPosition = state.snapshot.mirror({
-        generated: generatedPosition,
-      });
-
-      if (!originalPosition) {
-        const [definition] = state.service.getDefinitions(node);
-
-        if (definition) {
-          quickInfo = state.service.compilerObject.getQuickInfoAtPosition(
-            definition.getSourceFile().getFilePath(),
-            definition.getTextSpan().getStart(),
-          );
-        }
-      }
-    }
-  }
-
-  // Fallback case
-  quickInfo ??= state.service.compilerObject.getQuickInfoAtPosition(
-    state.sourceFile.getFilePath(),
-    generatedRange.offset,
-  );
 
   if (!quickInfo) return null;
 
-  // Translate "ts quick info" to "vscode hover info".
+  // Don't show definition preview when viewing the binding. It's often to
+  // verbose to provide any useful information.
+  if (binding?.name.contains(originalPosition)) {
+    quickInfo.displayParts = undefined;
+  }
+
   return {
-    contents: [
-      ...(quickInfo.displayParts
-        ? [
-            {
-              language: "typescript",
-              value: quickInfo.displayParts.map((part) => part.text).join(""),
-            },
-          ]
-        : []),
-    ],
+    contents: {
+      kind: "markdown",
+      value: quickInfoToMarkdown(quickInfo),
+    },
   };
+
+  function getAbsoluteDefinitionAt(position: Position) {
+    assert(!state.broken);
+
+    const [definition] = state.service.getDefinitionsAtPosition(
+      state.sourceFile,
+      position.offset,
+    );
+    if (definition) {
+      const node = definition.getNode();
+
+      if (
+        node.getSourceFile().getFilePath() === state.sourceFile.getFilePath()
+      ) {
+        const generatedStartOffset = node.getStart();
+        const generatedPosition = Position.fromOffset(
+          generatedStartOffset,
+          state.snapshot.generated,
+        );
+        const originalPosition = state.snapshot.mirror({
+          generated: generatedPosition,
+        });
+
+        if (!originalPosition) {
+          const [definition] = state.service.getDefinitions(node);
+
+          if (definition) {
+            return definition;
+          }
+        }
+      }
+    }
+
+    return undefined;
+  }
 }

@@ -5,9 +5,16 @@ import {
   type LanguageClientOptions,
   type ServerOptions,
   TransportKind,
+  RequestType,
 } from "vscode-languageclient/node.js";
 
 let client: LanguageClient;
+
+export const GetDocumentTextRequest = new RequestType<
+  { uri: string },
+  string,
+  void
+>("custom/readFile");
 
 export function activate(context: vscode.ExtensionContext) {
   console.log("activate");
@@ -42,6 +49,9 @@ export function activate(context: vscode.ExtensionContext) {
         "**/knuckles.config.*",
       ),
     },
+    markdown: {
+      isTrusted: true,
+    },
   };
 
   client = new LanguageClient(
@@ -60,6 +70,19 @@ export function activate(context: vscode.ExtensionContext) {
       });
     }
   });
+
+  vscode.commands.registerCommand(
+    "_knuckles.openJsDocLink",
+    async (fileName, start, length) => {
+      const document = await vscode.workspace.openTextDocument(fileName);
+      await vscode.window.showTextDocument(document, {
+        selection: new vscode.Selection(
+          document.positionAt(start),
+          document.positionAt(start + length),
+        ),
+      });
+    },
+  );
 }
 
 export function deactivate(): Thenable<void> | undefined {
