@@ -1,4 +1,4 @@
-import { DynamicPosition, DynamicRange } from "./location";
+import { DynamicPosition, DynamicRange } from "./location.js";
 
 describe("DynamicPosition", () => {
   it("translates position", () => {

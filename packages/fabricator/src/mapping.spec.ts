@@ -1,4 +1,4 @@
-import { Chunk } from "./chunk";
+import { Chunk } from "./chunk.js";
 import { Range } from "@knuckles/location";
 import assert from "node:assert/strict";
 

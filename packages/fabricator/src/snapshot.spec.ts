@@ -1,5 +1,5 @@
-import { Chunk } from "./chunk";
-import { Snapshot } from "./snapshot";
+import { Chunk } from "./chunk.js";
+import { type Snapshot } from "./snapshot.js";
 import { Position, Range } from "@knuckles/location";
 
 describe("Snapshot", () => {

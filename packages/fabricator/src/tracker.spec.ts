@@ -1,4 +1,4 @@
-import { Chunk } from "./chunk";
+import { Chunk } from "./chunk.js";
 
 describe("Tracker", () => {
   it("tracks changes", () => {
