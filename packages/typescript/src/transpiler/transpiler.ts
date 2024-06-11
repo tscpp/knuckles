@@ -6,6 +6,7 @@ import {
   type SourceFile,
   type CompilerOptions,
   type FileSystemHost,
+  ts,
 } from "ts-morph";
 
 export type TranspileOutput = {
@@ -18,6 +19,15 @@ export interface TranspilerOptions {
   fileSystem?: FileSystemHost | undefined;
 }
 
+const defaultCompilerOptions = {
+  module: ts.ModuleKind.CommonJS,
+  target: ts.ScriptTarget.ES2016,
+  strict: true,
+  esModuleInterop: true,
+  forceConsistentCasingInFileNames: true,
+  skipLibCheck: true,
+};
+
 export class Transpiler {
   #project: Project;
 
@@ -25,7 +35,7 @@ export class Transpiler {
     this.#project = new Project({
       ...(typeof options?.tsConfig === "string"
         ? { tsConfigFilePath: options.tsConfig }
-        : { compilerOptions: options?.tsConfig }),
+        : options?.tsConfig ?? defaultCompilerOptions),
       skipAddingFilesFromTsConfig: true,
       fileSystem: options?.fileSystem,
     });
@@ -36,7 +46,6 @@ export class Transpiler {
     document: Document,
     mode?: "strict" | "loose",
   ): TranspileOutput {
-    this.#project.resolveSourceFileDependencies();
     const sourceFiles = this.#project.getSourceFiles();
     for (const sourceFile of sourceFiles) {
       sourceFile.refreshFromFileSystemSync();
@@ -48,6 +57,7 @@ export class Transpiler {
       fileName: source,
       mode,
     });
+    this.#project.resolveSourceFileDependencies();
     const chunk = renderer.render();
 
     return {
