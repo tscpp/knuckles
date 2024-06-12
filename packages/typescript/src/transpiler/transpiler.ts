@@ -65,8 +65,13 @@ export class Transpiler {
   }
 }
 
+type BindingDeclarationMetadata = {
+  requiresContextParamater: boolean;
+  returnsChildContext: boolean;
+};
+
 class Renderer {
-  #controlsDescendantsMap!: Map<string, boolean>;
+  #bindingMetadataMap!: Map<string, BindingDeclarationMetadata>;
 
   get #unknown() {
     return this.strictness === "strict" ? "unknown" : "any";
@@ -114,46 +119,69 @@ class Renderer {
       }
     };
 
-    const commonNamespace = getDescendantOfKind(
+    const knucklesNs = getDescendantOfKind(
       typesSourceFile,
       ts.SyntaxKind.ModuleDeclaration,
       "Knuckles",
     );
-    assertOrBroken(commonNamespace);
+    assertOrBroken(knucklesNs);
 
-    const transformBindingTypeNode = getDescendantOfKind(
-      commonNamespace,
-      ts.SyntaxKind.TypeAliasDeclaration,
-      "TransformBinding",
+    const traitsNs = getDescendantOfKind(
+      typesSourceFile,
+      ts.SyntaxKind.ModuleDeclaration,
+      "Traits",
     );
-    assertOrBroken(transformBindingTypeNode);
+    assertOrBroken(traitsNs);
 
-    const limitedNamespace = getDescendantOfKind(
-      commonNamespace,
+    const returnsChildContextTrait = getDescendantOfKind(
+      traitsNs,
+      ts.SyntaxKind.TypeAliasDeclaration,
+      "ReturnsChildContext",
+    );
+    assertOrBroken(returnsChildContextTrait);
+
+    const requiresContextParamaterTrait = getDescendantOfKind(
+      traitsNs,
+      ts.SyntaxKind.TypeAliasDeclaration,
+      "RequiresContextParamater",
+    );
+    assertOrBroken(requiresContextParamaterTrait);
+
+    const strictnessNs = getDescendantOfKind(
+      knucklesNs,
       ts.SyntaxKind.ModuleDeclaration,
       this.strictness === "strict" ? "Strict" : "Loose",
     );
-    assertOrBroken(limitedNamespace);
+    assertOrBroken(strictnessNs);
 
-    const bindingsInterface = getDescendantOfKind(
-      limitedNamespace,
+    const bindingsType = getDescendantOfKind(
+      strictnessNs,
       ts.SyntaxKind.InterfaceDeclaration,
       "Bindings",
     );
-    assertOrBroken(bindingsInterface);
+    assertOrBroken(bindingsType);
 
-    this.#controlsDescendantsMap = new Map(
-      bindingsInterface
+    this.#bindingMetadataMap = new Map(
+      bindingsType
         .getType()
         .getProperties()
-        .map((property) => {
+        .map((property): [string, BindingDeclarationMetadata] => {
           const name = property.getName();
           const type = property.getValueDeclarationOrThrow().getType();
-          const controlsDescendants = type.isAssignableTo(
-            transformBindingTypeNode.getType(),
+          const requiresContextParamater = requiresContextParamaterTrait
+            .getType()
+            .isAssignableTo(type);
+          const returnsChildContext = type.isAssignableTo(
+            returnsChildContextTrait.getType(),
           );
 
-          return [name, controlsDescendants];
+          return [
+            name,
+            {
+              requiresContextParamater,
+              returnsChildContext,
+            },
+          ];
         }),
     );
 
@@ -247,10 +275,6 @@ class Renderer {
     return undefined;
   }
 
-  #controlsDescendants(binding: ko.Binding) {
-    return this.#controlsDescendantsMap.get(binding.name.value);
-  }
-
   #isConditional(binding: ko.Binding) {
     return ["if", "ifnot"].includes(binding.name.value);
   }
@@ -284,9 +308,11 @@ class Renderer {
     const conditional: ko.Binding[] = [];
 
     for (const binding of bindings) {
+      const meta = this.#bindingMetadataMap.get(binding.name.value);
+
       if (this.#isConditional(binding)) {
         conditional.push(binding);
-      } else if (this.#controlsDescendants(binding)) {
+      } else if (meta?.returnsChildContext) {
         controls.push(binding);
       } else {
         normal.push(binding);
@@ -392,6 +418,8 @@ class Renderer {
   }
 
   #renderBinding(binding: ko.Binding) {
+    const meta = this.#bindingMetadataMap.get(binding.name.value);
+
     const chunk = new Chunk() //
       .append(ns)
       .append(".")
@@ -402,7 +430,7 @@ class Renderer {
       .append(", ")
       .append(binding.param.value, { mirror: binding.param });
 
-    if (this.#controlsDescendants(binding)) {
+    if (meta?.requiresContextParamater) {
       chunk.append(", $context");
     }
 
