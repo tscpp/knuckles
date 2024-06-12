@@ -13,6 +13,7 @@ import {
   defaultConfig,
 } from "@knuckles/config";
 import { readFile, writeFile } from "node:fs/promises";
+import ts from "typescript";
 
 export default command({
   command: "analyze [entries...]",
@@ -28,6 +29,8 @@ export default command({
         },
         typeCheck: {
           alias: "ts",
+          type: "boolean",
+          default: false,
         },
         emitMeta: {
           type: "boolean",
@@ -74,16 +77,7 @@ export default command({
         process.exit(1);
       }
     }
-
-    logger.debug("Config:", config);
-
-    const flags: AnalyzerFlags = {
-      tsconfig: args.tsconfig,
-    };
-
-    logger.debug("Flags:", flags);
-
-    // Setup analyzer
+    
     if (args.typeCheck) {
       // eslint-disable-next-line @typescript-eslint/consistent-type-imports
       let exports: typeof import("@knuckles/typescript/analyzer");
@@ -99,6 +93,19 @@ export default command({
       const { default: tsPlugin } = exports;
       config.analyzer.plugins.unshift(await tsPlugin());
     }
+
+    logger.debug("Config:", config);
+
+    const flags: AnalyzerFlags = {
+      tsconfig: args.tsconfig,
+    };
+
+    if (!flags.tsconfig) {
+      flags.tsconfig = ts.findConfigFile(process.cwd(), ts.sys.fileExists);
+    }
+
+    logger.debug("Flags:", flags);
+
     const analyzer = new Analyzer({
       config,
       flags,

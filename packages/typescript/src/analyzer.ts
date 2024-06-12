@@ -23,7 +23,6 @@ export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
         fileSystem: options._fileSystemHost,
         strictness: context.config.analyzer.strictness,
       });
-      console.log(transpiler.project.getCompilerOptions());
     },
 
     async analyze(c) {
