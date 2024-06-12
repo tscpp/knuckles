@@ -1,9 +1,9 @@
 /* eslint-disable */
 import { ns, quote, rmnl } from "./utils.js";
 import { Chunk, type ChunkLike } from "@knuckles/fabricator";
+import type { Position } from "@knuckles/location";
 import type { Document } from "@knuckles/syntax-tree";
 import * as ko from "@knuckles/syntax-tree";
-import assert from "node:assert/strict";
 import * as ts from "ts-morph";
 
 export interface TranspilerOptions {
@@ -27,6 +27,16 @@ export type TranspilerOutput = {
 };
 
 export type TranspilerStrictness = "strict" | "loose";
+
+export class TranspilerError extends Error {
+  constructor(
+    message: string,
+    public start?: Position,
+    public end?: Position,
+  ) {
+    super(message);
+  }
+}
 
 export class Transpiler {
   readonly project: ts.Project;
@@ -88,31 +98,49 @@ class Renderer {
     });
     this.project.resolveSourceFileDependencies();
     const [typesSourceFile] = sourceFile.getReferencedSourceFiles();
-    assert(typesSourceFile, 'Cannot find "@knuckles/typescript/types".');
+    if (!typesSourceFile) {
+      throw new TranspilerError(
+        'Cannot find module "@knuckles/typescript/types". Is "@knuckles/typescript" installed?',
+      );
+    }
 
-    const commonNamespace = getDescendantOfKindOrThrow(
+    const assertOrBroken: (condition: unknown) => asserts condition = (
+      condition,
+    ) => {
+      if (!condition) {
+        throw new TranspilerError(
+          'Module "@knuckles/typescript" seems to be broken or outdated. Try installing the latest version.',
+        );
+      }
+    };
+
+    const commonNamespace = getDescendantOfKind(
       typesSourceFile,
       ts.SyntaxKind.ModuleDeclaration,
       "Knuckles",
     );
+    assertOrBroken(commonNamespace);
 
-    const transformBindingTypeNode = getDescendantOfKindOrThrow(
+    const transformBindingTypeNode = getDescendantOfKind(
       commonNamespace,
       ts.SyntaxKind.TypeAliasDeclaration,
       "TransformBinding",
     );
+    assertOrBroken(transformBindingTypeNode);
 
-    const limitedNamespace = getDescendantOfKindOrThrow(
+    const limitedNamespace = getDescendantOfKind(
       commonNamespace,
       ts.SyntaxKind.ModuleDeclaration,
       this.strictness === "strict" ? "Strict" : "Loose",
     );
+    assertOrBroken(limitedNamespace);
 
-    const bindingsInterface = getDescendantOfKindOrThrow(
+    const bindingsInterface = getDescendantOfKind(
       limitedNamespace,
       ts.SyntaxKind.InterfaceDeclaration,
       "Bindings",
     );
+    assertOrBroken(bindingsInterface);
 
     this.#controlsDescendantsMap = new Map(
       bindingsInterface
@@ -423,16 +451,6 @@ function getDescendantOfKind(
   return node
     .getDescendantsOfKind(kind)
     .find((node) => node.getName() === name);
-}
-
-function getDescendantOfKindOrThrow(
-  node: ts.Node,
-  kind: SyntaxKindWithName,
-  name: string,
-) {
-  const descendant = getDescendantOfKind(node, kind, name);
-  assert(descendant, `Cannot find "${name}".`);
-  return descendant;
 }
 
 /**
