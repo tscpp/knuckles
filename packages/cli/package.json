@@ -24,10 +24,14 @@
     "@knuckles/analyzer": "workspace:~",
     "@knuckles/config": "workspace:~",
     "@knuckles/ssr": "workspace:~",
-    "@knuckles/typescript": "workspace:~"
+    "@knuckles/typescript": "workspace:~",
+    "typescript": "^5.4.5"
   },
   "peerDependenciesMeta": {
     "@knuckles/typescript": {
+      "optional": true
+    },
+    "typescript": {
       "optional": true
     }
   },

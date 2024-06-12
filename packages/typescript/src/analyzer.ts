@@ -8,20 +8,22 @@ import { Position, Range } from "@knuckles/location";
 import { ts, type FileSystemHost } from "ts-morph";
 
 export type Options = {
-  tsconfig?: string | ts.CompilerOptions | undefined;
-  mode?: "strict" | "loose" | undefined;
-  fileSystem?: FileSystemHost;
+  _fileSystemHost?: FileSystemHost;
 };
 
 export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
-  const transpiler = new Transpiler({
-    tsConfig: options.tsconfig,
-    fileSystem: options.fileSystem,
-    strictness: options.mode,
-  });
+  let transpiler!: Transpiler;
 
   return {
     name: "typescript",
+
+    initialize(context) {
+      transpiler = new Transpiler({
+        tsConfig: context.flags.tsconfig,
+        fileSystem: options._fileSystemHost,
+        strictness: context.config.analyzer.strictness,
+      });
+    },
 
     async analyze(c) {
       let output: TranspilerOutput;

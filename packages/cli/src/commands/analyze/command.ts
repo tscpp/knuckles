@@ -4,9 +4,8 @@ import { formatIssue } from "./format.js";
 import { resolveFiles } from "./resolve-files.js";
 import {
   Analyzer,
-  type AnalyzerOptions,
   type AnalyzerSeverity,
-  type AnalyzerPlugin,
+  type AnalyzerFlags,
 } from "@knuckles/analyzer";
 import {
   findConfigFile,
@@ -14,6 +13,7 @@ import {
   defaultConfig,
 } from "@knuckles/config";
 import { readFile, writeFile } from "node:fs/promises";
+import ts from "typescript";
 
 export default command({
   command: "analyze [entries...]",
@@ -29,10 +29,15 @@ export default command({
         },
         typeCheck: {
           alias: "ts",
+          type: "boolean",
+          default: false,
         },
         emitMeta: {
           type: "boolean",
           default: false,
+        },
+        tsconfig: {
+          type: "string",
         },
       }),
   handler: async (args) => {
@@ -73,15 +78,6 @@ export default command({
       }
     }
 
-    logger.debug("Config:", config);
-
-    // Setup analyzer
-    const options: AnalyzerOptions = {
-      attributes: config.attributes,
-      plugins: (await Promise.all(config.analyzer.plugins)).filter(
-        (value): value is AnalyzerPlugin => !!value,
-      ),
-    };
     if (args.typeCheck) {
       // eslint-disable-next-line @typescript-eslint/consistent-type-imports
       let exports: typeof import("@knuckles/typescript/analyzer");
@@ -95,9 +91,26 @@ export default command({
         process.exit(1);
       }
       const { default: tsPlugin } = exports;
-      options.plugins = [await tsPlugin(), ...(options.plugins ?? [])];
+      config.analyzer.plugins.unshift(await tsPlugin());
     }
-    const analyzer = new Analyzer(options);
+
+    logger.debug("Config:", config);
+
+    const flags: AnalyzerFlags = {
+      tsconfig: args.tsconfig,
+    };
+
+    if (!flags.tsconfig) {
+      flags.tsconfig = ts.findConfigFile(process.cwd(), ts.sys.fileExists);
+    }
+
+    logger.debug("Flags:", flags);
+
+    const analyzer = new Analyzer({
+      config,
+      flags,
+    });
+    await analyzer.initialize();
 
     // Resolve files
     logger.debug("Enties:", args.entries);

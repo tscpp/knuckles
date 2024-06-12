@@ -8,6 +8,7 @@
     "./cli": "./src/cli/cli.ts"
   },
   "dependencies": {
+    "@knuckles/config": "workspace:~",
     "@knuckles/fabricator": "workspace:~",
     "@knuckles/location": "workspace:~",
     "@knuckles/parser": "workspace:~",

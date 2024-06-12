@@ -172,19 +172,27 @@ export default class Playground extends Component {
       this.#fileSystem.writeFileSync(name, text);
     }
 
-    return new Analyzer({
-      plugins: [
-        await AnalyzerTypeScriptPlugin({
-          fileSystem: this.#fileSystem,
-          tsconfig: {
-            target: ScriptTarget.ESNext,
-            module: ModuleKind.ESNext,
-            moduleResolution: ModuleResolutionKind.Bundler,
-            moduleDetection: ts.ModuleDetectionKind.Force,
-          },
-        }),
-      ],
+    const analyzer = new Analyzer({
+      config: {
+        analyzer: {
+          plugins: [
+            await AnalyzerTypeScriptPlugin({
+              _fileSystemHost: this.#fileSystem,
+            }),
+          ],
+        },
+      },
+      flags: {
+        tsconfig: {
+          target: ScriptTarget.ESNext,
+          module: ModuleKind.ESNext,
+          moduleResolution: ModuleResolutionKind.Bundler,
+          moduleDetection: ts.ModuleDetectionKind.Force,
+        },
+      },
     });
+    await analyzer.initialize();
+    return analyzer;
   }
 
   override initialize() {

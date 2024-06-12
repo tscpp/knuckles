@@ -5,7 +5,7 @@ export const defaultConfig: NormalizedConfig = {
   analyzer: {
     include: undefined,
     exclude: undefined,
-    mode: "loose",
+    strictness: "loose",
     plugins: [],
     rules: {},
   },

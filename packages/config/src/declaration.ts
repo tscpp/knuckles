@@ -3,7 +3,11 @@ import type { AnalyzerPlugin } from "@knuckles/analyzer";
 export interface AnalyzerConfig {
   include?: string | readonly string[] | undefined;
   exclude?: string | readonly string[] | undefined;
+  /**
+   * @deprecated Specify {@link strictness} instead.
+   */
   mode?: "strict" | "loose" | undefined;
+  strictness?: "strict" | "loose" | undefined;
   plugins?:
     | readonly (
         | AnalyzerPlugin
@@ -29,7 +33,7 @@ export interface Config {
 export interface NormalizedAnalyzerConfig extends AnalyzerConfig {
   include: string | string[] | undefined;
   exclude: string | string[] | undefined;
-  mode: "strict" | "loose";
+  strictness: "strict" | "loose";
   plugins: AnalyzerPlugin[];
   rules: Record<string, "off" | "on" | "error" | "warning">;
 }

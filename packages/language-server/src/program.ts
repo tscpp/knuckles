@@ -1,5 +1,9 @@
 import type { LanguageService } from "./language-service.js";
-import { Analyzer, type AnalyzerIssue } from "@knuckles/analyzer";
+import {
+  Analyzer,
+  type AnalyzerFlags,
+  type AnalyzerIssue,
+} from "@knuckles/analyzer";
 import {
   readConfigFile,
   discoverConfigFile,
@@ -174,33 +178,38 @@ export class Program {
   }
 
   async getConfig() {
-    return this.configPath
+    const config = this.configPath
       ? await this.#configProvider.readConfig(this.configPath)
       : defaultConfig;
+
+    const hasTypeScriptPlugin = config.analyzer.plugins.some(
+      (plugin) => plugin.name === "typescript",
+    );
+    if (!hasTypeScriptPlugin) {
+      config.analyzer.plugins.unshift(await analyzerTypeScriptPlugin());
+    }
+
+    return config;
+  }
+
+  getFlags(): AnalyzerFlags {
+    return {
+      tsconfig: this.tsconfigPath,
+    };
   }
 
   async getAnalyzer() {
     const config = await this.getConfig();
+    const flags = this.getFlags();
 
     if (this.#prevConfig !== config) {
-      const hasTypeScriptPlugin = config.analyzer.plugins.some(
-        (plugin) => plugin.name === "typescript",
-      );
-      const plugins = hasTypeScriptPlugin
-        ? config.analyzer.plugins
-        : [
-            await analyzerTypeScriptPlugin({
-              // TODO: resolve tsconfig
-              tsconfig: undefined,
-              mode: config.analyzer.mode,
-            }),
-            ...config.analyzer.plugins,
-          ];
-      this.#analyzer = new Analyzer({
-        attributes: config.attributes,
-        plugins,
-      });
       this.#prevConfig = config;
+
+      this.#analyzer = new Analyzer({
+        config,
+        flags,
+      });
+      await this.#analyzer.initialize();
     }
 
     return this.#analyzer!;
