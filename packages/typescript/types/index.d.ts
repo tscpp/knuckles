@@ -17,6 +17,8 @@ declare global {
       T,
     > = Readonly<Record<K, MaybeSubscribable<T>>>;
 
+    export type Unwrapped<T> = T extends ko.Subscribable<infer U> ? U : T;
+
     export type Binding = IdentityBinding | TransformBinding;
     export type IdentityBinding = (
       n: Comment | Element,
@@ -527,8 +529,8 @@ declare global {
         $parents: [C["$data"], ...C["$parents"]];
         $parent: C["$data"];
         $root: C["$root"];
-        $data: ko.Unwrapped<ko.Unwrapped<T>[number]>;
-        $rawData: ko.Unwrapped<T>[number];
+        $data: Unwrapped<Unwrapped<T>[number]>;
+        $rawData: Unwrapped<T>[number];
         $index: ko.Observable<number>;
       };
 
@@ -548,7 +550,7 @@ declare global {
         $parents: [C["$data"], ...C["$parents"]];
         $parent: C["$data"];
         $root: C["$root"];
-        $data: ko.Unwrapped<T>;
+        $data: Unwrapped<T>;
         $rawData: T;
       };
       /**
@@ -563,7 +565,7 @@ declare global {
         $parents: [C["$data"], ...C["$parents"]];
         $parent: C["$data"];
         $root: C["$root"];
-        $data: ko.Unwrapped<T>;
+        $data: Unwrapped<T>;
         $rawData: T;
       } & T;
 
@@ -619,7 +621,7 @@ declare namespace ns {
       $parents: [C["$data"], ...C["$parents"]];
       $parent: C["$data"];
       $root: Knuckles.Interop<T>;
-      $data: ko.Unwrapped<Knuckles.Interop<T>>;
+      $data: Knuckles.Unwrapped<Knuckles.Interop<T>>;
       $rawData: Knuckles.Interop<T>;
     };
   }
