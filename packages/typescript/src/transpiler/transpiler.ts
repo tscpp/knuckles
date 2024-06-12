@@ -168,9 +168,9 @@ class Renderer {
         .map((property): [string, BindingDeclarationMetadata] => {
           const name = property.getName();
           const type = property.getValueDeclarationOrThrow().getType();
-          const requiresContextParamater = type.isAssignableTo(
-            requiresContextParamaterTrait.getType(),
-          );
+          const requiresContextParamater = requiresContextParamaterTrait
+            .getType()
+            .isAssignableTo(type);
           const returnsChildContext = type.isAssignableTo(
             returnsChildContextTrait.getType(),
           );

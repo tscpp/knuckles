@@ -20,11 +20,15 @@ declare global {
     export type Unwrapped<T> = T extends ko.Subscribable<infer U> ? U : T;
 
     export namespace Traits {
-      export type RequiresContextParamater = (n: any, v: any, c: any) => void;
-      export type ReturnsChildContext = (
-        n: any,
+      export type RequiresContextParamater = (
+        n: Comment | Element,
         v: any,
-        c: any,
+        c: BindingContext,
+      ) => void;
+      export type ReturnsChildContext = (
+        n: Comment | Element,
+        v: any,
+        c: BindingContext,
       ) => BindingContext;
     }
 
