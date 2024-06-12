@@ -1,6 +1,6 @@
 {
   "name": "@knuckles/location",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Location utillities.",
   "type": "module",
   "exports": "./src/index.ts",

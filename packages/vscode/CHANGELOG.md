@@ -1,5 +1,17 @@
 # @knuckles/vscode
 
+## 0.12.0
+
+### Minor Changes
+
+- 81be0c7: Untracked bump
+
+### Patch Changes
+
+- Updated dependencies [81be0c7]
+- Updated dependencies [81be0c7]
+  - @knuckles/language-server@0.12.0
+
 ## 0.11.1
 
 ### Patch Changes
