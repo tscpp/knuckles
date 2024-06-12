@@ -1,5 +1,12 @@
 # @knuckles/vscode
 
+## 0.12.1
+
+### Patch Changes
+
+- Updated dependencies [207e3e5]
+  - @knuckles/language-server@0.13.0
+
 ## 0.12.0
 
 ### Minor Changes
