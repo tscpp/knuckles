@@ -12,7 +12,7 @@ export interface TranspilerOptions {
   strictness?: TranspilerStrictness;
 }
 
-const defaultCompilerOptions = {
+const defaultCompilerOptions: ts.CompilerOptions = {
   module: ts.ModuleKind.CommonJS,
   target: ts.ScriptTarget.ES2016,
   strict: true,
@@ -157,6 +157,7 @@ class Renderer {
 
   enhance(chunk: Chunk) {
     const sourceFile = this.#createSourceFile(chunk.text());
+    this.project.resolveSourceFileDependencies();
 
     const insert = (offset: number, text: string) => {
       chunk.insert(offset, text);
@@ -164,7 +165,7 @@ class Renderer {
     };
 
     // Render destructured paramaters for $context and $data.
-    for (const marker of chunk.markers(["context", "data"]).reverse()) {
+    for (const marker of chunk.markers(["context", "data"])) {
       const pos = marker.capture(chunk.text());
 
       const declaration = sourceFile
