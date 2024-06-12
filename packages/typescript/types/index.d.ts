@@ -46,7 +46,6 @@ declare global {
       | HTMLOutputElement
       | HTMLParamElement
       | HTMLProgressElement
-      | HTMLSelectElement
       | HTMLTextAreaElement;
 
     type ElementWithDisabled =
@@ -479,7 +478,8 @@ declare global {
       /**
        * @see https://knockoutjs.com/documentation/value-binding.html
        */
-      value: PreserveBinding<MaybeSubscribable<string>, ElementWithValue>;
+      value: PreserveBinding<MaybeSubscribable<string>, ElementWithValue> &
+        PreserveBinding<MaybeSubscribable<unknown>, HTMLSelectElement>;
 
       /**
        * @see https://knockoutjs.com/documentation/hasfocus-binding.html
