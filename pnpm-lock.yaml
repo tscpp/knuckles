@@ -227,6 +227,9 @@ importers:
 
   packages/analyzer:
     dependencies:
+      '@knuckles/config':
+        specifier: workspace:~
+        version: link:../config
       '@knuckles/fabricator':
         specifier: workspace:~
         version: link:../fabricator

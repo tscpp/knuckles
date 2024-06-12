@@ -3,15 +3,22 @@ import type {
   AnalyzerPlugin,
   AnalyzeContext,
   AnalyzerSnapshots,
+  AnalyzerFlags,
 } from "./plugin.js";
 import standard from "./standard/plugin.js";
+import {
+  defaultConfig,
+  normalizeConfig,
+  type Config,
+  type NormalizedConfig,
+} from "@knuckles/config";
 import { type ParserError, parse } from "@knuckles/parser";
 import type { Document } from "@knuckles/syntax-tree";
 import assert from "node:assert";
 
 export interface AnalyzerOptions {
-  plugins?: readonly AnalyzerPlugin[];
-  attributes?: readonly string[];
+  config?: Config;
+  flags?: AnalyzerFlags;
 }
 
 export interface AnalyzeOptions {
@@ -32,12 +39,22 @@ export interface AnalyzeResult {
 
 export class Analyzer {
   #plugins = new Set<AnalyzerPlugin>();
-  #attributes: readonly string[];
+  #configRaw: Config;
+  #config!: NormalizedConfig;
+  #flags: AnalyzerFlags;
+  #initialized = false;
 
   constructor(options?: AnalyzerOptions) {
-    this.#attributes = options?.attributes ?? ["data-bind"];
+    this.#configRaw = options?.config ?? defaultConfig;
+    this.#flags = options?.flags ?? {};
+  }
 
-    const unsortedPlugins = [...(options?.plugins ?? []), standard()];
+  async initialize() {
+    this.#config = this.#configRaw
+      ? await normalizeConfig(this.#configRaw)
+      : defaultConfig;
+
+    const unsortedPlugins = [...this.#config.analyzer.plugins, standard()];
     for (const plugin of unsortedPlugins) {
       if (plugin.dependencies) {
         for (const [name, value] of Object.entries(plugin.dependencies)) {
@@ -61,6 +78,15 @@ export class Analyzer {
       }
       this.#plugins.add(plugin);
     }
+
+    for (const plugin of this.#plugins) {
+      await plugin.initialize?.({
+        config: this.#config,
+        flags: this.#flags,
+      });
+    }
+
+    this.#initialized = true;
   }
 
   async analyze(
@@ -68,6 +94,10 @@ export class Analyzer {
     text: string,
     options?: AnalyzeOptions,
   ): Promise<AnalyzeResult> {
+    if (!this.#initialized) {
+      throw new Error(`Analyzer is not initialized.`);
+    }
+
     const issues: AnalyzerIssue[] = [];
     const snapshots = (options?.cache?.snapshots ?? {}) as AnalyzerSnapshots;
     const metadata = {};
@@ -77,7 +107,7 @@ export class Analyzer {
       document = options.cache.document;
     } else {
       const result = parse(text, {
-        bindingAttributes: this.#attributes,
+        bindingAttributes: this.#config.attributes,
       });
       if (result.errors.length > 0) {
         return {

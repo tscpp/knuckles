@@ -4,9 +4,8 @@ import { formatIssue } from "./format.js";
 import { resolveFiles } from "./resolve-files.js";
 import {
   Analyzer,
-  type AnalyzerOptions,
   type AnalyzerSeverity,
-  type AnalyzerPlugin,
+  type AnalyzerFlags,
 } from "@knuckles/analyzer";
 import {
   findConfigFile,
@@ -33,6 +32,9 @@ export default command({
         emitMeta: {
           type: "boolean",
           default: false,
+        },
+        tsconfig: {
+          type: "string",
         },
       }),
   handler: async (args) => {
@@ -75,13 +77,13 @@ export default command({
 
     logger.debug("Config:", config);
 
-    // Setup analyzer
-    const options: AnalyzerOptions = {
-      attributes: config.attributes,
-      plugins: (await Promise.all(config.analyzer.plugins)).filter(
-        (value): value is AnalyzerPlugin => !!value,
-      ),
+    const flags: AnalyzerFlags = {
+      tsconfig: args.tsconfig,
     };
+
+    logger.debug("Flags:", flags);
+
+    // Setup analyzer
     if (args.typeCheck) {
       // eslint-disable-next-line @typescript-eslint/consistent-type-imports
       let exports: typeof import("@knuckles/typescript/analyzer");
@@ -95,9 +97,13 @@ export default command({
         process.exit(1);
       }
       const { default: tsPlugin } = exports;
-      options.plugins = [await tsPlugin(), ...(options.plugins ?? [])];
+      config.analyzer.plugins.unshift(await tsPlugin());
     }
-    const analyzer = new Analyzer(options);
+    const analyzer = new Analyzer({
+      config,
+      flags,
+    });
+    await analyzer.initialize();
 
     // Resolve files
     logger.debug("Enties:", args.entries);

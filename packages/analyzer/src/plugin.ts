@@ -1,4 +1,5 @@
 import type { AnalyzerIssue } from "./issue.js";
+import type { NormalizedConfig } from "@knuckles/config";
 import type { Snapshot } from "@knuckles/fabricator";
 import type { Document } from "@knuckles/syntax-tree";
 
@@ -18,6 +19,15 @@ export interface AnalyzeContext {
   report(issue: AnalyzerIssue): void;
 }
 
+export interface AnalyzerFlags {
+  tsconfig?: any;
+}
+
+export interface InitializeContext {
+  readonly flags: AnalyzerFlags;
+  readonly config: NormalizedConfig;
+}
+
 export interface AnalyzerPluginDependency {
   optional?: boolean;
 }
@@ -31,6 +41,7 @@ export interface AnalyzerPluginDependencies {
 export interface AnalyzerPlugin {
   readonly name: string;
   readonly dependencies?: AnalyzerPluginDependencies;
+  initialize?(context: InitializeContext): void | PromiseLike<void>;
   analyze(context: AnalyzeContext): void | PromiseLike<void>;
   dispose?(): void | PromiseLike<void>;
 }

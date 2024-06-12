@@ -11,7 +11,10 @@ export async function normalizeConfig(
         config.analyzer?.include?.slice() ?? defaultConfig.analyzer.include,
       exclude:
         config.analyzer?.exclude?.slice() ?? defaultConfig.analyzer.exclude,
-      mode: config.analyzer?.mode ?? defaultConfig.analyzer.mode,
+      strictness:
+        config.analyzer?.strictness ??
+        config.analyzer?.mode ??
+        defaultConfig.analyzer.strictness,
       plugins: await Promise.all(
         config.analyzer?.plugins?.filter(
           (value): value is Exclude<typeof value, null | undefined | false> =>
