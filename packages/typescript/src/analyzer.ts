@@ -13,13 +13,14 @@ export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
   const transpiler = new Transpiler({
     tsConfig: options.tsconfig,
     fileSystem: options.fileSystem,
+    strictness: options.mode,
   });
 
   return {
     name: "typescript",
 
     async analyze(c) {
-      const output = transpiler.transpile(c.fileName, c.document, options.mode);
+      const output = transpiler.transpile(c.fileName, c.document);
       const sourceFile = output.sourceFile;
 
       const snapshot = output.chunk.snapshot(c.text);

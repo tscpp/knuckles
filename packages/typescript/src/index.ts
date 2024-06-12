@@ -1,5 +1,5 @@
 export {
   Transpiler,
   type TranspilerOptions,
-  type TranspileOutput,
+  type TranspilerOutput,
 } from "./transpiler/transpiler.js";
