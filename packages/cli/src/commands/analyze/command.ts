@@ -77,7 +77,7 @@ export default command({
         process.exit(1);
       }
     }
-    
+
     if (args.typeCheck) {
       // eslint-disable-next-line @typescript-eslint/consistent-type-imports
       let exports: typeof import("@knuckles/typescript/analyzer");
