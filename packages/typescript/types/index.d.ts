@@ -1,17 +1,14 @@
 import type * as ko from "knockout";
 
-type Overwrite<T, U> = Omit<T, keyof U> & U;
-type Unwrapped<T> = T extends ko.Observable<infer U> ? U : T;
-
 declare global {
   export namespace Knuckles {
     export interface BindingContext {
       $parentContext: BindingContext | undefined;
-      $parents: BindingContext[];
-      $parent: BindingContext | undefined;
-      $root: unknown;
-      $data: unknown;
-      $rawData: unknown;
+      $parents: any[];
+      $parent: any;
+      $root: any;
+      $data: any;
+      $rawData: any;
     }
 
     export type MaybeSubscribable<T> = T | ko.Subscribable<T>;
@@ -20,11 +17,22 @@ declare global {
       T,
     > = Readonly<Record<K, MaybeSubscribable<T>>>;
 
-    export type Binding<V, E = Comment | Element> = <C extends BindingContext>(
+    export type Binding = IdentityBinding | TransformBinding;
+    export type IdentityBinding = (
+      n: Comment | Element,
+      v: any,
+      c?: BindingContext,
+    ) => void;
+    export type TransformBinding = (
+      n: Comment | Element,
+      v: any,
+      c: BindingContext,
+    ) => BindingContext;
+
+    export type PreserveBinding<V, E = Comment | Element> = (
       n: E,
       v: V,
-      c: C,
-    ) => C;
+    ) => void;
 
     type ValueUpdate = "input" | "keyup" | "keypress" | "afterkeydown";
 
@@ -62,7 +70,7 @@ declare global {
          *
          * @see https://knockoutjs.com/documentation/attr-binding.html
          */
-        attr: Binding<
+        attr: PreserveBinding<
           MaybeSubscribable<MaybeSubscribableRecord<string, string>>,
           Element
         >;
@@ -71,19 +79,19 @@ declare global {
          *
          * @see https://knockoutjs.com/documentation/text-binding.html
          */
-        text: Binding<MaybeSubscribable<string>>;
+        text: PreserveBinding<MaybeSubscribable<string>>;
         /**
          * Replaces the node's content with the provided html.
          *
          * @see https://knockoutjs.com/documentation/html-binding.html
          */
-        html: Binding<MaybeSubscribable<string>>;
+        html: PreserveBinding<MaybeSubscribable<string>>;
         /**
          * Binds the provided record to the element's "style" attribute.
          *
          * @see https://knockoutjs.com/documentation/style-binding.html
          */
-        style: Binding<
+        style: PreserveBinding<
           MaybeSubscribable<MaybeSubscribableRecord<string, string>>,
           Element
         >;
@@ -92,7 +100,7 @@ declare global {
          *
          * @see https://knockoutjs.com/documentation/uniqueName-binding.html
          */
-        uniqueName: Binding<MaybeSubscribable<boolean>, Element>;
+        uniqueName: PreserveBinding<MaybeSubscribable<boolean>, Element>;
 
         /**
          * Controls whether the descendants is present, based on a specified
@@ -101,7 +109,7 @@ declare global {
          * @see {@link ifnot}
          * @see https://knockoutjs.com/documentation/if-binding.html
          */
-        if: Binding<MaybeSubscribable<boolean>>;
+        if: PreserveBinding<MaybeSubscribable<boolean>>;
         /**
          * Controls whether the descendants is not present, based on a
          * specified condition.
@@ -109,14 +117,14 @@ declare global {
          * @see {@link if}
          * @see https://knockoutjs.com/documentation/if-binding.html
          */
-        ifnot: Binding<MaybeSubscribable<boolean>>;
+        ifnot: PreserveBinding<MaybeSubscribable<boolean>>;
 
         /**
          * Dynamically applies or removes the provided classes to an element.
          *
          * @see https://knockoutjs.com/documentation/css-binding.html
          */
-        css: Binding<
+        css: PreserveBinding<
           MaybeSubscribable<
             string | MaybeSubscribable<MaybeSubscribableRecord<string, boolean>>
           >,
@@ -127,7 +135,7 @@ declare global {
          *
          * @see https://knockoutjs.com/documentation/css-binding.html
          */
-        class: Binding<MaybeSubscribable<string>, Element>;
+        class: PreserveBinding<MaybeSubscribable<string>, Element>;
 
         /**
          * Controls weather the element is visible or not, based on the
@@ -136,7 +144,7 @@ declare global {
          * @see {@link visible}
          * @see https://knockoutjs.com/documentation/visible-binding.html
          */
-        hidden: Binding<MaybeSubscribable<boolean>, Element>;
+        hidden: PreserveBinding<MaybeSubscribable<boolean>, Element>;
         /**
          * Controls weather the element is visible or not, based on the
          * provided condition.
@@ -144,7 +152,7 @@ declare global {
          * @see {@link hidden}
          * @see https://knockoutjs.com/documentation/visible-binding.html
          */
-        visible: Binding<MaybeSubscribable<boolean>, Element>;
+        visible: PreserveBinding<MaybeSubscribable<boolean>, Element>;
 
         // Knockout will unwrap observables, but not react to them. It is
         // probably not intended to be used with observables.
@@ -152,12 +160,12 @@ declare global {
          * @see {@link value}
          * @see https://knockoutjs.com/documentation/value-binding.html
          */
-        valueUpdate: Binding<ValueUpdate, ElementWithValue>;
+        valueUpdate: PreserveBinding<ValueUpdate, ElementWithValue>;
         /**
          * @see {@link value}
          * @see https://knockoutjs.com/documentation/value-binding.html
          */
-        valueAllowUnset: Binding<boolean, ElementWithValue>;
+        valueAllowUnset: PreserveBinding<boolean, ElementWithValue>;
 
         // Knockout supports any element with value, however documentation
         // states that is should be used exclusively with 'input' and
@@ -172,7 +180,7 @@ declare global {
          *
          * @see https://knockoutjs.com/documentation/textinput-binding.html
          */
-        textInput: Binding<
+        textInput: PreserveBinding<
           MaybeSubscribable<string>,
           HTMLInputElement | HTMLTextAreaElement
         >;
@@ -187,7 +195,7 @@ declare global {
          * @see {@link selectedOptions}
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
-        options: Binding<
+        options: PreserveBinding<
           MaybeSubscribable<readonly unknown[]> | ko.ObservableArray<unknown>,
           HTMLSelectElement
         >;
@@ -195,7 +203,7 @@ declare global {
          * @see {@link options}
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
-        optionsCaption: Binding<unknown, HTMLSelectElement>;
+        optionsCaption: PreserveBinding<unknown, HTMLSelectElement>;
 
         // Knockout will unwrap observables, but not react to them. It is
         // probably not intended to be used with observables.
@@ -203,7 +211,7 @@ declare global {
          * @see {@link options}
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
-        optionsText: Binding<
+        optionsText: PreserveBinding<
           string | ((entry: unknown) => string),
           HTMLSelectElement
         >;
@@ -211,7 +219,7 @@ declare global {
          * @see {@link options}
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
-        optionsValue: Binding<
+        optionsValue: PreserveBinding<
           string | ((entry: unknown) => string),
           HTMLSelectElement
         >;
@@ -220,7 +228,7 @@ declare global {
          * @see {@link options}
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
-        selectedOptions: Binding<
+        selectedOptions: PreserveBinding<
           MaybeSubscribable<readonly string[]> | ko.ObservableArray<string>,
           HTMLSelectElement
         >;
@@ -234,7 +242,7 @@ declare global {
          *
          * @see https://knockoutjs.com/documentation/attr-binding.html
          */
-        attr: Binding<
+        attr: PreserveBinding<
           MaybeSubscribable<Readonly<Record<string, any>>>,
           Element
         >;
@@ -243,19 +251,19 @@ declare global {
          *
          * @see https://knockoutjs.com/documentation/text-binding.html
          */
-        text: Binding<any>;
+        text: PreserveBinding<any>;
         /**
          * Replaces the node's content with the provided html.
          *
          * @see https://knockoutjs.com/documentation/html-binding.html
          */
-        html: Binding<any>;
+        html: PreserveBinding<any>;
         /**
          * Binds the provided record to the element's "style" attribute.
          *
          * @see https://knockoutjs.com/documentation/style-binding.html
          */
-        style: Binding<
+        style: PreserveBinding<
           MaybeSubscribable<Readonly<Record<string, any>>>,
           Element
         >;
@@ -264,7 +272,7 @@ declare global {
          *
          * @see https://knockoutjs.com/documentation/uniqueName-binding.html
          */
-        uniqueName: Binding<unknown, Element>;
+        uniqueName: PreserveBinding<unknown, Element>;
 
         /**
          * Controls whether the descendants is present, based on a specified
@@ -273,7 +281,7 @@ declare global {
          * @see {@link ifnot}
          * @see https://knockoutjs.com/documentation/if-binding.html
          */
-        if: Binding<unknown>;
+        if: PreserveBinding<unknown>;
         /**
          * Controls whether the descendants is not present, based on a
          * specified condition.
@@ -281,14 +289,14 @@ declare global {
          * @see {@link if}
          * @see https://knockoutjs.com/documentation/if-binding.html
          */
-        ifnot: Binding<unknown>;
+        ifnot: PreserveBinding<unknown>;
 
         /**
          * Dynamically applies or removes the provided classes to an element.
          *
          * @see https://knockoutjs.com/documentation/css-binding.html
          */
-        css: Binding<
+        css: PreserveBinding<
           MaybeSubscribable<
             string | MaybeSubscribable<Readonly<Record<string, any>>>
           >,
@@ -299,7 +307,7 @@ declare global {
          *
          * @see https://knockoutjs.com/documentation/css-binding.html
          */
-        class: Binding<any, Element>;
+        class: PreserveBinding<any, Element>;
 
         /**
          * Controls weather the element is visible or not, based on the
@@ -308,7 +316,7 @@ declare global {
          * @see {@link visible}
          * @see https://knockoutjs.com/documentation/visible-binding.html
          */
-        hidden: Binding<any, Element>;
+        hidden: PreserveBinding<any, Element>;
         /**
          * Controls weather the element is visible or not, based on the
          * provided condition.
@@ -316,19 +324,25 @@ declare global {
          * @see {@link hidden}
          * @see https://knockoutjs.com/documentation/visible-binding.html
          */
-        visible: Binding<any, Element>;
+        visible: PreserveBinding<any, Element>;
 
         // See strict definition for details.
         /**
          * @see {@link value}
          * @see https://knockoutjs.com/documentation/value-binding.html
          */
-        valueUpdate: Binding<MaybeSubscribable<ValueUpdate>, ElementWithValue>;
+        valueUpdate: PreserveBinding<
+          MaybeSubscribable<ValueUpdate>,
+          ElementWithValue
+        >;
         /**
          * @see {@link value}
          * @see https://knockoutjs.com/documentation/value-binding.html
          */
-        valueAllowUnset: Binding<MaybeSubscribable<boolean>, ElementWithValue>;
+        valueAllowUnset: PreserveBinding<
+          MaybeSubscribable<boolean>,
+          ElementWithValue
+        >;
 
         // See strict definition for details.
         /**
@@ -341,7 +355,7 @@ declare global {
          *
          * @see https://knockoutjs.com/documentation/textinput-binding.html
          */
-        textInput: Binding<MaybeSubscribable<string>, ElementWithValue>;
+        textInput: PreserveBinding<MaybeSubscribable<string>, ElementWithValue>;
 
         /**
          * The options binding manages the selection choices for a `<select>`
@@ -353,7 +367,7 @@ declare global {
          * @see {@link selectedOptions}
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
-        options: Binding<
+        options: PreserveBinding<
           MaybeSubscribable<readonly any[]> | ko.ObservableArray<any>,
           HTMLSelectElement
         >;
@@ -361,14 +375,14 @@ declare global {
          * @see {@link options}
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
-        optionsCaption: Binding<any, HTMLSelectElement>;
+        optionsCaption: PreserveBinding<any, HTMLSelectElement>;
 
         // See strict definition for details.
         /**
          * @see {@link options}
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
-        optionsText: Binding<
+        optionsText: PreserveBinding<
           MaybeSubscribable<string | ((entry: any) => string)>,
           HTMLSelectElement
         >;
@@ -376,7 +390,7 @@ declare global {
          * @see {@link options}
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
-        optionsValue: Binding<
+        optionsValue: PreserveBinding<
           MaybeSubscribable<string | ((entry: any) => string)>,
           HTMLSelectElement
         >;
@@ -385,7 +399,7 @@ declare global {
          * @see {@link options}
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
-        selectedOptions: Binding<
+        selectedOptions: PreserveBinding<
           | MaybeSubscribable<readonly string[] | Falsy>
           | ko.ObservableArray<string>,
           HTMLSelectElement
@@ -413,7 +427,7 @@ declare global {
             ) => void;
           },
           c: C,
-        ): C;
+        ): void;
 
         // Index access for undeclared DOM events
         <C extends BindingContext>(
@@ -422,7 +436,7 @@ declare global {
             readonly [key: string]: (this: C["$root"], event: Event) => void;
           },
           c: C,
-        ): C;
+        ): void;
       };
 
       /**
@@ -434,7 +448,7 @@ declare global {
         n: Element,
         v: MaybeSubscribable<(this: C["$root"], event: MouseEvent) => void>,
         c: C,
-      ) => C;
+      ) => void;
       /**
        * Adds the "submit" event listener to the element.
        *
@@ -444,7 +458,7 @@ declare global {
         n: Element,
         v: MaybeSubscribable<(this: C["$root"], event: SubmitEvent) => void>,
         c: C,
-      ) => C;
+      ) => void;
 
       /**
        * Adds the boolean `disabled` attributes based on the specified
@@ -452,11 +466,7 @@ declare global {
        *
        * @see https://knockoutjs.com/documentation/enable-binding.html
        */
-      enable: Binding<MaybeSubscribable<boolean>, ElementWithDisabled>;
-
-      enable2: {
-        input: MaybeSubscribable<boolean>;
-      };
+      enable: PreserveBinding<MaybeSubscribable<boolean>, ElementWithDisabled>;
 
       /**
        * Adds the boolean `disabled` attributes based on the specified
@@ -464,23 +474,23 @@ declare global {
        *
        * @see https://knockoutjs.com/documentation/enable-binding.html
        */
-      disable: Binding<MaybeSubscribable<boolean>, ElementWithDisabled>;
+      disable: PreserveBinding<MaybeSubscribable<boolean>, ElementWithDisabled>;
 
       /**
        * @see https://knockoutjs.com/documentation/value-binding.html
        */
-      value: Binding<MaybeSubscribable<string>, ElementWithValue>;
+      value: PreserveBinding<MaybeSubscribable<string>, ElementWithValue>;
 
       /**
        * @see https://knockoutjs.com/documentation/hasfocus-binding.html
        */
-      hasFocus: Binding<MaybeSubscribable<boolean>, Element>;
+      hasFocus: PreserveBinding<MaybeSubscribable<boolean>, Element>;
 
       /**
        * @see {@link checkedValue}
        * @see https://knockoutjs.com/documentation/checked-binding.html
        */
-      checked: Binding<
+      checked: PreserveBinding<
         | MaybeSubscribable<boolean | readonly string[]>
         | ko.ObservableArray<string>,
         HTMLInputElement
@@ -488,7 +498,10 @@ declare global {
       /**
        * @see https://knockoutjs.com/documentation/checked-binding.html
        */
-      checkedValue: Binding<MaybeSubscribable<string>, HTMLInputElement>;
+      checkedValue: PreserveBinding<
+        MaybeSubscribable<string>,
+        HTMLInputElement
+      >;
 
       /**
        * @see https://knockoutjs.com/documentation/foreach-binding.html
@@ -501,19 +514,15 @@ declare global {
         n: Comment | Element,
         v: { data: T; as: K } | T,
         c: C,
-      ) => Overwrite<
-        C,
-        {
-          $parentContext: C;
-          $parents: [C["$data"], ...C["$parents"]];
-          $parent: C["$data"];
-          $root: C["$root"];
-          $data: ko.Unwrapped<T>;
-          $rawData: T;
-        } & {
-          $index: ko.Observable<number>;
-        } & (K extends string ? Record<K, T> : {})
-      >;
+      ) => {
+        $parentContext: C | undefined;
+        $parents: [C["$data"], ...C["$parents"]];
+        $parent: C["$data"];
+        $root: C["$root"];
+        $data: ko.Unwrapped<ko.Unwrapped<T>[number]>;
+        $rawData: ko.Unwrapped<T>[number];
+        $index: ko.Observable<number>;
+      };
 
       /**
        * @see https://knockoutjs.com/documentation/with-binding.html
@@ -526,17 +535,14 @@ declare global {
         n: Comment | Element,
         v: T | ko.Observable<T>,
         c: C,
-      ) => Overwrite<
-        C,
-        {
-          $parentContext: C;
-          $parents: [C["$data"], ...C["$parents"]];
-          $parent: C["$data"];
-          $root: C["$root"];
-          $data: ko.Unwrapped<T>;
-          $rawData: T;
-        }
-      >;
+      ) => {
+        $parentContext: C;
+        $parents: [C["$data"], ...C["$parents"]];
+        $parent: C["$data"];
+        $root: C["$root"];
+        $data: ko.Unwrapped<T>;
+        $rawData: T;
+      };
       /**
        * @see https://knockoutjs.com/documentation/let-binding.html
        */
@@ -544,17 +550,24 @@ declare global {
         n: Comment | Element,
         v: T | ko.Observable<T>,
         c: C,
-      ) => Overwrite<C, T>;
+      ) => {
+        $parentContext: C;
+        $parents: [C["$data"], ...C["$parents"]];
+        $parent: C["$data"];
+        $root: C["$root"];
+        $data: ko.Unwrapped<T>;
+        $rawData: T;
+      } & T;
 
       // TODO: Untyped
       /**
        * @see https://knockoutjs.com/documentation/template-binding.html
        */
-      template: Binding<any>;
+      template: PreserveBinding<any>;
       /**
        * @see https://knockoutjs.com/documentation/component-binding.html
        */
-      component: Binding<any>;
+      component: PreserveBinding<any>;
     }
 
     export interface Settings {}
@@ -580,7 +593,7 @@ declare global {
 declare namespace ns {
   export const strict: Knuckles.Strict.Bindings;
   export const loose: Knuckles.Loose.Bindings & {
-    [name: string]: Knuckles.Binding<unknown>;
+    [name: string]: Knuckles.PreserveBinding<unknown>;
   };
   export const element: <K extends keyof ElementTagNameMap>(
     tagName: K,
@@ -593,20 +606,15 @@ declare namespace ns {
     with: <T, C extends Knuckles.BindingContext>(
       v: T,
       c: C,
-    ) => Overwrite<
-      C,
-      {
-        $parentContext: C;
-        $parents: [C["$data"], ...C["$parents"]];
-        $parent: C["$data"];
-        $root: Knuckles.Interop<T>;
-        $data: Unwrapped<Knuckles.Interop<T>>;
-        $rawData: Knuckles.Interop<T>;
-      }
-    >;
+    ) => {
+      $parentContext: C;
+      $parents: [C["$data"], ...C["$parents"]];
+      $parent: C["$data"];
+      $root: Knuckles.Interop<T>;
+      $data: ko.Unwrapped<Knuckles.Interop<T>>;
+      $rawData: Knuckles.Interop<T>;
+    };
   }
-
-  // export { Knuckles };
 }
 
 export default ns;
