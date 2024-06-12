@@ -1,4 +1,8 @@
-import { Transpiler } from "./transpiler/transpiler.js";
+import {
+  Transpiler,
+  TranspilerError,
+  type TranspilerOutput,
+} from "./transpiler/transpiler.js";
 import { AnalyzerSeverity, type AnalyzerPlugin } from "@knuckles/analyzer";
 import { Position, Range } from "@knuckles/location";
 import { ts, type FileSystemHost } from "ts-morph";
@@ -20,7 +24,23 @@ export default async function (options: Options = {}): Promise<AnalyzerPlugin> {
     name: "typescript",
 
     async analyze(c) {
-      const output = transpiler.transpile(c.fileName, c.document);
+      let output: TranspilerOutput;
+      try {
+        output = transpiler.transpile(c.fileName, c.document);
+      } catch (error) {
+        if (error instanceof TranspilerError) {
+          c.report({
+            name: "ts/transpile",
+            message: error.message,
+            start: error.start,
+            end: error.end,
+            severity: AnalyzerSeverity.Error,
+          });
+          return;
+        } else {
+          throw error;
+        }
+      }
       const sourceFile = output.sourceFile;
 
       const snapshot = output.chunk.snapshot(c.text);
