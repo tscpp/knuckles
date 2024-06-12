@@ -432,7 +432,11 @@ declare global {
         <C extends BindingContext>(
           n: Element,
           v: {
-            readonly [key: string]: (this: C["$root"], event: Event) => void;
+            readonly [key: string]: (
+              this: C["$data"],
+              data: C["$data"],
+              event: Event,
+            ) => void;
           },
           c: C,
         ): void;
@@ -445,7 +449,9 @@ declare global {
        */
       click: <C extends BindingContext>(
         n: Element,
-        v: MaybeSubscribable<(this: C["$root"], event: MouseEvent) => void>,
+        v: MaybeSubscribable<
+          (this: C["$data"], data: C["$data"], event: MouseEvent) => void
+        >,
         c: C,
       ) => void;
       /**
@@ -455,7 +461,9 @@ declare global {
        */
       submit: <C extends BindingContext>(
         n: Element,
-        v: MaybeSubscribable<(this: C["$root"], event: SubmitEvent) => void>,
+        v: MaybeSubscribable<
+          (this: C["$data"], data: C["$data"], event: SubmitEvent) => void
+        >,
         c: C,
       ) => void;
 
