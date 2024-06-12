@@ -301,8 +301,9 @@ class Renderer {
 
       descendants = new Chunk()
         .append("if (")
-        .append(negate ? "!" : "")
+        .append(negate ? "!(" : "")
         .append(binding.param.value, { blame: binding.param })
+        .append(negate ? ")" : "")
         .append(") {")
         .newline()
         .append(descendants)
