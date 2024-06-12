@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { groupBy, ns, quote, rmnl } from "./utils.js";
+import { ns, quote, rmnl } from "./utils.js";
 import { Chunk, type ChunkLike } from "@knuckles/fabricator";
 import type { Document } from "@knuckles/syntax-tree";
 import * as ko from "@knuckles/syntax-tree";
@@ -222,6 +222,10 @@ class Renderer {
     return this.#controlsDescendantsMap.get(binding.name.value);
   }
 
+  #isConditional(binding: ko.Binding) {
+    return ["if", "ifnot"].includes(binding.name.value);
+  }
+
   #renderWithVirtualElement(node: ko.WithVirtualElement): Chunk {
     const childContext = new Chunk()
       .append(`${ns}.hints.with(${ns}.type<typeof import(`)
@@ -246,18 +250,26 @@ class Renderer {
   }
 
   #renderParent(bindings: ko.Binding[], children: ko.Node[]) {
-    // Group bindings by "controls decendants" or not.
-    const { a: ds = [], b: cds = [] } = groupBy(bindings, (binding) =>
-      this.#controlsDescendants(binding) ? "b" : "a",
-    );
+    const normal: ko.Binding[] = [];
+    const controls: ko.Binding[] = [];
+    const conditional: ko.Binding[] = [];
 
-    const chunk = new Chunk() //
-      .append(this.#renderBindings(ds));
+    for (const binding of bindings) {
+      if (this.#isConditional(binding)) {
+        conditional.push(binding);
+      } else if (this.#controlsDescendants(binding)) {
+        controls.push(binding);
+      } else {
+        normal.push(binding);
+      }
+    }
 
-    if (cds.length) {
+    let descendants: ChunkLike;
+
+    if (controls.length) {
       // Render child binding context creation.
       let childContext: ChunkLike | undefined;
-      for (const binding of cds) {
+      for (const binding of controls) {
         if (childContext) {
           childContext = this.#renderClosure(
             new Chunk()
@@ -276,14 +288,31 @@ class Renderer {
         }
       }
 
-      chunk
+      descendants = new Chunk()
         .append(this.#renderClosure(this.#renderNodes(children), childContext!))
         .newline();
     } else {
-      chunk.append(this.#renderNodes(children));
+      descendants = this.#renderNodes(children);
     }
 
-    return chunk;
+    for (const binding of conditional) {
+      const negate = binding.name.value === "ifnot";
+
+      descendants = new Chunk()
+        .append("if (")
+        .append(negate ? "!" : "")
+        .append(binding.param.value, { blame: binding.param })
+        .append(") {")
+        .newline()
+        .append(descendants)
+        .newline()
+        .append("}")
+        .newline();
+    }
+
+    return new Chunk() //
+      .append(this.#renderBindings(normal))
+      .append(descendants);
   }
 
   #renderClosure(descendants: ChunkLike, context: ChunkLike) {
