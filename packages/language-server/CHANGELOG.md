@@ -1,5 +1,31 @@
 # @knuckles/language-server
 
+## 0.12.0
+
+### Minor Changes
+
+- 81be0c7: Improve language service features
+- 81be0c7: Untracked bump
+
+### Patch Changes
+
+- Updated dependencies [cd2275e]
+- Updated dependencies [81be0c7]
+- Updated dependencies [c7c9356]
+- Updated dependencies [81be0c7]
+- Updated dependencies [ecf411f]
+- Updated dependencies [24ee536]
+- Updated dependencies [57493b8]
+- Updated dependencies [3e3b746]
+- Updated dependencies [38a5a6e]
+  - @knuckles/typescript@0.12.0
+  - @knuckles/syntax-tree@0.12.0
+  - @knuckles/analyzer@0.12.0
+  - @knuckles/config@0.12.0
+  - @knuckles/parser@0.12.0
+  - @knuckles/fabricator@0.12.0
+  - @knuckles/location@0.12.0
+
 ## 0.11.1
 
 ### Patch Changes

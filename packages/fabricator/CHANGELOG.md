@@ -1,5 +1,16 @@
 # @knuckles/fabricator
 
+## 0.12.0
+
+### Minor Changes
+
+- 81be0c7: Untracked bump
+
+### Patch Changes
+
+- Updated dependencies [81be0c7]
+  - @knuckles/location@0.12.0
+
 ## 0.11.0
 
 ### Minor Changes
