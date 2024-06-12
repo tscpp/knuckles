@@ -19,17 +19,14 @@ declare global {
 
     export type Unwrapped<T> = T extends ko.Subscribable<infer U> ? U : T;
 
-    export type Binding = IdentityBinding | TransformBinding;
-    export type IdentityBinding = (
-      n: Comment | Element,
-      v: any,
-      c?: BindingContext,
-    ) => void;
-    export type TransformBinding = (
-      n: Comment | Element,
-      v: any,
-      c: BindingContext,
-    ) => BindingContext;
+    export namespace Traits {
+      export type RequiresContextParamater = (n: any, v: any, c: any) => void;
+      export type ReturnsChildContext = (
+        n: any,
+        v: any,
+        c: any,
+      ) => BindingContext;
+    }
 
     export type PreserveBinding<V, E = Comment | Element> = (
       n: E,
