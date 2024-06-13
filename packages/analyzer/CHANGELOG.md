@@ -1,5 +1,16 @@
 # @knuckles/analyzer
 
+## 0.13.0
+
+### Minor Changes
+
+- 207e3e5: Update tsconfig resolution and configuration.
+
+### Patch Changes
+
+- Updated dependencies [207e3e5]
+  - @knuckles/config@0.13.0
+
 ## 0.12.0
 
 ### Minor Changes

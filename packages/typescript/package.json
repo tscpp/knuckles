@@ -1,6 +1,6 @@
 {
   "name": "@knuckles/typescript",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Type-checking for bindings in knockout views.",
   "type": "module",
   "exports": {

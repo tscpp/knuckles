@@ -1,5 +1,21 @@
 # @knuckles/typescript
 
+## 0.13.0
+
+### Minor Changes
+
+- 207e3e5: Update tsconfig resolution and configuration.
+
+### Patch Changes
+
+- ddc1afc: Fix missing context paramater for some bindings
+- d8a396f: Fix first argument of event binding handlers.
+- a1c77cb: Wrap negated conditions in if/ifnot bindings with parenthesis
+- c998e09: Allow any type in value binding for `select` elements.
+- 4d055f2: Handle transpiler errors and report as analyzer issues
+- 736fbb0: Use shallow unwrap on $data
+- d1fd7ee: Fix cases where some objects were not deconstructed.
+
 ## 0.12.0
 
 ### Minor Changes

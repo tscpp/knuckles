@@ -1,5 +1,25 @@
 # @knuckles/language-server
 
+## 0.13.0
+
+### Minor Changes
+
+- 207e3e5: Update tsconfig resolution and configuration.
+
+### Patch Changes
+
+- Updated dependencies [ddc1afc]
+- Updated dependencies [d8a396f]
+- Updated dependencies [a1c77cb]
+- Updated dependencies [c998e09]
+- Updated dependencies [207e3e5]
+- Updated dependencies [4d055f2]
+- Updated dependencies [736fbb0]
+- Updated dependencies [d1fd7ee]
+  - @knuckles/typescript@0.13.0
+  - @knuckles/analyzer@0.13.0
+  - @knuckles/config@0.13.0
+
 ## 0.12.0
 
 ### Minor Changes
