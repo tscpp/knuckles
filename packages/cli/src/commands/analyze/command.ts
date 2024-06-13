@@ -124,6 +124,10 @@ export default command({
     });
     logger.debug("Files:", files);
 
+    if (files.length === 0) {
+      logger.error("No matching files found.");
+    }
+
     for (const fileName of files) {
       // Analyze file
       logger.debug("File: " + fileName);
