@@ -24,7 +24,7 @@ declare global {
         n: Comment | Element,
         v: any,
         c: BindingContext,
-      ) => void;
+      ) => any;
       export type ReturnsChildContext = (
         n: Comment | Element,
         v: any,
@@ -198,7 +198,7 @@ declare global {
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
         options: PreserveBinding<
-          MaybeSubscribable<readonly unknown[]> | ko.ObservableArray<unknown>,
+          MaybeSubscribable<unknown[] | readonly unknown[]> | ko.ObservableArray<unknown>,
           HTMLSelectElement
         >;
         /**
@@ -370,7 +370,7 @@ declare global {
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
         options: PreserveBinding<
-          MaybeSubscribable<readonly any[]> | ko.ObservableArray<any>,
+          MaybeSubscribable<any[] | readonly any[]> | ko.ObservableArray<any>,
           HTMLSelectElement
         >;
         /**
@@ -502,7 +502,7 @@ declare global {
        * @see https://knockoutjs.com/documentation/checked-binding.html
        */
       checked: PreserveBinding<
-        | MaybeSubscribable<boolean | readonly string[]>
+        | MaybeSubscribable<boolean | string | readonly string[]>
         | ko.ObservableArray<string>,
         HTMLInputElement
       >;
@@ -583,9 +583,9 @@ declare global {
 
     export interface Settings {}
 
-    type Instanciate<T> = T extends new () => infer U
+    type Instanciate<T> = T extends new (...args: any) => infer U
       ? U
-      : T extends () => infer U
+      : T extends (...args: any) => infer U
         ? U
         : T;
     type DefaultInterop<T> = Instanciate<
