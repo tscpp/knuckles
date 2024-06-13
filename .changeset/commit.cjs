@@ -1,5 +1,5 @@
 module.exports.getAddMessage = async () => {
-  return `docs(changeset): add changeset [skip-ci]`;
+  return `docs(changeset): add changeset [skip ci]`;
 };
 
 module.exports.getVersionMessage = async (releasePlan) => {
@@ -8,7 +8,7 @@ module.exports.getVersionMessage = async (releasePlan) => {
   );
 
   return (
-    `chore(release): version ${publishableReleases.length} package(s) [skip-ci]` +
+    `chore(release): version ${publishableReleases.length} package(s) [skip ci]` +
     "\n\n" +
     publishableReleases
       .map((release) => `- ${release.name}@${release.newVersion}`)
