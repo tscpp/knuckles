@@ -198,7 +198,8 @@ declare global {
          * @see https://knockoutjs.com/documentation/options-binding.html
          */
         options: PreserveBinding<
-          MaybeSubscribable<unknown[] | readonly unknown[]> | ko.ObservableArray<unknown>,
+          | MaybeSubscribable<unknown[] | readonly unknown[]>
+          | ko.ObservableArray<unknown>,
           HTMLSelectElement
         >;
         /**
