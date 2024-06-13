@@ -4,6 +4,7 @@ import STATIC_FILES from "./assets/static-files.js";
 import sass from "esbuild-plugin-sass";
 import nodeLib from "node-stdlib-browser";
 import polyfillNode from "node-stdlib-browser/helpers/esbuild/plugin";
+import { builtinModules } from "node:module";
 
 /** @type {import('esbuild').BuildOptions} */
 const common = {
@@ -33,7 +34,7 @@ const common = {
     STATIC_FILES: JSON.stringify(STATIC_FILES),
   },
   inject: ["assets/polyfill.js"],
-  external: ["import-meta-resolve"],
+  external: ["import-meta-resolve", "node:*", ...builtinModules],
 };
 
 /** @type {import('esbuild').BuildOptions[]} */
