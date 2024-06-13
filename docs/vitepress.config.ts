@@ -19,15 +19,15 @@ const config: ThemeConfig = {
       link: "/docs/introduction",
       activeMatch: "/docs/",
     },
-    {
-      text: "Playground",
-      link: "/playground",
-    },
-    {
-      text: "Packages",
-      link: "/packages/index",
-      activeMatch: "/packages/",
-    },
+    // {
+    //   text: "Playground",
+    //   link: "/playground",
+    // },
+    // {
+    //   text: "Packages",
+    //   link: "/packages/index",
+    //   activeMatch: "/packages/",
+    // },
   ],
 
   sidebar: {
