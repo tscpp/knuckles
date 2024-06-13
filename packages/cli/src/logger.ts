@@ -13,7 +13,6 @@ export default winston.createLogger({
   levels,
   transports: [
     new winston.transports.Console({
-      level: "info",
       format: winston.format.combine(
         ...(supportsColor ? [winston.format.colorize()] : []),
         winston.format.simple(),
