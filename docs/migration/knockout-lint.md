@@ -10,7 +10,7 @@ This guide will help you migrate your project to using [Knuckles analyzer](/docs
 
 ## Improvements
 
-- **Performance:** The new underlaying transpiler that converts views to TypeScript snapshots (code) have been improved and is significantly faster. From 300~700ms to about 80ms per file 🤯
+- **Performance:** The new underlaying transpiler that converts views to TypeScript snapshots (code) have been improved and is significantly faster.
 - **Stabillity:** Stabillity of the tools have been improved by fixing bugs and refactoring code. Overall, the toolkit is much more stable than before and should be easier to use.
 - **Additions:** Many new features have been introduced, including using external tools (such as TypeScript and ESLint) in bindings and optional/dynamic strictness for type-checking.
 
