@@ -1,5 +1,5 @@
 import command from "../../command.js";
-import * as envinfo from "envinfo";
+import envinfo from "envinfo";
 
 export default command({
   command: "envinfo",
