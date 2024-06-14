@@ -1,4 +1,12 @@
-import logger, { createDebugFile, levels } from "./logger.js";
+import logger, {
+  LogConsoleWriter,
+  LogFileWriter,
+  LogFormatter,
+  LogLevel,
+  LogUncolorize,
+  logLevels,
+  toLogLevel,
+} from "./logger.js";
 import yargs from "yargs";
 
 export default (argv: readonly string[], cwd: string) =>
@@ -19,17 +27,33 @@ export default (argv: readonly string[], cwd: string) =>
       },
       logLevel: {
         type: "string",
-        choices: Object.keys(levels),
+        choices: logLevels,
         description: "Log level for the console.",
       },
     })
     .middleware((args) => {
       // Setup logger
-      logger.level = args.logLevel || (args.verbose && "verbose") || "info";
+
+      const logLevel = toLogLevel(
+        args.logLevel || (args.verbose && "verbose") || "info",
+      );
+
+      // Pipe logger to console
+      logger //
+        .createReadableStream()
+        .pipeThrough(new LogFormatter({ colorize: true }))
+        .pipeTo(new LogConsoleWriter(logLevel));
+
+      // Pipe logger to debug log
       if (args.debug) {
-        logger.add(createDebugFile());
+        logger
+          .createReadableStream()
+          .pipeThrough(new LogUncolorize())
+          .pipeThrough(new LogFormatter({ colorize: false }))
+          .pipeTo(new LogFileWriter("ko.debug.log", LogLevel.Debug));
       }
-      logger.debug(`Log level: ${logger.level}`);
+
+      logger.debug(`Log level: ${LogLevel[logLevel]}`);
       logger.debug(`CWD: ${process.cwd()}`);
     })
     .demandCommand();

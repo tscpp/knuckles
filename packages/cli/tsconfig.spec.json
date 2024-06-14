@@ -1,5 +1,4 @@
 {
   "extends": ["@tools/tsconfig/jest.json"],
-  "include": ["src/**/*.spec.ts", "src/**/*.test.ts"],
-  "exclude": ["**/__fixtures__"]
+  "include": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }

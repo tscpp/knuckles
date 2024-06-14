@@ -293,12 +293,12 @@ importers:
       prettier:
         specifier: ^3.2.5
         version: 3.2.5
+      strip-ansi:
+        specifier: ^7.1.0
+        version: 7.1.0
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
-      winston:
-        specifier: ^3.13.0
-        version: 3.13.0
       yargs:
         specifier: ^17.7.2
         version: 17.7.2

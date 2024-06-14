@@ -2,9 +2,7 @@
   "extends": "./node.json",
   "compilerOptions": {
     "types": ["jest", "node"],
-    "verbatimModuleSyntax": false,
-    "moduleDetection": "force",
-    "moduleResolution": "bundler"
+    "verbatimModuleSyntax": false
   },
   "ts-node": {
     "esm": true,
