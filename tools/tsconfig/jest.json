@@ -4,7 +4,8 @@
     "types": ["jest", "node"],
     "verbatimModuleSyntax": false,
     "moduleDetection": "force",
-    "moduleResolution": "bundler"
+    "moduleResolution": "Bundler",
+    "module": "Preserve"
   },
   "ts-node": {
     "esm": true,

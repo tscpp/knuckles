@@ -13,6 +13,7 @@ import {
   defaultConfig,
 } from "@knuckles/config";
 import { readFile, writeFile } from "node:fs/promises";
+import { relative } from "node:path";
 import ts from "typescript";
 
 export default command({
@@ -41,6 +42,8 @@ export default command({
         },
       }),
   handler: async (args) => {
+    const cwd = process.cwd();
+
     let configResolution: "force" | "auto" | "disabled";
     let configFileName: string | undefined;
 
@@ -100,11 +103,21 @@ export default command({
       tsconfig: args.tsconfig,
     };
 
-    if (!flags.tsconfig) {
+    if (flags.tsconfig) {
+      logger.verbose(`Specified tsconfig ${relative(cwd, flags.tsconfig)}.`);
+    } else {
       flags.tsconfig = ts.findConfigFile(process.cwd(), ts.sys.fileExists);
+
+      if (flags.tsconfig) {
+        logger.verbose(`Resolved tsconfig ${relative(cwd, flags.tsconfig)}.`);
+      } else {
+        logger.verbose("Unable to resolve tsconfig.");
+      }
     }
 
     logger.debug("Flags:", flags);
+
+    logger.verbose("Initializing analyzer.");
 
     const analyzer = new Analyzer({
       config,
@@ -129,6 +142,8 @@ export default command({
     }
 
     for (const fileName of files) {
+      logger.verbose(`Analyzing file '${relative(cwd, fileName)}'.`);
+
       // Analyze file
       logger.debug("File: " + fileName);
       const content = await readFile(fileName, "utf-8");
@@ -169,5 +184,7 @@ export default command({
         await writeFile(fileName + "-meta.json", JSON.stringify(meta));
       }
     }
+
+    logger.verbose("Finished analyzing.");
   },
 });
