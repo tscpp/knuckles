@@ -1,5 +1,19 @@
 # @knuckles/cli
 
+## 3.1.0
+
+### Minor Changes
+
+- a97efcc: Add envinfo command
+
+### Patch Changes
+
+- bb94c94: Fix `--logLevel` and `--verbose` flags not working.
+- a5732d3: Update internal logger and some logging.
+- c129ca3: Error when no matching files are found.
+- Updated dependencies [08bfde9]
+  - @knuckles/typescript@0.13.1
+
 ## 3.0.0
 
 ### Minor Changes

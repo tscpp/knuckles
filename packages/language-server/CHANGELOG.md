@@ -1,5 +1,12 @@
 # @knuckles/language-server
 
+## 0.13.1
+
+### Patch Changes
+
+- Updated dependencies [08bfde9]
+  - @knuckles/typescript@0.13.1
+
 ## 0.13.0
 
 ### Minor Changes

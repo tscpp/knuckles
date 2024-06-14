@@ -1,5 +1,11 @@
 # @knuckles/typescript
 
+## 0.13.1
+
+### Patch Changes
+
+- 08bfde9: Various type improvements
+
 ## 0.13.0
 
 ### Minor Changes
