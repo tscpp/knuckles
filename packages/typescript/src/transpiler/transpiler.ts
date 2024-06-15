@@ -281,13 +281,26 @@ class Renderer {
 
   #renderWithVirtualElement(node: ko.WithVirtualElement): Chunk {
     const childContext = new Chunk()
-      .append(`${ns}.hints.with(${ns}.type<typeof import(`)
-      .append(quote(node.import.module.value))
-      .append(")")
-      .append(
-        node.import.identifier.value === "*"
-          ? ""
-          : "[" + quote(node.import.identifier.value) + "]",
+      .append(`${ns}.hints.with(${ns}.type<`)
+      .while(
+        (chunk) =>
+          chunk
+            .append("typeof import(")
+            .append(node.import.module.text, { mirror: node.import.module })
+            .append(")")
+            .if(node.import.identifier.value !== "*", (chunk) =>
+              chunk.while(
+                (chunk) =>
+                  chunk
+                    .append('["')
+                    .append(quote(node.import.identifier.value).slice(1, -1), {
+                      mirror: node.import.identifier,
+                    })
+                    .append('"]'),
+                { blame: node.import.identifier },
+              ),
+            ),
+        { blame: node.import },
       )
       .append(">(), $context)");
 
