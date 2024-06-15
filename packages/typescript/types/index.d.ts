@@ -425,7 +425,8 @@ declare global {
           n: Element,
           v: {
             readonly [K in keyof WindowEventMap]: (
-              this: C["$root"],
+              this: C["$data"],
+              data: C["$data"],
               event: WindowEventMap[K],
             ) => void;
           },
