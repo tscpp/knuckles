@@ -1,5 +1,11 @@
 # @knuckles/fabricator
 
+## 0.12.1
+
+### Patch Changes
+
+- 0c198cc: Add "if" method to chunk.
+
 ## 0.12.0
 
 ### Minor Changes

@@ -1,5 +1,12 @@
 # @knuckles/eslint
 
+## 0.14.0
+
+### Patch Changes
+
+- Updated dependencies [0c198cc]
+  - @knuckles/fabricator@0.12.1
+
 ## 0.12.0
 
 ### Minor Changes

@@ -1,5 +1,19 @@
 # @knuckles/typescript
 
+## 0.14.0
+
+### Minor Changes
+
+- a62399e: Add types for 'as' binding.
+
+### Patch Changes
+
+- 0c198cc: Fix mapping with "with" hint.
+- 7a84ddf: Fix event binding overload types
+- ec8381a: Fix mapping for if/ifnot bindings.
+- Updated dependencies [0c198cc]
+  - @knuckles/fabricator@0.12.1
+
 ## 0.13.1
 
 ### Patch Changes
