@@ -79,6 +79,18 @@ export class Chunk {
     return this;
   }
 
+  if(
+    condition: unknown,
+    positive: (chunk: this) => void,
+    negative?: (chunk: this) => void,
+  ) {
+    if (condition) {
+      positive(this);
+    } else {
+      negative?.(this);
+    }
+  }
+
   marker(id: string): this {
     this.#markers.add(new DynamicMarker(id, this.#text.length));
     return this;
