@@ -108,6 +108,9 @@ importers:
       globals:
         specifier: ^15.0.0
         version: 15.0.0
+      husky:
+        specifier: ^9.0.11
+        version: 9.0.11
       jest:
         specifier: ^29.4.1
         version: 29.7.0(@types/node@20.12.7)(ts-node@10.9.2(@swc/core@1.5.7(@swc/helpers@0.5.11))(@types/node@20.12.7)(typescript@5.4.5))
@@ -126,6 +129,9 @@ importers:
       prettier-plugin-packagejson:
         specifier: ^2.5.0
         version: 2.5.0(prettier@3.2.5)
+      pretty-quick:
+        specifier: ^4.0.0
+        version: 4.0.0(prettier@3.2.5)
       revise-static-content:
         specifier: ~0.1.1
         version: 0.1.1
@@ -4867,6 +4873,11 @@ packages:
     resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}
     engines: {node: '>=16.17.0'}
 
+  husky@9.0.11:
+    resolution: {integrity: sha512-AB6lFlbwwyIqMdHYhwPe+kjOC3Oc5P3nThEoW/AaO2BX3vJDjWPFxYLxokUZOo6RNX20He3AaT8sESs9NJcmEw==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -5917,6 +5928,10 @@ packages:
   monaco-editor@0.48.0:
     resolution: {integrity: sha512-goSDElNqFfw7iDHMg8WDATkfcyeLTNpBHQpO8incK6p5qZt5G/1j41X0xdGzpIkGojGXM+QiRQyLjnfDVvrpwA==}
 
+  mri@1.2.0:
+    resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
+    engines: {node: '>=4'}
+
   mrmime@2.0.0:
     resolution: {integrity: sha512-eu38+hdgojoyq63s+yTpN4XMBdt5l8HhMhc4VKLO9KM5caLIBvUm4thi7fFaxyTmCKeNnXZ5pAlBwCUnhA09uw==}
     engines: {node: '>=10'}
@@ -6320,6 +6335,10 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
 
+  picomatch@3.0.1:
+    resolution: {integrity: sha512-I3EurrIQMlRc9IaAZnqRR044Phh2DXY+55o7uJ0V+hYZAcQYSuFWsc9q5PvyDHUSCe1Qxn/iBz+78s86zWnGag==}
+    engines: {node: '>=10'}
+
   pify@4.0.1:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
     engines: {node: '>=6'}
@@ -6414,6 +6433,13 @@ packages:
   pretty-format@29.7.0:
     resolution: {integrity: sha512-Pdlw/oPxN+aXdmM9R00JVC9WVFoCLTKJvDVLgmJ+qAffBMxsV85l/Lu7sNx4zSzPyoL2euImuEwHhOXdEgNFZQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+
+  pretty-quick@4.0.0:
+    resolution: {integrity: sha512-M+2MmeufXb/M7Xw3Afh1gxcYpj+sK0AxEfnfF958ktFeAyi5MsKY5brymVURQLgPLV1QaF5P4pb2oFJ54H3yzQ==}
+    engines: {node: '>=14'}
+    hasBin: true
+    peerDependencies:
+      prettier: ^3.0.0
 
   proc-log@3.0.0:
     resolution: {integrity: sha512-++Vn7NS4Xf9NacaU9Xq3URUuqZETPsf8L4j5/ckhaRYsfPeRyzGw+iDjFhV/Jr3uNmTvvddEJFWh5R1gRgUH8A==}
@@ -13276,6 +13302,8 @@ snapshots:
 
   human-signals@5.0.0: {}
 
+  husky@9.0.11: {}
+
   iconv-lite@0.4.24:
     dependencies:
       safer-buffer: 2.1.2
@@ -14522,6 +14550,8 @@ snapshots:
 
   monaco-editor@0.48.0: {}
 
+  mri@1.2.0: {}
+
   mrmime@2.0.0: {}
 
   ms@2.0.0: {}
@@ -15077,6 +15107,8 @@ snapshots:
 
   picomatch@2.3.1: {}
 
+  picomatch@3.0.1: {}
+
   pify@4.0.1: {}
 
   pirates@4.0.6: {}
@@ -15174,6 +15206,17 @@ snapshots:
       '@jest/schemas': 29.6.3
       ansi-styles: 5.2.0
       react-is: 18.2.0
+
+  pretty-quick@4.0.0(prettier@3.2.5):
+    dependencies:
+      execa: 5.1.1
+      find-up: 5.0.0
+      ignore: 5.3.1
+      mri: 1.2.0
+      picocolors: 1.0.0
+      picomatch: 3.0.1
+      prettier: 3.2.5
+      tslib: 2.6.2
 
   proc-log@3.0.0: {}
 
