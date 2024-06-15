@@ -11,6 +11,10 @@ declare global {
       $rawData: any;
     }
 
+    export interface BindingMap {
+      [key: string]: unknown;
+    }
+
     export type MaybeSubscribable<T> = T | ko.Subscribable<T>;
     export type MaybeSubscribableRecord<
       K extends string | number | symbol,
@@ -25,10 +29,17 @@ declare global {
         v: any,
         c: BindingContext,
       ) => any;
+      export type RequiresBindingsParamater = (
+        n: Comment | Element,
+        v: any,
+        c: BindingContext,
+        b: any,
+      ) => any;
       export type ReturnsChildContext = (
         n: Comment | Element,
         v: any,
         c: BindingContext,
+        b?: any,
       ) => BindingContext;
     }
 
@@ -411,6 +422,8 @@ declare global {
     }
 
     export interface Bindings {
+      as: (n: Comment | Element, v: MaybeSubscribable<string>) => void;
+
       /**
        * Adds event listeners for each entry in the provided record on the
        * element.
@@ -523,10 +536,12 @@ declare global {
         const K extends string,
         T extends MaybeSubscribable<unknown[] | readonly unknown[]>,
         C extends BindingContext,
+        const B extends BindingMap,
       >(
         n: Comment | Element,
         v: { data: T; as: K } | T,
         c: C,
+        b: B,
       ) => {
         $parentContext: C | undefined;
         $parents: [C["$data"], ...C["$parents"]];
@@ -535,7 +550,13 @@ declare global {
         $data: Unwrapped<Unwrapped<T>[number]>;
         $rawData: Unwrapped<T>[number];
         $index: ko.Observable<number>;
-      };
+      } & {
+        [_ in K]: Unwrapped<Unwrapped<T>[number]>;
+      } & (B extends { as: any }
+          ? {
+              [_ in Unwrapped<B["as"]>]: Unwrapped<Unwrapped<T>[number]>;
+            }
+          : {});
 
       /**
        * @see https://knockoutjs.com/documentation/with-binding.html
@@ -544,10 +565,15 @@ declare global {
       /**
        * @see https://knockoutjs.com/documentation/with-binding.html
        */
-      with: <T extends object, C extends BindingContext>(
+      with: <
+        T extends object,
+        C extends BindingContext,
+        const B extends BindingMap,
+      >(
         n: Comment | Element,
         v: T | ko.Observable<T>,
         c: C,
+        b: B,
       ) => {
         $parentContext: C;
         $parents: [C["$data"], ...C["$parents"]];
@@ -555,7 +581,11 @@ declare global {
         $root: C["$root"];
         $data: Unwrapped<T>;
         $rawData: T;
-      };
+      } & (B extends { as: any }
+        ? {
+            [_ in Unwrapped<B["as"]>]: Unwrapped<T>;
+          }
+        : {});
       /**
        * @see https://knockoutjs.com/documentation/let-binding.html
        */

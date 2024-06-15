@@ -67,6 +67,7 @@ export class Transpiler {
 
 type BindingDeclarationMetadata = {
   requiresContextParamater: boolean;
+  requiresBindingsParamater: boolean;
   returnsChildContext: boolean;
 };
 
@@ -147,6 +148,13 @@ class Renderer {
     );
     assertOrBroken(requiresContextParamaterTrait);
 
+    const requiresBindingsParamaterTrait = getDescendantOfKind(
+      traitsNs,
+      ts.SyntaxKind.TypeAliasDeclaration,
+      "RequiresBindingsParamater",
+    );
+    assertOrBroken(requiresBindingsParamaterTrait);
+
     const strictnessNs = getDescendantOfKind(
       knucklesNs,
       ts.SyntaxKind.ModuleDeclaration,
@@ -171,6 +179,9 @@ class Renderer {
           const requiresContextParamater = requiresContextParamaterTrait
             .getType()
             .isAssignableTo(type);
+          const requiresBindingsParamater = requiresBindingsParamaterTrait
+            .getType()
+            .isAssignableTo(type);
           const returnsChildContext = type.isAssignableTo(
             returnsChildContextTrait.getType(),
           );
@@ -179,6 +190,7 @@ class Renderer {
             name,
             {
               requiresContextParamater,
+              requiresBindingsParamater,
               returnsChildContext,
             },
           ];
@@ -451,6 +463,25 @@ class Renderer {
 
     if (meta?.requiresContextParamater) {
       chunk.append(", $context");
+    }
+
+    if (meta?.requiresBindingsParamater) {
+      chunk.append(", {").newline();
+
+      const siblings =
+        binding.parent instanceof ko.Element
+          ? binding.parent.bindings
+          : [binding];
+      for (const sibling of siblings) {
+        chunk
+          .append(sibling.name.value)
+          .append(": ")
+          .append(sibling.param.value)
+          .append(",")
+          .newline();
+      }
+
+      chunk.append("}");
     }
 
     return chunk.append(")");
