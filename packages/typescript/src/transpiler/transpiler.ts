@@ -367,11 +367,17 @@ class Renderer {
       const negate = binding.name.value === "ifnot";
 
       descendants = new Chunk()
-        .append("if (")
-        .append(negate ? "!(" : "")
-        .append(binding.param.value, { blame: binding.param })
-        .append(negate ? ")" : "")
-        .append(") {")
+        .while(
+          (chunk) =>
+            chunk
+              .append("if (")
+              .append(negate ? "!(" : "")
+              .append(binding.param.value, { mirror: binding.param })
+              .append(negate ? ")" : "")
+              .append(")"),
+          { blame: binding },
+        )
+        .append("{")
         .newline()
         .append(descendants)
         .newline()
