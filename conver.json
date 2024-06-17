@@ -1,0 +1,5 @@
+{
+  "$schema": "./node_modules/conventional-versioning/schema.json",
+  "options": {},
+  "base": "a62399e7e568beaf7a9455aa3a98a750d3970b27"
+}

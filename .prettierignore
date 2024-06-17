@@ -11,3 +11,4 @@ packages/legacy-compiler/lib/parser.cjs
 packages/*/README.md
 apps/playground/src/assets/
 /.nx/workspace-data
+conver.json
