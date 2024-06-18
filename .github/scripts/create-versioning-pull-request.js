@@ -70,7 +70,7 @@ if (versioning.length === 0) {
 if (!dry) {
   console.info(`Pushing changes to ${GITHUB_BASE_BRANCH}.`);
   await $`git add -A`;
-  await $`git commit -m "chore: version package(s)"`;
+  await $`git commit -m ${"chore: version package(s)"}`;
   await $`git push --force origin ${GITHUB_HEAD_BRANCH}`;
 }
 
