@@ -8,16 +8,13 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "tools/scripts/run-many build",
-    "checks": "tools/scripts/checks",
+    "build": "nx run-many -t build",
+    "checks": "scripts/checks",
     "docs": "nx dev @apps/website",
     "format": "prettier --write .",
-    "generate": "nx g @tools/nx:package",
     "lint": "eslint .",
     "prepare": "husky",
-    "release": "tools/scripts/release",
-    "revise-docs": "tools/scripts/revise-docs",
-    "test": "tools/scripts/run-many test",
+    "test": "nx run-many -t test",
     "type-check": "tsc -b tsconfig.json"
   },
   "dependencies": {
@@ -47,7 +44,7 @@
     "@types/jest": "^29.4.0",
     "@types/node": "20.12.7",
     "@vitest/ui": "^1.3.1",
-    "conventional-versioning": "0.2.0-rc.2",
+    "conventional-versioning": "0.2.0-rc.4",
     "coveralls": "^3.1.1",
     "escape-string-regexp": "^5.0.0",
     "eslint": "^9.0.0",

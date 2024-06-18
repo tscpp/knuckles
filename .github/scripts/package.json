@@ -1,0 +1,11 @@
+{
+  "name": "github-scripts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "execa": "^9.2.0",
+    "octokit": "^4.0.2",
+    "yn": "^5.0.0"
+  }
+}
