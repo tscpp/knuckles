@@ -38,7 +38,7 @@ if (!dry && (await getCurrentBranch()) !== GITHUB_BASE_BRANCH) {
 
 if (!dry) {
   console.info(`Switch branch to ${GITHUB_HEAD_BRANCH}.`);
-  await $`git checkout -f ${GITHUB_HEAD_BRANCH}`;
+  await $`git checkout -B ${GITHUB_HEAD_BRANCH} ${`origin/${GITHUB_HEAD_BRANCH}`}`;
 }
 
 const config = await Config.read(CONVER_CONFIG);
