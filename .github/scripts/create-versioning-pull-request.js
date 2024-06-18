@@ -37,7 +37,7 @@ if (!dry && (await getCurrentBranch()) !== GITHUB_BASE_BRANCH) {
 }
 
 if (!dry) {
-  console.info(`Switch branch to ${GITHUB_HEAD_BRANCH}.`);
+  console.info(`Switching branch to ${GITHUB_HEAD_BRANCH}.`);
   await $`git checkout -B ${GITHUB_HEAD_BRANCH}`;
 }
 
@@ -131,6 +131,11 @@ if (pull) {
     assert.equal(response.status, 201, "Expected response status code 201.");
     console.info(`Created pull request #${response.data.number}.`);
   }
+}
+
+if (!dry) {
+  console.info(`Switching branch to ${GITHUB_BASE_BRANCH}.`);
+  await $`git checkout ${GITHUB_BASE_BRANCH}`;
 }
 
 async function isClean() {
