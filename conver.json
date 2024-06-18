@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/conventional-versioning/schema.json",
   "options": {},
-  "base": "a62399e7e568beaf7a9455aa3a98a750d3970b27",
+  "base": "69e9613917fe6216fad7e61f1ea99b73154d851b",
   "pre": {
     "prerelease": [
       "knuckles-vscode"
@@ -9,8 +9,6 @@
     "original": {
       "knuckles-vscode": "0.12.2"
     },
-    "promote": {
-      "@knuckles/eslint": "minor"
-    }
+    "promote": {}
   }
 }
