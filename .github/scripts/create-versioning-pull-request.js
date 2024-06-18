@@ -37,8 +37,8 @@ if (!dry && (await getCurrentBranch()) !== GITHUB_BASE_BRANCH) {
 }
 
 if (!dry) {
-  console.info(`Switch branch to ${GITHUB_BASE_BRANCH}.`);
-  await $`git checkout -f ${GITHUB_BASE_BRANCH}`;
+  console.info(`Switch branch to ${GITHUB_HEAD_BRANCH}.`);
+  await $`git checkout -f ${GITHUB_HEAD_BRANCH}`;
 }
 
 const config = await Config.read(CONVER_CONFIG);
@@ -68,10 +68,10 @@ if (versioning.length === 0) {
 }
 
 if (!dry) {
-  console.info(`Pushing changes to ${GITHUB_BASE_BRANCH}.`);
+  console.info(`Pushing changes to ${GITHUB_HEAD_BRANCH}.`);
   await $`git add -A`;
   await $`git commit -m ${"chore: version package(s)"}`;
-  await $`git push --force origin ${GITHUB_HEAD_BRANCH}`;
+  await $`git push --force -u origin ${GITHUB_HEAD_BRANCH}`;
 }
 
 let pullBody =
