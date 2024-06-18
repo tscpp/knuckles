@@ -45,7 +45,7 @@ const config = await Config.read(CONVER_CONFIG);
 const base = config.getBase();
 
 console.info("Running conventional versioning.");
-await $`pnpm conventional-versioning version --dry-run=${!!dry}`;
+await $`pnpm conventional-versioning version --dry-run=${String(!!dry)}`;
 
 if (!dry && (await isClean())) {
   console.error("No changes made to working directory. Exiting.");
@@ -103,12 +103,11 @@ assert.equal(response.status, 200, "Expected response status code 200.");
 const [pull] = response.data;
 
 if (pull) {
-  console.info(
-    `Found existing pull request #${pull.number}. Updating existing pull request.`,
-  );
+  console.info(`Found existing pull request #${pull.number}.`);
   assert.equal(pull.head.ref, GITHUB_HEAD_BRANCH);
   assert.equal(pull.base.ref, GITHUB_BASE_BRANCH);
   if (!dry) {
+    console.info("Updating existing pull request.");
     const response = await octokit.rest.pulls.update({
       owner: GITHUB_OWNER,
       repo: GITHUB_REPO,
@@ -116,13 +115,11 @@ if (pull) {
       body: pullBody,
     });
     assert.equal(response.status, 200, "Expected response status code 200.");
-    console.info("Successfully updated pull request.");
   }
 } else {
-  console.info(
-    "Did not find existing pull request. Creating a new pull request.",
-  );
+  console.info("Did not find existing pull request.");
   if (!dry) {
+    console.info("Creating a new pull request.");
     const response = await octokit.rest.pulls.create({
       owner: GITHUB_OWNER,
       repo: GITHUB_REPO,
