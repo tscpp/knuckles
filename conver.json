@@ -8,6 +8,9 @@
     ],
     "original": {
       "knuckles-vscode": "0.12.2"
+    },
+    "promote": {
+      "@knuckles/eslint": "minor"
     }
   }
 }

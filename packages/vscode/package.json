@@ -42,5 +42,8 @@
   },
   "engines": {
     "vscode": "^1.88.0"
+  },
+  "publishConfig": {
+    "tag": "latest"
   }
 }

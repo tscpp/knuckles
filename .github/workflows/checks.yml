@@ -58,7 +58,7 @@ jobs:
         run: pnpm exec nx run-many -t test --coverage
 
       - name: Collect coverage
-        run: echo "COVERAGE=$(tools/scripts/list-coverage)" >> $GITHUB_ENV
+        run: echo "COVERAGE=$(node .github/scripts/list-coverage-files.js)" >> $GITHUB_ENV
 
       - name: Report coverage
         uses: coverallsapp/github-action@v2
