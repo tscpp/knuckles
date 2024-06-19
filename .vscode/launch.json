@@ -6,12 +6,24 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Extension",
+      "name": "Debug extension",
       "type": "extensionHost",
       "request": "launch",
+      "runtimeExecutable": "${execPath}",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}/packages/vscode"],
       "outFiles": ["${workspaceFolder}/packages/vscode/dist/**/*.js"],
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true,
       "preLaunchTask": "Build VSCode Extension"
+    },
+    {
+      "name": "Attach to language server",
+      "type": "node",
+      "request": "attach",
+      "port": 6009,
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/packages/vscode/dist/**/*.js"]
     }
   ]
 }
