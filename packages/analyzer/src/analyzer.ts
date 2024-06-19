@@ -154,8 +154,8 @@ export class Analyzer {
 
 export function parserErrorToAnalyzerIssue(error: ParserError): AnalyzerIssue {
   return {
-    start: error.range.start,
-    end: error.range.end,
+    start: error.start,
+    end: error.end,
     message: error.description,
     name: "knuckles/parser",
     severity: AnalyzerSeverity.Error,

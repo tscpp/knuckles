@@ -1,10 +1,11 @@
-import type { Range } from "@knuckles/location";
+import type { Position } from "@knuckles/location";
 
 export class ParserError extends Error {
   constructor(
-    readonly range: Range,
+    readonly start: Position,
+    readonly end: Position | undefined,
     readonly description: string,
   ) {
-    super(`${range.start.format()}: ${description}`);
+    super(`${start.format()}: ${description}`);
   }
 }

@@ -19,7 +19,7 @@ export default class Position {
     if (nl) {
       for (const s of text.split(nl)) {
         if (i - s.length <= 0) {
-          column = i;
+          column = Math.max(i, 0);
           i = 0;
           break;
         } else {

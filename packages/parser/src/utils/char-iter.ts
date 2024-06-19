@@ -1,5 +1,5 @@
 import { ParserError } from "../error.js";
-import { Range } from "@knuckles/location";
+import { Position } from "@knuckles/location";
 
 export default class CharIter {
   #index: number;
@@ -31,7 +31,8 @@ export default class CharIter {
   next() {
     if (this.#index >= this.chars.length - 1) {
       throw new ParserError(
-        Range.fromOffsets(this.#index, this.#index + 1, this.string),
+        Position.fromOffset(this.#index, this.string),
+        undefined,
         "Unexpected end of input.",
       );
     } else {
@@ -53,7 +54,8 @@ export default class CharIter {
     for (const char of chars) {
       if (this.char() !== char) {
         throw new ParserError(
-          Range.fromOffsets(start, start + string.length, this.string),
+          Position.fromOffset(start, this.string),
+          Position.fromOffset(start + string.length, this.string),
           `Expected "${string}".`,
         );
       }
