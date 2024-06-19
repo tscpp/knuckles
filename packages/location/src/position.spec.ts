@@ -38,4 +38,12 @@ describe("Position", () => {
       offset: 6,
     });
   });
+
+  it("Converts offset in middle of CRLF to line and column", () => {
+    const position = Position.fromOffset(9, "foo\r\nbar\r\n");
+    expect(position).toMatchObject({
+      line: 2,
+      column: 0,
+    });
+  });
 });
