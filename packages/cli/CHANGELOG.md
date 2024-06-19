@@ -1,5 +1,17 @@
 # @knuckles/cli
 
+## 4.0.0
+
+### Patch Changes
+
+- Updated dependencies [a62399e]
+- Updated dependencies [0c198cc]
+- Updated dependencies [7a84ddf]
+- Updated dependencies [ec8381a]
+  - @knuckles/typescript@0.14.0
+  - @knuckles/analyzer@0.14.0
+  - @knuckles/config@0.13.0
+
 ## 3.1.1
 
 ### Patch Changes

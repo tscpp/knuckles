@@ -1,5 +1,13 @@
 # @knuckles/analyzer
 
+## 0.14.0
+
+### Patch Changes
+
+- Updated dependencies [0c198cc]
+  - @knuckles/fabricator@0.12.1
+  - @knuckles/config@0.13.0
+
 ## 0.13.0
 
 ### Minor Changes
