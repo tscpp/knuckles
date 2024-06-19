@@ -14,7 +14,7 @@ import type {
   ModuleProviderResolveResult,
 } from "./module-provider.js";
 import type { Plugin, Self, Sibling } from "./plugin.js";
-import { type Range } from "@knuckles/location";
+import { Position, Range } from "@knuckles/location";
 import { parse } from "@knuckles/parser";
 import {
   Element,
@@ -222,7 +222,11 @@ export class Renderer {
           createDiagnostic({
             type: "error",
             message: error.description,
-            range: error.range,
+            range: new Range(
+              error.start,
+              error.end ??
+                Position.translate(error.start, 1, this.modified.original),
+            ),
             cause: error,
           }),
         ),

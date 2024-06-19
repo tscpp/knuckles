@@ -50,8 +50,12 @@ export default class Parser {
   }
 
   //#region Utils
-  #error(range: Range, description: string) {
-    const error = new ParserError(range, description);
+  #error(range: Range, description: string): ParserError;
+  #error(start: Position, description: string): ParserError;
+  #error(location: Range | Position, description: string): ParserError {
+    const start = location instanceof Range ? location.start : location;
+    const end = location instanceof Range ? location.end : undefined;
+    const error = new ParserError(start, end, description);
     this.errors.push(error);
     return error;
   }
@@ -391,6 +395,17 @@ export default class Parser {
     const range = parse5LocationToRange(
       node.sourceCodeLocation!.attrs![attr.name]!,
     );
+    const valueRange = new Range(
+      Position.fromOffset(
+        range.start.offset +
+          // name
+          attr.name.length +
+          // equal
+          1,
+        this.#string,
+      ),
+      range.end,
+    );
 
     return new Attribute({
       name: new Identifier({
@@ -404,19 +419,13 @@ export default class Parser {
         ),
       }),
       value: new StringLiteral({
-        value: attr.value,
-        quote,
-        range: new Range(
-          Position.fromOffset(
-            range.start.offset +
-              // name
-              attr.name.length +
-              // equal
-              1,
-            this.#string,
-          ),
-          range.end,
+        // parse5 replaces all occurrences of CRLF with LF, which breaks mappings.
+        value: this.#string.slice(
+          valueRange.start.offset + (quoted ? 1 : 0),
+          valueRange.end.offset - (quoted ? 1 : 0),
         ),
+        quote,
+        range: valueRange,
       }),
       namespace: attr.namespace,
       prefix: attr.prefix,

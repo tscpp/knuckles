@@ -35,8 +35,10 @@ function translateIssueToDiagnostic(
   const start = issue.start ?? Position.fromOffset(0, text);
   const end = issue.end ?? Position.fromOffset(start.offset + 1, text);
   const range = vscode.Range.create(
-    vscode.Position.create(start.line, start.column),
-    vscode.Position.create(end.line, end.column),
+    start.line,
+    start.column,
+    end.line,
+    end.column,
   );
   const severity = {
     [AnalyzerSeverity.Error]: vscode.DiagnosticSeverity.Error,
