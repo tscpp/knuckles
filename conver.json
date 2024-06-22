@@ -7,5 +7,20 @@
   "base": "a62399e7e568beaf7a9455aa3a98a750d3970b27",
   "preReleases": {
     "knuckles-vscode": "0.12.2"
+  },
+  "promotions": {
+    "@knuckles/analyzer": "minor",
+    "@knuckles/cli": "minor",
+    "@knuckles/config": "minor",
+    "@knuckles/eslint": "minor",
+    "@knuckles/fabricator": "minor",
+    "@knuckles/language-server": "minor",
+    "@knuckles/location": "minor",
+    "@knuckles/parser": "minor",
+    "@knuckles/ssr": "minor",
+    "@knuckles/syntax-tree": "minor",
+    "@knuckles/typescript": "minor",
+    "@knuckles/typescript-plugin": "minor",
+    "knuckles-vscode": "minor"
   }
 }
