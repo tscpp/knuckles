@@ -1,0 +1,11 @@
+/*
+  This config file manages the options and current state for versioning.
+  See https://github.com/tscpp/conventional-versioning#readme.
+*/
+{
+  "$schema": "./node_modules/conventional-versioning/schema.json",
+  "base": "a62399e7e568beaf7a9455aa3a98a750d3970b27",
+  "preReleases": {
+    "knuckles-vscode": "0.12.2"
+  }
+}
