@@ -45,7 +45,10 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Publish versions
+      - name: Build packages
+        run: pnpm nx run-many -t build --projects=@knuckles/*
+
+      - name: Publish packages
         run: pnpm nx release publish
 
       - name: Create Release Pull Request
