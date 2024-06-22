@@ -2,7 +2,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.tabSize": 2,
   "files.exclude": {
-    "**/node_modules": true,
+    // "**/node_modules": true,
     "**/.nx": true,
     "tmp": true,
     "**/.pnpm-store": true
@@ -17,7 +17,8 @@
   },
   "files.associations": {
     "*.ts.snap": "typescript",
-    "*.js.snap": "javascript"
+    "*.js.snap": "javascript",
+    "conver.json": "jsonc"
   },
   "json.schemas": [
     {

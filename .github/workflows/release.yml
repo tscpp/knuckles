@@ -45,15 +45,13 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      - name: Publish versions
+        run: pnpm nx release publish
+
       - name: Create Release Pull Request
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          title: "Version packages (automated)"
-          commit: "chore(release): version packages"
-          createGithubReleases: false
-          version: tools/scripts/version
-          publish: tools/scripts/publish
+        run: node .github/scripts/create-versioning-pull-request.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_HEAD_BRANCH: "automated-versioning"
+          GITHUB_BASE_BRANCH: "main"

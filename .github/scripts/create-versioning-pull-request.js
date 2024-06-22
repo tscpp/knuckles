@@ -1,84 +1,74 @@
 import {
-  Config,
-  createGit,
+  LogLevel,
   createVersioningPlan,
-  getCommits,
+  getCommitHistory,
   getWorkspace,
+  logger,
+  readJsoncFile,
 } from "conventional-versioning";
 import { $ } from "execa";
 import assert from "node:assert/strict";
 import { Octokit } from "octokit";
-import yn from "yn";
+
+logger.pipe((log) => {
+  if (log.level <= LogLevel.Warning) {
+    console.error(log.text);
+  }
+});
 
 const {
   GITHUB_TOKEN,
-  GITHUB_OWNER,
   GITHUB_REPO,
   GITHUB_HEAD_BRANCH = "automated-versioning",
   GITHUB_BASE_BRANCH = "main",
   CONVER_CONFIG = "conver.json",
-  CONVER_WORKSPACE_ROOT = "./",
-  CONVER_DRY,
 } = process.env;
 assert(GITHUB_TOKEN, "Missing 'GITHUB_TOKEN' environment variable.");
-assert(GITHUB_OWNER, "Missing 'GITHUB_OWNER' environment variable.");
 assert(GITHUB_REPO, "Missing 'GITHUB_REPO' environment variable.");
 
-const dry = yn(CONVER_DRY);
+const [owner, repo] = GITHUB_REPO.split("/");
 
-if (!dry && !(await isClean())) {
+// Make sure working directory is clean.
+if (!(await isClean())) {
   console.error("Working directory is not clean. Exiting.");
   process.exit(1);
 }
 
-if (!dry && (await getCurrentBranch()) !== GITHUB_BASE_BRANCH) {
+// Make sure current branch is base branch.
+if ((await getCurrentBranch()) !== GITHUB_BASE_BRANCH) {
   console.error("Switch to base branch before running. Exiting.");
   process.exit(1);
 }
 
-if (!dry) {
-  console.info(`Switching branch to ${GITHUB_HEAD_BRANCH}.`);
-  await $`git checkout -B ${GITHUB_HEAD_BRANCH}`;
-}
+// Switch to head branch.
+console.info(`Switching branch to ${GITHUB_HEAD_BRANCH}.`);
+await $`git checkout -B ${GITHUB_HEAD_BRANCH}`;
 
-const config = await Config.read(CONVER_CONFIG);
-const base = config.getBase();
+// Get versioning plan.
+/** @type {import('conventional-versioning').Options} */
+const options = await readJsoncFile(CONVER_CONFIG);
+const workspace = await getWorkspace(options);
+const history = await getCommitHistory(options);
+const updates = createVersioningPlan(workspace, history, options);
 
-console.info("Running conventional versioning.");
-await $`pnpm conventional-versioning version --dry-run=${String(!!dry)}`;
+// Do versioning.
+await $`pnpm conver version --yes`;
 
-if (!dry && (await isClean())) {
-  console.error("No changes made to working directory. Exiting.");
+if (await isClean()) {
+  console.log("No changes. Exiting.");
   process.exit();
 }
 
-console.info("Getting versioning plan.");
-config.setBase(base); // Do not save!
-const workspace = await getWorkspace({
-  directory: CONVER_WORKSPACE_ROOT,
-  config,
-});
-const git = await createGit();
-const commits = await getCommits({ git, config });
-const versioning = await createVersioningPlan({ workspace, config, commits });
-
-if (versioning.length === 0) {
-  console.info("No changes were made in versioning.");
-  process.exit();
-}
-
-if (!dry) {
-  console.info(`Pushing changes to ${GITHUB_HEAD_BRANCH}.`);
-  await $`git add -A`;
-  await $`git commit -m ${"chore: version package(s)"}`;
-  await $`git push --force -u origin ${GITHUB_HEAD_BRANCH}`;
-}
+// Push changes.
+console.info(`Pushing changes to ${GITHUB_HEAD_BRANCH}.`);
+await $`git commit -a -m ${"chore: version package(s)"}`;
+await $`git push --force -u origin ${GITHUB_HEAD_BRANCH}`;
 
 let pullBody =
   "This pull request was opened by the " +
   "[release action](https://github.com/tscpp/knuckles/actions/workflows/release.yml) " +
-  "since new version bumps are available and will automatically stay in sync.\n\n" +
-  versioning
+  "since new versions are available and will automatically stay in sync.\n\n" +
+  updates
     .map(
       (update) =>
         `- ${update.name}: ${update.oldVersion} -> ${update.newVersion}`,
@@ -92,10 +82,10 @@ const octokit = new Octokit({
 
 console.info("Searching for existing pull request.");
 const response = await octokit.rest.pulls.list({
-  owner: GITHUB_OWNER,
-  repo: GITHUB_REPO,
+  owner,
+  repo,
   state: "open",
-  head: GITHUB_OWNER + ":" + GITHUB_HEAD_BRANCH,
+  head: owner + ":" + GITHUB_HEAD_BRANCH,
   base: GITHUB_BASE_BRANCH,
   per_page: 1,
 });
@@ -106,37 +96,31 @@ if (pull) {
   console.info(`Found existing pull request #${pull.number}.`);
   assert.equal(pull.head.ref, GITHUB_HEAD_BRANCH);
   assert.equal(pull.base.ref, GITHUB_BASE_BRANCH);
-  if (!dry) {
-    console.info("Updating existing pull request.");
-    const response = await octokit.rest.pulls.update({
-      owner: GITHUB_OWNER,
-      repo: GITHUB_REPO,
-      pull_number: pull.number,
-      body: pullBody,
-    });
-    assert.equal(response.status, 200, "Expected response status code 200.");
-  }
+  console.info("Updating existing pull request.");
+  const response = await octokit.rest.pulls.update({
+    owner,
+    repo,
+    pull_number: pull.number,
+    body: pullBody,
+  });
+  assert.equal(response.status, 200, "Expected response status code 200.");
 } else {
   console.info("Did not find existing pull request.");
-  if (!dry) {
-    console.info("Creating a new pull request.");
-    const response = await octokit.rest.pulls.create({
-      owner: GITHUB_OWNER,
-      repo: GITHUB_REPO,
-      head: GITHUB_HEAD_BRANCH,
-      base: GITHUB_BASE_BRANCH,
-      title: "chore: version package(s)",
-      body: pullBody,
-    });
-    assert.equal(response.status, 201, "Expected response status code 201.");
-    console.info(`Created pull request #${response.data.number}.`);
-  }
+  console.info("Creating a new pull request.");
+  const response = await octokit.rest.pulls.create({
+    owner,
+    repo,
+    head: GITHUB_HEAD_BRANCH,
+    base: GITHUB_BASE_BRANCH,
+    title: "chore: version package(s)",
+    body: pullBody,
+  });
+  assert.equal(response.status, 201, "Expected response status code 201.");
+  console.info(`Created pull request #${response.data.number}.`);
 }
 
-if (!dry) {
-  console.info(`Switching branch to ${GITHUB_BASE_BRANCH}.`);
-  await $`git checkout ${GITHUB_BASE_BRANCH}`;
-}
+console.info(`Switching branch to ${GITHUB_BASE_BRANCH}.`);
+await $`git checkout ${GITHUB_BASE_BRANCH}`;
 
 async function isClean() {
   const { stdout } = await $`git status --porcelain`;
