@@ -5,6 +5,7 @@
   "type": "module",
   "dependencies": {
     "execa": "^9.2.0",
+    "jsonwebtoken": "^9.0.2",
     "octokit": "^4.0.2",
     "yn": "^5.0.0"
   }

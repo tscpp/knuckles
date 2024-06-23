@@ -45,19 +45,36 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Setup Git User
-        run: node .github/scripts/setup-git-user.js
-
       - name: Build packages
         run: pnpm nx run-many -t build --projects=@knuckles/*
 
       - name: Publish packages
         run: pnpm nx release publish
 
+      - name: Setup Git User
+        run: node .github/scripts/setup-git-user.js
+
+      - name: Generate JWT and Get Installation Access Token
+        id: auth
+        run: |
+          # Generate JWT
+          JWT=$(APP_ID=${{ vars.GH_APP_ID }} \
+            node .github/scripts/generate-jwt.js \
+            <<< "${{ secrets.GH_APP_PRIVATE_KEY }}")
+
+          # Get Installation Access Token
+          INSTALLATION_TOKEN=$(curl -X POST \
+            -H "Authorization: Bearer $JWT" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/app/installations/${{ vars.GH_INSTALLATION_ID }}/access_tokens \
+            | jq -r .token)
+
+          echo "TOKEN=${INSTALLATION_TOKEN}" >> $GITHUB_ENV
+
       - name: Create Release Pull Request
         run: node .github/scripts/create-versioning-pull-request.js
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ env.TOKEN }}
           GITHUB_REPO: ${{ github.repository }}
           GITHUB_HEAD_BRANCH: "automated-versioning"
           GITHUB_BASE_BRANCH: "main"
