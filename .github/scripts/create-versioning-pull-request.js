@@ -59,6 +59,9 @@ if (await isClean()) {
   process.exit();
 }
 
+// Update lockfile.
+await $`pnpm install --no-frozen-lockfile`;
+
 // Push changes.
 console.info(`Pushing changes to ${GITHUB_HEAD_BRANCH}.`);
 await $`git commit -a -m ${"chore: version package(s)"}`;
