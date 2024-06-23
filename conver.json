@@ -5,6 +5,16 @@
 {
   "$schema": "./node_modules/conventional-versioning/schema.json",
   "base": "a62399e7e568beaf7a9455aa3a98a750d3970b27",
+  "fixed": [
+    ["@knuckles/parser", "@knuckles/syntax-tree"]
+  ],
+  "linked": [
+    ["@knuckles/analyzer", "@knuckles/typescript", "@knuckles/eslint"]
+  ],
+  "include": [
+    "@knuckles/*",
+    "knuckles-*"
+  ],
   "original": {
     "knuckles-vscode": "0.12.2"
   },
