@@ -5,7 +5,7 @@
 {
   "$schema": "./node_modules/conventional-versioning/schema.json",
   "base": "a62399e7e568beaf7a9455aa3a98a750d3970b27",
-  "preReleases": {
+  "original": {
     "knuckles-vscode": "0.12.2"
   },
   "promotions": {
