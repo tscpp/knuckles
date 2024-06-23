@@ -45,6 +45,9 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      - name: Setup Git User
+        run: node .github/scripts/setup-git-user.js
+
       - name: Build packages
         run: pnpm nx run-many -t build --projects=@knuckles/*
 
