@@ -16,8 +16,62 @@ permissions:
   pull-requests: write
 
 jobs:
-  release:
-    name: Release
+  versioning:
+    name: Versioning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository (deep)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+
+      - name: Setup Bun 1.x
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Git User
+        run: node .github/scripts/setup-git-user.js
+
+      - name: Generate JWT and Get Installation Access Token
+        id: auth
+        run: |
+          # Generate JWT
+          JWT=$(APP_ID=${{ vars.GH_APP_ID }} \
+            node .github/scripts/generate-jwt.js \
+            <<< "${{ secrets.GH_APP_PRIVATE_KEY }}")
+
+          # Get Installation Access Token
+          INSTALLATION_TOKEN=$(curl -X POST \
+            -H "Authorization: Bearer $JWT" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/app/installations/${{ vars.GH_INSTALLATION_ID }}/access_tokens \
+            | jq -r .token)
+
+          echo "TOKEN=${INSTALLATION_TOKEN}" >> $GITHUB_ENV
+
+      - name: Create Release Pull Request
+        run: node .github/scripts/create-versioning-pull-request.js
+        env:
+          GITHUB_TOKEN: ${{ env.TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_HEAD_BRANCH: "automated-versioning"
+          GITHUB_BASE_BRANCH: "main"
+
+  publish:
+    name: Publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository (deep)
@@ -50,31 +104,3 @@ jobs:
 
       - name: Publish packages
         run: pnpm nx release publish
-
-      - name: Setup Git User
-        run: node .github/scripts/setup-git-user.js
-
-      - name: Generate JWT and Get Installation Access Token
-        id: auth
-        run: |
-          # Generate JWT
-          JWT=$(APP_ID=${{ vars.GH_APP_ID }} \
-            node .github/scripts/generate-jwt.js \
-            <<< "${{ secrets.GH_APP_PRIVATE_KEY }}")
-
-          # Get Installation Access Token
-          INSTALLATION_TOKEN=$(curl -X POST \
-            -H "Authorization: Bearer $JWT" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/app/installations/${{ vars.GH_INSTALLATION_ID }}/access_tokens \
-            | jq -r .token)
-
-          echo "TOKEN=${INSTALLATION_TOKEN}" >> $GITHUB_ENV
-
-      - name: Create Release Pull Request
-        run: node .github/scripts/create-versioning-pull-request.js
-        env:
-          GITHUB_TOKEN: ${{ env.TOKEN }}
-          GITHUB_REPO: ${{ github.repository }}
-          GITHUB_HEAD_BRANCH: "automated-versioning"
-          GITHUB_BASE_BRANCH: "main"
