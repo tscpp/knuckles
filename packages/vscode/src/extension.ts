@@ -2,7 +2,7 @@ import { createDebounceAsync } from "./utils/debounce.js";
 import { LogLevel, Logger } from "@eliassko/logger";
 import {
   LanguageService,
-  LanguageServiceOptions,
+  type LanguageServiceOptions,
 } from "@knuckles/language-service";
 import { join } from "node:path";
 import * as vscode from "vscode";

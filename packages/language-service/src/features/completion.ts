@@ -1,6 +1,6 @@
 import type { LanguageServiceWorker } from "../private.js";
 import { toPosition, type ProtocolPosition } from "../utils/position.js";
-import { Position } from "@knuckles/location";
+import { type Position } from "@knuckles/location";
 import { Element } from "@knuckles/syntax-tree";
 import { ts } from "ts-morph";
 
