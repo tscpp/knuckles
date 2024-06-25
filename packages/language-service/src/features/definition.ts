@@ -1,59 +1,64 @@
-import type { LanguageService } from "../language-service.js";
+import type { LanguageServiceWorker } from "../private.js";
+import {
+  toPosition,
+  toProtocolRange,
+  type ProtocolLocation,
+  type ProtocolPosition,
+} from "../utils/position.js";
 import { Position, Range } from "@knuckles/location";
-import { pathToFileURL } from "node:url";
 import type { DefinitionInfo } from "ts-morph";
-import * as vscode from "vscode-languageserver/node.js";
+
+export interface DefinitionParams {
+  fileName: string;
+  position: ProtocolPosition;
+}
+
+export interface Definition extends Array<ProtocolLocation> {}
 
 export default async function getDefinition(
-  service: LanguageService,
-  params: vscode.DefinitionParams,
-): Promise<vscode.Definition> {
-  const state = await service.getState(params.textDocument);
+  this: LanguageServiceWorker,
+  params: DefinitionParams,
+): Promise<Definition> {
+  const state = await this.getDocumentState(params.fileName);
   if (state.broken) return [];
 
-  const originalPosition = Position.fromLineAndColumn(
-    params.position.line,
-    params.position.character,
-    state.snapshot.original,
-  );
+  const tsService = state.tsProject.getLanguageService();
+
+  const position = toPosition(params.position, state.document.text);
+
   const generatedPosition = state.snapshot.mirror({
-    original: originalPosition,
+    original: position,
   });
 
   if (generatedPosition) {
-    const definitions = state.service.getDefinitionsAtPosition(
-      state.sourceFile,
+    const definitions = tsService.getDefinitionsAtPosition(
+      state.tsSourceFile,
       generatedPosition.offset,
     );
 
-    return definitions.flatMap((definition): vscode.Location[] => {
+    return definitions.flatMap((definition): ProtocolLocation[] => {
       const node = definition.getNode();
 
       const definitionToLocation = (
         definition: DefinitionInfo,
-      ): vscode.Location => {
+      ): ProtocolLocation => {
         const sourceFile = definition.getSourceFile();
         const path = sourceFile.getFilePath();
-        const uri = pathToFileURL(path).toString();
         const span = definition.getTextSpan();
-        const range1 = Range.fromOffsets(
+        const range = Range.fromOffsets(
           span.getStart(),
           span.getEnd(),
           sourceFile.getFullText(),
         );
-        const range2 = vscode.Range.create(
-          vscode.Position.create(range1.start.line, range1.start.column),
-          vscode.Position.create(range1.end.line, range1.end.column),
-        );
 
         return {
-          uri: uri,
-          range: range2,
+          path,
+          range: toProtocolRange(range),
         };
       };
 
       if (
-        node.getSourceFile().getFilePath() === state.sourceFile.getFilePath()
+        node.getSourceFile().getFilePath() === state.tsSourceFile.getFilePath()
       ) {
         const generatedStartOffset = node.getStart();
         const generatedPosition = Position.fromOffset(
@@ -77,15 +82,12 @@ export default async function getDefinition(
           );
           return [
             {
-              uri: state.document.uri,
-              range: vscode.Range.create(
-                vscode.Position.create(range.start.line, range.start.column),
-                vscode.Position.create(range.end.line, range.end.column),
-              ),
+              path: state.document.path,
+              range: toProtocolRange(range),
             },
           ];
         } else {
-          const definitions = state.service.getDefinitions(node);
+          const definitions = tsService.getDefinitions(node);
           return definitions.map((definition) =>
             definitionToLocation(definition),
           );

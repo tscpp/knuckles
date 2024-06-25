@@ -1,7 +1,7 @@
 import type { AnalyzerIssue } from "./issue.js";
 import type { NormalizedConfig } from "@knuckles/config";
 import type { Snapshot } from "@knuckles/fabricator";
-import type { Document } from "@knuckles/syntax-tree";
+import type { SyntaxTree } from "@knuckles/syntax-tree";
 
 export interface AnalyzerSnapshots {
   [name: string]: Snapshot | undefined;
@@ -12,7 +12,7 @@ export interface AnalyzerSnapshots {
 export interface AnalyzeContext {
   readonly fileName: string;
   readonly text: string;
-  readonly document: Document;
+  readonly document: SyntaxTree;
   readonly snapshots: AnalyzerSnapshots;
   readonly metadata: Record<string, unknown>;
 

@@ -1,17 +1,75 @@
-import type { LanguageService } from "../language-service.js";
+import type { LanguageServiceWorker } from "../private.js";
+import { toPosition, type ProtocolPosition } from "../utils/position.js";
 import { Position } from "@knuckles/location";
 import { Element } from "@knuckles/syntax-tree";
 import { ts } from "ts-morph";
-import * as vscode from "vscode-languageserver/node.js";
+
+export interface CompletionParams {
+  fileName: string;
+  position: ProtocolPosition;
+  context?: CompletionContext;
+}
+
+export interface CompletionContext {
+  triggerCharacter?: string;
+  triggerKind?: CompletionTriggerKind;
+}
+
+export enum CompletionTriggerKind {
+  Invoked = 1,
+  TriggerCharacter,
+  TriggerForIncompleteCompletions,
+}
+
+export enum CompletionItemKind {
+  Text,
+  Method,
+  Function,
+  Constructor,
+  Field,
+  Variable,
+  Class,
+  Interface,
+  Module,
+  Property,
+  Unit,
+  Value,
+  Enum,
+  Keyword,
+  Snippet,
+  Color,
+  File,
+  Reference,
+  Folder,
+  EnumMember,
+  Constant,
+  Struct,
+  Event,
+  Operator,
+  TypeParameter,
+}
+
+export interface CompletionItem {
+  label: string;
+  kind: CompletionItemKind;
+  preselect: boolean | undefined;
+  insertText: string | undefined;
+  filterText: string | undefined;
+  sortText: string;
+}
+
+export type Completion = CompletionItem[];
 
 export default async function getCompletion(
-  service: LanguageService,
-  params: vscode.CompletionParams,
-): Promise<vscode.CompletionItem[]> {
-  const state = await service.getState(params.textDocument);
+  this: LanguageServiceWorker,
+  params: CompletionParams,
+): Promise<Completion> {
+  const state = await this.getDocumentState(params.fileName);
   if (state.broken) return [];
 
-  const originalPosition = convertPosition(params.position);
+  const tsService = state.tsProject.getLanguageService();
+
+  const originalPosition = toPosition(params.position, state.document.text);
   const generatedPosition = state.snapshot.mirror({
     original: originalPosition,
   });
@@ -21,8 +79,8 @@ export default async function getCompletion(
 
   const quotePreference = getQuotePreferenceAt(originalPosition);
 
-  const completions = state.service!.compilerObject.getCompletionsAtPosition(
-    state.sourceFile!.getFilePath(),
+  const completions = tsService.compilerObject.getCompletionsAtPosition(
+    state.tsSourceFile!.getFilePath(),
     generatedPosition.offset,
     {
       includeCompletionsForImportStatements: false,
@@ -42,15 +100,7 @@ export default async function getCompletion(
 
   return completions.entries.map(convertCompletion);
 
-  function convertPosition(position: vscode.Position): Position {
-    return Position.fromLineAndColumn(
-      position.line,
-      position.character,
-      state.snapshot!.original,
-    );
-  }
-
-  function convertCompletion(entry: ts.CompletionEntry): vscode.CompletionItem {
+  function convertCompletion(entry: ts.CompletionEntry): CompletionItem {
     return {
       label: entry.name,
       kind: convertKind(entry.kind),
@@ -86,11 +136,11 @@ export default async function getCompletion(
 }
 
 // https://github.com/microsoft/vscode/blob/77e5788/extensions/typescript-language-features/src/languageFeatures/completions.ts#L440
-function convertKind(kind: string): vscode.CompletionItemKind {
+function convertKind(kind: string): CompletionItemKind {
   switch (kind) {
     case ts.ScriptElementKind.primitiveType:
     case ts.ScriptElementKind.keyword:
-      return vscode.CompletionItemKind.Keyword;
+      return CompletionItemKind.Keyword;
 
     case ts.ScriptElementKind.constElement:
     case ts.ScriptElementKind.letElement:
@@ -98,53 +148,53 @@ function convertKind(kind: string): vscode.CompletionItemKind {
     case ts.ScriptElementKind.localVariableElement:
     case ts.ScriptElementKind.alias:
     case ts.ScriptElementKind.parameterElement:
-      return vscode.CompletionItemKind.Variable;
+      return CompletionItemKind.Variable;
 
     case ts.ScriptElementKind.memberVariableElement:
     case ts.ScriptElementKind.memberGetAccessorElement:
     case ts.ScriptElementKind.memberSetAccessorElement:
-      return vscode.CompletionItemKind.Field;
+      return CompletionItemKind.Field;
 
     case ts.ScriptElementKind.functionElement:
     case ts.ScriptElementKind.localFunctionElement:
-      return vscode.CompletionItemKind.Function;
+      return CompletionItemKind.Function;
 
     case ts.ScriptElementKind.memberFunctionElement:
     case ts.ScriptElementKind.constructSignatureElement:
     case ts.ScriptElementKind.callSignatureElement:
     case ts.ScriptElementKind.indexSignatureElement:
-      return vscode.CompletionItemKind.Method;
+      return CompletionItemKind.Method;
 
     case ts.ScriptElementKind.enumElement:
-      return vscode.CompletionItemKind.Enum;
+      return CompletionItemKind.Enum;
 
     case ts.ScriptElementKind.enumMemberElement:
-      return vscode.CompletionItemKind.EnumMember;
+      return CompletionItemKind.EnumMember;
 
     case ts.ScriptElementKind.moduleElement:
     case ts.ScriptElementKind.externalModuleName:
-      return vscode.CompletionItemKind.Module;
+      return CompletionItemKind.Module;
 
     case ts.ScriptElementKind.classElement:
     case ts.ScriptElementKind.typeElement:
-      return vscode.CompletionItemKind.Class;
+      return CompletionItemKind.Class;
 
     case ts.ScriptElementKind.interfaceElement:
-      return vscode.CompletionItemKind.Interface;
+      return CompletionItemKind.Interface;
 
     case ts.ScriptElementKind.warning:
-      return vscode.CompletionItemKind.Text;
+      return CompletionItemKind.Text;
 
     case ts.ScriptElementKind.scriptElement:
-      return vscode.CompletionItemKind.File;
+      return CompletionItemKind.File;
 
     case ts.ScriptElementKind.directory:
-      return vscode.CompletionItemKind.Folder;
+      return CompletionItemKind.Folder;
 
     case ts.ScriptElementKind.string:
-      return vscode.CompletionItemKind.Constant;
+      return CompletionItemKind.Constant;
 
     default:
-      return vscode.CompletionItemKind.Property;
+      return CompletionItemKind.Property;
   }
 }

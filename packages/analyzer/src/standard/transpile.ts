@@ -1,12 +1,12 @@
 import { Chunk } from "@knuckles/fabricator";
 import {
-  type Document,
+  type SyntaxTree,
   Element,
   type Binding,
   KoVirtualElement,
 } from "@knuckles/syntax-tree";
 
-export function transpile(document: Document) {
+export function transpile(document: SyntaxTree) {
   const chunk = new Chunk();
 
   const render = (binding: Binding) => {

@@ -13,7 +13,7 @@ import {
   type NormalizedConfig,
 } from "@knuckles/config";
 import { type ParserError, parse } from "@knuckles/parser";
-import type { Document } from "@knuckles/syntax-tree";
+import type { SyntaxTree } from "@knuckles/syntax-tree";
 import assert from "node:assert";
 
 export interface AnalyzerOptions {
@@ -26,7 +26,7 @@ export interface AnalyzeOptions {
 }
 
 export interface AnalyzeCache {
-  document?: Document;
+  document?: SyntaxTree;
   snapshots?: Partial<AnalyzerSnapshots>;
 }
 
@@ -34,7 +34,7 @@ export interface AnalyzeResult {
   issues: AnalyzerIssue[];
   snapshots: Partial<AnalyzerSnapshots>;
   metadata: Record<string, unknown>;
-  document: Document | null;
+  document: SyntaxTree | null;
 }
 
 export class Analyzer {
@@ -102,7 +102,7 @@ export class Analyzer {
     const snapshots = (options?.cache?.snapshots ?? {}) as AnalyzerSnapshots;
     const metadata = {};
 
-    let document: Document;
+    let document: SyntaxTree;
     if (options?.cache?.document) {
       document = options.cache.document;
     } else {

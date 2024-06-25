@@ -6,7 +6,7 @@
     { "path": "packages/config/tsconfig.json" },
     { "path": "packages/eslint/tsconfig.json" },
     { "path": "packages/fabricator/tsconfig.json" },
-    { "path": "packages/language-server/tsconfig.json" },
+    { "path": "packages/language-service/tsconfig.json" },
     { "path": "packages/location/tsconfig.json" },
     { "path": "packages/parser/tsconfig.json" },
     { "path": "packages/ssr/tsconfig.json" },

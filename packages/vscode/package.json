@@ -17,19 +17,20 @@
   "contributes": {
     "commands": [
       {
-        "command": "_knuckles.openJsDocLink"
+        "command": "knuckles.restartLanguageService",
+        "title": "Knuckles: Restart language service"
       }
     ]
   },
   "activationEvents": [
-    "*"
+    "onLanguage:html"
   ],
   "dependencies": {
-    "@knuckles/language-server": "workspace:~",
-    "typescript": "^5.4.5",
-    "vscode-languageclient": "^9.0.1"
+    "@knuckles/language-service": "workspace:~",
+    "typescript": "^5.4.5"
   },
   "devDependencies": {
+    "@eliassko/logger": "^1.1.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "20.x",
     "@types/vscode": "^1.88.0",

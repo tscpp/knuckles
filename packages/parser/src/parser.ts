@@ -13,7 +13,7 @@ import {
 } from "./utils/parse5.js";
 import { Range, Position } from "@knuckles/location";
 import {
-  Document,
+  SyntaxTree,
   type Node,
   Text,
   Comment,
@@ -66,7 +66,7 @@ export default class Parser {
   //#endregion
 
   //#region Document
-  parse(): Document | null {
+  parse(): SyntaxTree | null {
     const fragment = p5.parseFragment(this.#string, {
       sourceCodeLocationInfo: true,
       scriptingEnabled: false,
@@ -91,7 +91,7 @@ export default class Parser {
     }
   }
 
-  #parseDocument(fragment: p5t.DocumentFragment): Document {
+  #parseDocument(fragment: p5t.DocumentFragment): SyntaxTree {
     const iter = fragment.childNodes[Symbol.iterator]();
     const children: Node[] = [];
     let result: IteratorResult<p5t.Node> | undefined;
@@ -100,7 +100,7 @@ export default class Parser {
       children.push(this.#parseNode(result.value, iter));
     }
 
-    return new Document({
+    return new SyntaxTree({
       children,
       range: new Range(
         Position.zero,

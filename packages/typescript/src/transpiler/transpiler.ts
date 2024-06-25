@@ -2,7 +2,7 @@
 import { ns, quote, rmnl } from "./utils.js";
 import { Chunk, type ChunkLike } from "@knuckles/fabricator";
 import type { Position } from "@knuckles/location";
-import type { Document } from "@knuckles/syntax-tree";
+import type { SyntaxTree } from "@knuckles/syntax-tree";
 import * as ko from "@knuckles/syntax-tree";
 import * as ts from "ts-morph";
 
@@ -53,7 +53,7 @@ export class Transpiler {
     this.#strictness = options?.strictness ?? "loose";
   }
 
-  transpile(fileName: string, syntaxTree: Document): TranspilerOutput {
+  transpile(fileName: string, syntaxTree: SyntaxTree): TranspilerOutput {
     const renderer = new Renderer(fileName, this.project, this.#strictness);
     renderer.refresh();
     const chunk = renderer.render(syntaxTree);
@@ -200,7 +200,7 @@ class Renderer {
     importDeclaration.remove();
   }
 
-  render(document: Document) {
+  render(document: SyntaxTree) {
     return new Chunk()
       .append(`import ${ns} from '@knuckles/typescript/types';`)
       .newline(2)
