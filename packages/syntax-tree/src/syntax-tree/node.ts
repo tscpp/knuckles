@@ -1,8 +1,10 @@
-import { type Position, Range } from "@knuckles/location";
+import { type Position, Range, type RawRange } from "@knuckles/location";
 
 export interface NodeInit {
   range: Range;
 }
+
+export interface RawNode extends RawRange {}
 
 export abstract class Node extends Range {
   constructor(init: NodeInit) {
@@ -26,10 +28,18 @@ export abstract class Node extends Range {
       }
     }
   }
+
+  override toJSON(): RawNode {
+    return super.toJSON();
+  }
 }
 
 export interface ParentNodeInit extends NodeInit {
   children: Iterable<Node>;
+}
+
+export interface RawParentNode extends RawRange {
+  children: RawNode[];
 }
 
 export abstract class ParentNode extends Node {
@@ -54,5 +64,12 @@ export abstract class ParentNode extends Node {
     }
 
     return ascendants.reduce((a, b) => (a.size < b.size ? a : b));
+  }
+
+  override toJSON(): RawParentNode {
+    return {
+      ...super.toJSON(),
+      children: this.children.map((child) => child.toJSON()),
+    };
   }
 }

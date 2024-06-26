@@ -19,11 +19,10 @@ import { parse } from "@knuckles/parser";
 import {
   Element,
   ParentNode,
-  WithVirtualElement,
+  OkVirtualElement,
   type StringLiteral,
   type ImportStatement,
   KoVirtualElement,
-  VirtualElement,
   type Node,
 } from "@knuckles/syntax-tree";
 import ko from "knockout";
@@ -255,13 +254,13 @@ export class Renderer {
 
   isSsrVirtualElement(node: Node) {
     return (
-      node instanceof VirtualElement &&
+      node instanceof OkVirtualElement &&
       (node.name.value === "ssr" || node.name.value === "no-ssr")
     );
   }
 
   isSsrEnabled(node: Node, fallback = true) {
-    if (node instanceof VirtualElement) {
+    if (node instanceof OkVirtualElement) {
       if (node.name.value === "ssr" && node.param.value === "true") {
         return true;
       }
@@ -289,8 +288,8 @@ export class Renderer {
     }
   }
 
-  async renderViewModel(modified: MagicString, node: WithVirtualElement) {
-    const data = await this.import(node.import);
+  async renderViewModel(modified: MagicString, node: OkVirtualElement) {
+    const data = await this.import(node.import!);
     const context = new BindingContext(data);
 
     if (!this.#options.preserveHints) {
@@ -309,7 +308,10 @@ export class Renderer {
   ) {
     for (const child of node.children) {
       if (this.isSsrEnabled(child, true)) {
-        if (child instanceof WithVirtualElement) {
+        if (
+          child instanceof OkVirtualElement &&
+          (child.name.value === "with" || child.name.value === "using")
+        ) {
           await this.renderViewModel(modified, child);
           continue;
         }
@@ -356,7 +358,7 @@ export class Renderer {
     bubble?: (() => Promise<void>) | undefined;
     extend?: (() => Promise<BindingContext>) | undefined;
   }> {
-    const bindings = node instanceof Element ? node.bindings : [node.binding];
+    const bindings = node.bindings;
 
     const plugins = bindings.map((binding) =>
       this.#plugins.find((plugin) => plugin.filter(binding)),

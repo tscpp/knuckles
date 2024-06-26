@@ -24,7 +24,7 @@ import {
   Identifier,
   Expression,
   KoVirtualElement,
-  WithVirtualElement,
+  OkVirtualElement,
   ImportStatement,
   StringLiteral,
 } from "@knuckles/syntax-tree";
@@ -32,7 +32,7 @@ import * as acorn from "acorn";
 import * as acornLoose from "acorn-loose";
 
 export const VIRTUAL_ELEMENT_START_REGEX = //
-  /^(\s*)(ko|ok)(\s+)([^\s]+)(\s*:\s*)([^]*?)\s*$/;
+  /^(\s*)(ko|ok)(\s+)([^]*?)\s*$/;
 
 export interface ParserOptions {
   bindingAttributes?: readonly string[];
@@ -142,10 +142,8 @@ export default class Parser {
     node: p5t.CommentNode,
     iter: Iterator<p5t.Node>,
   ): VirtualElement {
-    const [padding1, nsText, padding2, nameText, padding3, paramText] =
+    const [padding1, nsText, padding3, expressionText] =
       VIRTUAL_ELEMENT_START_REGEX.exec(node.data)!.slice(1) as [
-        string,
-        string,
         string,
         string,
         string,
@@ -185,8 +183,7 @@ export default class Parser {
 
     const dataOffset = node.sourceCodeLocation!.startOffset + "<!--".length;
     const nsOffset = dataOffset + padding1.length;
-    const nameOffset = nsOffset + nsText.length + padding2.length;
-    const paramOffset = nameOffset + nameText.length + padding3.length;
+    const expressionOffset = nsOffset + nsText.length + padding3.length;
 
     const namespace = new Identifier({
       value: nsText,
@@ -197,69 +194,90 @@ export default class Parser {
       ),
     });
 
-    const name = new Identifier({
-      value: nameText,
-      range: Range.fromOffsets(
-        nameOffset,
-        nameOffset + nameText.length,
-        this.#string,
+    const expression = new Expression({
+      range: new Range(
+        Position.fromOffset(expressionOffset, this.#string),
+        Position.fromOffset(
+          expressionOffset + expressionText.length,
+          this.#string,
+        ),
       ),
-    });
-
-    const param = new Expression({
-      value: paramText,
-      range: Range.fromOffsets(
-        paramOffset,
-        paramOffset + paramText.length,
-        this.#string,
-      ),
+      value: expressionText,
     });
 
     if (namespace.value === "ko") {
       const node = new KoVirtualElement({
         namespace,
-        name,
-        param,
-        binding: undefined!,
+        expression,
+        bindings: [],
         startComment,
         children,
         endComment,
         range: new Range(startComment.start, endComment.end),
       });
-
-      const binding = new Binding({
-        name,
-        param,
-        parent: node,
-      });
-      node.binding = binding;
-
+      node.bindings = this.#parseBindings(expression, node);
       return node;
     }
 
     if (namespace.value === "ok") {
-      if (name.value === "with" || name.value === "using") {
-        const importStatement = this.#parseImportStatement(
-          new CharIter(this.#string, paramOffset),
+      const match = /([^\s]+)(\s*:\s*)([^]*?)/.exec(expression.value);
+      if (!match) {
+        throw this.#error(
+          expression,
+          "Expected an identifier followed by ':'.",
         );
-
-        return new WithVirtualElement({
-          namespace,
-          name,
-          param,
-          import: importStatement,
-          startComment,
-          children,
-          endComment,
-          range: new Range(startComment.start, endComment.end),
-        });
       }
+      const [nameText, padding2, paramText] = match.slice(1) as [
+        string,
+        string,
+        string,
+      ];
+
+      const name = new Identifier({
+        value: nameText,
+        range: new Range(
+          expression.start,
+          Position.fromOffset(expressionOffset + nameText.length, this.#string),
+        ),
+      });
+
+      const param = new Identifier({
+        value: paramText,
+        range: new Range(
+          Position.fromOffset(
+            expressionOffset + nameText.length + padding2.length,
+            this.#string,
+          ),
+          expression.end,
+        ),
+      });
+
+      let importStatement: ImportStatement | undefined;
+      if (nameText === "with" || nameText === "using") {
+        importStatement = this.#parseImportStatement(
+          new CharIter(
+            this.#string,
+            expressionOffset + nameText.length + padding2.length,
+          ),
+        );
+      }
+
+      return new OkVirtualElement({
+        name,
+        param,
+        namespace,
+        expression,
+        import: importStatement,
+        startComment,
+        children,
+        endComment,
+        range: new Range(startComment.start, endComment.end),
+      });
     }
 
     return new VirtualElement({
       namespace,
-      name,
-      param,
+      expression,
       startComment,
       children,
       endComment,
@@ -355,7 +373,14 @@ export default class Parser {
           attr.name.value,
         ),
       )
-      .flatMap((attr) => this.#parseAttributeBindings(attr));
+      .flatMap((attr) => {
+        const expression = new Expression({
+          value: attr.value.value,
+          range: attr.value.inner,
+        });
+
+        return this.#parseBindings(expression, element);
+      });
 
     let inner: Range;
     if (children.length > 0) {
@@ -406,6 +431,12 @@ export default class Parser {
       ),
       range.end,
     );
+    const valueInnerRange = quoted
+      ? new Range(
+          Position.fromOffset(valueRange.start.offset + 1, this.#string),
+          Position.fromOffset(valueRange.end.offset - 1, this.#string),
+        )
+      : valueRange;
 
     return new Attribute({
       name: new Identifier({
@@ -421,9 +452,10 @@ export default class Parser {
       value: new StringLiteral({
         // parse5 replaces all occurrences of CRLF with LF, which breaks mappings.
         value: this.#string.slice(
-          valueRange.start.offset + (quoted ? 1 : 0),
-          valueRange.end.offset - (quoted ? 1 : 0),
+          valueInnerRange.start.offset,
+          valueInnerRange.end.offset,
         ),
+        inner: valueInnerRange,
         quote,
         range: valueRange,
       }),
@@ -433,20 +465,14 @@ export default class Parser {
       parent,
     });
   }
+  //#endregion
 
-  #parseAttributeBindings(attr: Attribute) {
-    const innerOffset =
-      // name
-      attr.name.end.offset +
-      // equal
-      1 +
-      // quote
-      (attr.value.value ? 1 : 0);
-
+  //#region Bindings
+  #parseBindings(node: Expression, parent: Element | KoVirtualElement) {
     const translate = (offset: number) =>
-      innerOffset +
+      node.start.offset +
       offset -
-      // attribute value is wrapped in expressionText
+      // wrapping characters
       2;
 
     const acornOptions: acorn.Options = {
@@ -455,7 +481,7 @@ export default class Parser {
       ranges: true,
     };
 
-    const expressionText = `({${attr.value.value}})`;
+    const expressionText = `({${node.value}})`;
     let expression: acorn.Expression | undefined;
     try {
       expression = acorn.parseExpressionAt(expressionText, 0, acornOptions);
@@ -582,8 +608,7 @@ export default class Parser {
                   this.#string,
                 ),
               }),
-          attribute: attr,
-          parent: attr.parent,
+          parent,
           incomplete,
         });
       })
@@ -664,6 +689,7 @@ export default class Parser {
       value,
       quote,
       range: Range.fromOffsets(start, iter.index(), this.#string),
+      inner: Range.fromOffsets(start + 1, iter.index() - 1, this.#string),
     });
   }
   //#endregion

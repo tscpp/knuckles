@@ -22,4 +22,9 @@ describe("parser", () => {
   test("Import statement with *", () => {
     parse("<!-- ok with: * from 'foo' --><!-- /ok -->");
   });
+
+  test("Multiple bindings on same virtual element", () => {
+    const { document } = parse("<!-- ko with: foo, as: 'bar' --><!-- /ko -->");
+    expect(document).toMatchSnapshot();
+  });
 });

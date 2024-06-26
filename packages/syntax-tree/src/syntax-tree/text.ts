@@ -1,6 +1,11 @@
-import { Node, type NodeInit } from "./node.js";
+import { Node, type NodeInit, type RawNode } from "./node.js";
 
 export interface TextInit extends NodeInit {
+  content: string;
+}
+
+export interface RawText extends RawNode {
+  type: "text";
   content: string;
 }
 
@@ -10,5 +15,13 @@ export class Text extends Node {
   constructor(init: TextInit) {
     super(init);
     this.content = init.content;
+  }
+
+  override toJSON(): RawText {
+    return {
+      ...super.toJSON(),
+      type: "text",
+      content: this.content,
+    };
   }
 }
