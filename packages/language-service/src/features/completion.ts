@@ -86,7 +86,6 @@ export default async function getCompletion(
       includeCompletionsForImportStatements: false,
       includeCompletionsForModuleExports: false,
       allowRenameOfImportPath: false,
-      // TODO: get quote from current binding attribute
       quotePreference,
       triggerCharacter: params.context?.triggerCharacter as
         | ts.CompletionsTriggerCharacter

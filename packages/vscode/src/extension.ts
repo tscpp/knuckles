@@ -1,7 +1,9 @@
 import { createDebounceAsync } from "./utils/debounce.js";
+import { isMatchingReference } from "./utils/diagnostics.js";
 import { LogLevel, Logger } from "@eliassko/logger";
 import {
   LanguageService,
+  type DiagnosticIdentifier,
   type LanguageServiceOptions,
 } from "@knuckles/language-service";
 import { join } from "node:path";
@@ -147,6 +149,135 @@ export function activate(context: vscode.ExtensionContext) {
     return document.version === currentVersion;
   }
   //#endregion
+
+  //#region code actions
+  context.subscriptions.push(
+    vscode.languages.registerCodeActionsProvider(options.selector, {
+      async provideCodeActions(document, range, context, token) {
+        if (!service) return null;
+        if (!(await getLatestUpdate(document))) return null;
+        if (token.isCancellationRequested) return null;
+
+        const codeActions = await service.getCodeActions({
+          fileName: document.fileName,
+          position: {
+            line: range.start.line,
+            column: range.start.character,
+          },
+          diagnostics: context.diagnostics
+            .filter(
+              (d): d is typeof d & { code: string } =>
+                Boolean(d.code) && typeof d.code === "string",
+            )
+            .map((diagnostic) => ({
+              code: diagnostic.code,
+              range: {
+                start: {
+                  line: diagnostic.range.start.line,
+                  column: diagnostic.range.start.character,
+                },
+                end: {
+                  line: diagnostic.range.end.line,
+                  column: diagnostic.range.end.character,
+                },
+              },
+            })),
+        });
+
+        if (token.isCancellationRequested) return null;
+
+        return codeActions.map((fix): vscode.CodeAction => {
+          const workspaceEdit = new vscode.WorkspaceEdit();
+
+          for (const edit of fix.edits) {
+            switch (edit.type) {
+              case "delete":
+                workspaceEdit.delete(
+                  vscode.Uri.file(edit.fileName),
+                  new vscode.Range(
+                    new vscode.Position(
+                      edit.range.start.line,
+                      edit.range.start.column,
+                    ),
+                    new vscode.Position(
+                      edit.range.end.line,
+                      edit.range.end.column,
+                    ),
+                  ),
+                );
+                break;
+
+              case "replace":
+                workspaceEdit.replace(
+                  vscode.Uri.file(edit.fileName),
+                  new vscode.Range(
+                    new vscode.Position(
+                      edit.range.start.line,
+                      edit.range.start.column,
+                    ),
+                    new vscode.Position(
+                      edit.range.end.line,
+                      edit.range.end.column,
+                    ),
+                  ),
+                  edit.text,
+                );
+                break;
+
+              case "insert":
+                workspaceEdit.insert(
+                  vscode.Uri.file(edit.fileName),
+                  new vscode.Position(edit.position.line, edit.position.column),
+                  edit.text,
+                );
+                break;
+
+              case "create-file":
+                workspaceEdit.createFile(vscode.Uri.file(edit.fileName));
+                break;
+
+              case "delete-file":
+                workspaceEdit.deleteFile(vscode.Uri.file(edit.fileName));
+                break;
+
+              case "rename-file":
+                workspaceEdit.renameFile(
+                  vscode.Uri.file(edit.oldFileName),
+                  vscode.Uri.file(edit.newFileName),
+                );
+                break;
+            }
+          }
+
+          const diagnosticId = fix.diagnostic;
+          const diagnostic = diagnosticId
+            ? context.diagnostics.find((d) =>
+                isMatchingReference(d, diagnosticId),
+              )
+            : undefined;
+
+          return {
+            title: fix.label,
+            edit: workspaceEdit,
+
+            // TODO: allow language service to return multiple diagnostics
+            diagnostics: diagnostic ? [diagnostic] : [],
+
+            // TODO: move to language service
+            kind: vscode.CodeActionKind.QuickFix,
+            isPreferred: true,
+
+            command: {
+              title: "Fix this issue (command)",
+              command: "_knuckles.quickFix",
+              arguments: [document.uri.toString(), fix.diagnostic],
+            },
+          };
+        });
+      },
+    }),
+  );
+  //#endregion code action
 
   //#region completion
   context.subscriptions.push(
@@ -333,6 +464,21 @@ export function activate(context: vscode.ExtensionContext) {
             document.positionAt(start + length),
           ),
         });
+      },
+    ),
+  );
+
+  // Remove diagnostics immediately when using quick-fixes.
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "_knuckles.quickFix",
+      async (documentUri: string, diagnosticId: DiagnosticIdentifier) => {
+        const uri = vscode.Uri.parse(documentUri);
+        const filteredDiagnostics =
+          diagnosticCollection
+            .get(uri)
+            ?.filter((d) => !isMatchingReference(d, diagnosticId)) ?? [];
+        diagnosticCollection.set(uri, filteredDiagnostics);
       },
     ),
   );

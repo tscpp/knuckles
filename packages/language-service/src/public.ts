@@ -1,3 +1,4 @@
+import type { CodeActions, CodeActionParams } from "./features/code-actions.js";
 import type { Completion, CompletionParams } from "./features/completion.js";
 import type { Definition, DefinitionParams } from "./features/definition.js";
 import type { Diagnostics, DiagnosticsParams } from "./features/diagnostics.js";
@@ -128,6 +129,10 @@ export class LanguageService {
 
   getHover(params: HoverParams): Promise<Hover | null> {
     return this.#client.request("document/hover", params);
+  }
+
+  getCodeActions(params: CodeActionParams): Promise<CodeActions> {
+    return this.#client.request("document/quick-fixes", params);
   }
   //#endregion
 }

@@ -1,7 +1,8 @@
 import type { LanguageServiceWorker } from "../private.js";
+import type { Document } from "../utils/document.js";
+import { getFullIssueRange } from "../utils/issue.js";
 import type { ProtocolRange } from "../utils/position.js";
 import { AnalyzerSeverity, type AnalyzerIssue } from "@knuckles/analyzer";
-import { Position, Range } from "@knuckles/location";
 
 export interface DiagnosticsParams {
   fileName: string;
@@ -31,19 +32,17 @@ export default async function getDiagnostics(
   const state = await this.getDocumentState(params.fileName);
 
   const diagnostics = state.issues.map((issue) =>
-    translateIssueToDiagnostic(issue, state.document.text),
+    translateIssueToDiagnostic(state.document, issue),
   );
 
   return diagnostics;
 }
 
 function translateIssueToDiagnostic(
+  document: Document,
   issue: AnalyzerIssue,
-  text: string,
 ): Diagnostic {
-  const start = issue.start ?? Position.fromOffset(0, text);
-  const end = issue.end ?? Position.fromOffset(start.offset + 1, text);
-  const range = new Range(start, end);
+  const range = getFullIssueRange(document, issue);
   const severity = {
     [AnalyzerSeverity.Error]: DiagnosticSeverity.Error,
     [AnalyzerSeverity.Warning]: DiagnosticSeverity.Warning,

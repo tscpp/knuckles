@@ -1,3 +1,4 @@
+import getCodeActions from "./features/code-actions.js";
 import getCompletion from "./features/completion.js";
 import getDefinition from "./features/definition.js";
 import getDiagnostics from "./features/diagnostics.js";
@@ -31,6 +32,7 @@ export class LanguageServiceWorker {
     "document/definition": getDefinition.bind(this),
     "document/diagnostics": getDiagnostics.bind(this),
     "document/hover": getHover.bind(this),
+    "document/quick-fixes": getCodeActions.bind(this),
   };
 
   #programProvider = new ProgramProvider();
