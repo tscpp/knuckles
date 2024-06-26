@@ -1,4 +1,5 @@
 import { DynamicPosition, DynamicRange } from "./location.js";
+import { it, describe, expect } from "@jest/globals";
 
 describe("DynamicPosition", () => {
   it("translates position", () => {

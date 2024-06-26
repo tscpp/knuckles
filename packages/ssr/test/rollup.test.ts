@@ -1,4 +1,5 @@
 import knockoutSSR from "../src/rollup/plugin.js";
+import { test, describe } from "@jest/globals";
 import assert from "node:assert/strict";
 import { rollup } from "rollup";
 

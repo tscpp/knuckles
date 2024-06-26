@@ -1,4 +1,5 @@
 import { LogFormatter, LogLevel, LogUncolorize, Logger } from "./logger.js";
+import { it, describe, expect } from "@jest/globals";
 import chalk from "chalk";
 import assert from "node:assert/strict";
 

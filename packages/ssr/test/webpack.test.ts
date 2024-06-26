@@ -1,3 +1,4 @@
+import { test, describe } from "@jest/globals";
 import { createFsFromVolume, Volume } from "memfs";
 import assert from "node:assert/strict";
 import webpack from "webpack";
@@ -33,7 +34,7 @@ describe("webpack (build-tool)", () => {
           return done(err);
         }
 
-        const close = (err?: unknown) => {
+        const close = (err?: any) => {
           compiler.close((closeErr) => {
             if (err) {
               return done(err);
