@@ -1,21 +1,35 @@
-import type { Binding } from "./binding.js";
-import type { Comment } from "./comment.js";
-import { ParentNode, type ParentNodeInit } from "./node.js";
-import type { Expression, Identifier, StringLiteral } from "./primitives.js";
-import { Range } from "@knuckles/location";
+import type { Binding, RawBinding } from "./binding.js";
+import type { Comment, RawComment } from "./comment.js";
+import { ParentNode, type ParentNodeInit, type RawParentNode } from "./node.js";
+import type {
+  Expression,
+  Identifier,
+  RawExpression,
+  RawIdentifier,
+  RawStringLiteral,
+  StringLiteral,
+} from "./primitives.js";
+import { Range, type RawRange } from "@knuckles/location";
 
 export interface VirtualElementInit extends ParentNodeInit {
   namespace: Identifier;
-  name: Identifier;
-  param: Expression;
+  expression: Expression;
   startComment: Comment;
   endComment: Comment;
 }
 
+export interface RawVirtualElement extends RawParentNode {
+  type: "virtual-element";
+  namespace: RawIdentifier;
+  expression: RawExpression;
+  startComment: RawComment;
+  endComment: RawComment;
+  inner: RawRange;
+}
+
 export class VirtualElement extends ParentNode {
   namespace: Identifier;
-  name: Identifier;
-  param: Expression;
+  expression: Expression;
   startComment: Comment;
   endComment: Comment;
   inner: Range;
@@ -23,24 +37,53 @@ export class VirtualElement extends ParentNode {
   constructor(init: VirtualElementInit) {
     super(init);
     this.namespace = init.namespace;
-    this.name = init.name;
-    this.param = init.param;
+    this.expression = init.expression;
     this.startComment = init.startComment;
     this.endComment = init.endComment;
     this.inner = new Range(init.startComment.end, init.endComment.start);
   }
+
+  override toJSON(): RawVirtualElement {
+    return {
+      ...super.toJSON(),
+      type: "virtual-element",
+      namespace: this.namespace.toJSON(),
+      expression: this.expression.toJSON(),
+      startComment: this.startComment.toJSON(),
+      endComment: this.endComment.toJSON(),
+      inner: this.inner.toJSON(),
+    };
+  }
 }
 
 export interface KoVirtualElementInit extends VirtualElementInit {
-  binding: Binding;
+  bindings: Iterable<Binding>;
+}
+
+export interface RawKoVirtualElementInit extends RawVirtualElement {
+  bindings: RawBinding[];
 }
 
 export class KoVirtualElement extends VirtualElement {
-  binding: Binding;
+  bindings: Binding[];
+
+  /**
+   * @deprecated Use {@link bindings} instead.
+   */
+  get binding() {
+    return this.bindings[0]!;
+  }
 
   constructor(init: KoVirtualElementInit) {
     super(init);
-    this.binding = init.binding;
+    this.bindings = Array.from(init.bindings);
+  }
+
+  override toJSON(): RawKoVirtualElementInit {
+    return {
+      ...super.toJSON(),
+      bindings: this.bindings.map((binding) => binding.toJSON()),
+    };
   }
 }
 
@@ -49,6 +92,12 @@ export interface ImportStatementInit {
   isTypeOnly: boolean;
   identifier: Identifier;
   module: StringLiteral;
+}
+
+export interface RawImportStatement extends RawRange {
+  isTypeOnly: boolean;
+  identifier: RawIdentifier;
+  module: RawStringLiteral;
 }
 
 export class ImportStatement extends Range {
@@ -62,17 +111,47 @@ export class ImportStatement extends Range {
     this.identifier = init.identifier;
     this.module = init.module;
   }
+
+  override toJSON(): RawImportStatement {
+    return {
+      ...super.toJSON(),
+      identifier: this.identifier.toJSON(),
+      isTypeOnly: this.isTypeOnly,
+      module: this.module.toJSON(),
+    };
+  }
 }
 
-export interface WithVirtualElementInit extends VirtualElementInit {
-  import: ImportStatement;
+export interface OkVirtualElementInit extends VirtualElementInit {
+  name: Identifier;
+  param: Expression;
+  import?: ImportStatement | undefined;
 }
 
-export class WithVirtualElement extends VirtualElement {
-  import: ImportStatement;
+export interface RawOkVirtualElement extends RawVirtualElement {
+  name: RawIdentifier;
+  param: RawExpression;
+  import: RawImportStatement | undefined;
+}
 
-  constructor(init: WithVirtualElementInit) {
+export class OkVirtualElement extends VirtualElement {
+  name: Identifier;
+  param: Expression;
+  import: ImportStatement | undefined;
+
+  constructor(init: OkVirtualElementInit) {
     super(init);
+    this.name = init.name;
+    this.param = init.param;
     this.import = init.import;
+  }
+
+  override toJSON(): RawOkVirtualElement {
+    return {
+      ...super.toJSON(),
+      name: this.name.toJSON(),
+      param: this.param.toJSON(),
+      import: this.import?.toJSON(),
+    };
   }
 }

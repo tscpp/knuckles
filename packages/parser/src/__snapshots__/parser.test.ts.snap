@@ -2,6 +2,251 @@
 
 exports[`parser Deep virtual elements 1`] = `
 {
+  "children": [
+    {
+      "bindings": [
+        {
+          "end": {
+            "column": 16,
+            "line": 0,
+            "offset": 16,
+          },
+          "incomplete": false,
+          "name": {
+            "end": {
+              "column": 11,
+              "line": 0,
+              "offset": 11,
+            },
+            "start": {
+              "column": 8,
+              "line": 0,
+              "offset": 8,
+            },
+            "value": "foo",
+          },
+          "param": {
+            "end": {
+              "column": 16,
+              "line": 0,
+              "offset": 16,
+            },
+            "start": {
+              "column": 13,
+              "line": 0,
+              "offset": 13,
+            },
+            "value": "foo",
+          },
+          "start": {
+            "column": 8,
+            "line": 0,
+            "offset": 8,
+          },
+        },
+      ],
+      "children": [
+        {
+          "bindings": [
+            {
+              "end": {
+                "column": 36,
+                "line": 0,
+                "offset": 36,
+              },
+              "incomplete": false,
+              "name": {
+                "end": {
+                  "column": 31,
+                  "line": 0,
+                  "offset": 31,
+                },
+                "start": {
+                  "column": 28,
+                  "line": 0,
+                  "offset": 28,
+                },
+                "value": "bar",
+              },
+              "param": {
+                "end": {
+                  "column": 36,
+                  "line": 0,
+                  "offset": 36,
+                },
+                "start": {
+                  "column": 33,
+                  "line": 0,
+                  "offset": 33,
+                },
+                "value": "bar",
+              },
+              "start": {
+                "column": 28,
+                "line": 0,
+                "offset": 28,
+              },
+            },
+          ],
+          "children": [],
+          "end": {
+            "column": 52,
+            "line": 0,
+            "offset": 52,
+          },
+          "endComment": {
+            "content": " /ko ",
+            "end": {
+              "column": 52,
+              "line": 0,
+              "offset": 52,
+            },
+            "start": {
+              "column": 40,
+              "line": 0,
+              "offset": 40,
+            },
+            "type": "comment",
+          },
+          "expression": {
+            "end": {
+              "column": 36,
+              "line": 0,
+              "offset": 36,
+            },
+            "start": {
+              "column": 28,
+              "line": 0,
+              "offset": 28,
+            },
+            "value": "bar: bar",
+          },
+          "inner": {
+            "end": {
+              "column": 40,
+              "line": 0,
+              "offset": 40,
+            },
+            "start": {
+              "column": 40,
+              "line": 0,
+              "offset": 40,
+            },
+          },
+          "namespace": {
+            "end": {
+              "column": 27,
+              "line": 0,
+              "offset": 27,
+            },
+            "start": {
+              "column": 25,
+              "line": 0,
+              "offset": 25,
+            },
+            "value": "ko",
+          },
+          "start": {
+            "column": 20,
+            "line": 0,
+            "offset": 20,
+          },
+          "startComment": {
+            "content": " ko bar: bar ",
+            "end": {
+              "column": 40,
+              "line": 0,
+              "offset": 40,
+            },
+            "start": {
+              "column": 20,
+              "line": 0,
+              "offset": 20,
+            },
+            "type": "comment",
+          },
+          "type": "virtual-element",
+        },
+      ],
+      "end": {
+        "column": 64,
+        "line": 0,
+        "offset": 64,
+      },
+      "endComment": {
+        "content": " /ko ",
+        "end": {
+          "column": 64,
+          "line": 0,
+          "offset": 64,
+        },
+        "start": {
+          "column": 52,
+          "line": 0,
+          "offset": 52,
+        },
+        "type": "comment",
+      },
+      "expression": {
+        "end": {
+          "column": 16,
+          "line": 0,
+          "offset": 16,
+        },
+        "start": {
+          "column": 8,
+          "line": 0,
+          "offset": 8,
+        },
+        "value": "foo: foo",
+      },
+      "inner": {
+        "end": {
+          "column": 52,
+          "line": 0,
+          "offset": 52,
+        },
+        "start": {
+          "column": 20,
+          "line": 0,
+          "offset": 20,
+        },
+      },
+      "namespace": {
+        "end": {
+          "column": 7,
+          "line": 0,
+          "offset": 7,
+        },
+        "start": {
+          "column": 5,
+          "line": 0,
+          "offset": 5,
+        },
+        "value": "ko",
+      },
+      "start": {
+        "column": 0,
+        "line": 0,
+        "offset": 0,
+      },
+      "startComment": {
+        "content": " ko foo: foo ",
+        "end": {
+          "column": 20,
+          "line": 0,
+          "offset": 20,
+        },
+        "start": {
+          "column": 0,
+          "line": 0,
+          "offset": 0,
+        },
+        "type": "comment",
+      },
+      "type": "virtual-element",
+    },
+  ],
   "end": {
     "column": 64,
     "line": 0,
@@ -17,10 +262,324 @@ exports[`parser Deep virtual elements 1`] = `
 
 exports[`parser Element bindings 1`] = `
 {
+  "children": [
+    {
+      "attributes": [
+        {
+          "end": {
+            "column": 23,
+            "line": 0,
+            "offset": 23,
+          },
+          "name": {
+            "end": {
+              "column": 14,
+              "line": 0,
+              "offset": 14,
+            },
+            "start": {
+              "column": 5,
+              "line": 0,
+              "offset": 5,
+            },
+            "value": "data-bind",
+          },
+          "namespace": null,
+          "prefix": null,
+          "start": {
+            "column": 5,
+            "line": 0,
+            "offset": 5,
+          },
+          "value": {
+            "end": {
+              "column": 23,
+              "line": 0,
+              "offset": 23,
+            },
+            "inner": {
+              "end": {
+                "column": 22,
+                "line": 0,
+                "offset": 22,
+              },
+              "start": {
+                "column": 16,
+                "line": 0,
+                "offset": 16,
+              },
+            },
+            "quote": "'",
+            "start": {
+              "column": 15,
+              "line": 0,
+              "offset": 15,
+            },
+            "value": "0: bar",
+          },
+        },
+      ],
+      "bindings": [
+        {
+          "end": {
+            "column": 22,
+            "line": 0,
+            "offset": 22,
+          },
+          "incomplete": false,
+          "name": {
+            "end": {
+              "column": 17,
+              "line": 0,
+              "offset": 17,
+            },
+            "start": {
+              "column": 16,
+              "line": 0,
+              "offset": 16,
+            },
+            "value": "0",
+          },
+          "param": {
+            "end": {
+              "column": 22,
+              "line": 0,
+              "offset": 22,
+            },
+            "start": {
+              "column": 19,
+              "line": 0,
+              "offset": 19,
+            },
+            "value": "bar",
+          },
+          "start": {
+            "column": 16,
+            "line": 0,
+            "offset": 16,
+          },
+        },
+      ],
+      "children": [],
+      "end": {
+        "column": 30,
+        "line": 0,
+        "offset": 30,
+      },
+      "inner": {
+        "end": {
+          "column": 24,
+          "line": 0,
+          "offset": 24,
+        },
+        "start": {
+          "column": 24,
+          "line": 0,
+          "offset": 24,
+        },
+      },
+      "start": {
+        "column": 0,
+        "line": 0,
+        "offset": 0,
+      },
+      "tagName": {
+        "end": {
+          "column": 4,
+          "line": 0,
+          "offset": 4,
+        },
+        "start": {
+          "column": 1,
+          "line": 0,
+          "offset": 1,
+        },
+        "value": "div",
+      },
+      "type": "element",
+    },
+  ],
   "end": {
     "column": 30,
     "line": 0,
     "offset": 30,
+  },
+  "start": {
+    "column": 0,
+    "line": 0,
+    "offset": 0,
+  },
+}
+`;
+
+exports[`parser Multiple bindings on same virtual element 1`] = `
+{
+  "children": [
+    {
+      "bindings": [
+        {
+          "end": {
+            "column": 17,
+            "line": 0,
+            "offset": 17,
+          },
+          "incomplete": false,
+          "name": {
+            "end": {
+              "column": 12,
+              "line": 0,
+              "offset": 12,
+            },
+            "start": {
+              "column": 8,
+              "line": 0,
+              "offset": 8,
+            },
+            "value": "with",
+          },
+          "param": {
+            "end": {
+              "column": 17,
+              "line": 0,
+              "offset": 17,
+            },
+            "start": {
+              "column": 14,
+              "line": 0,
+              "offset": 14,
+            },
+            "value": "foo",
+          },
+          "start": {
+            "column": 8,
+            "line": 0,
+            "offset": 8,
+          },
+        },
+        {
+          "end": {
+            "column": 28,
+            "line": 0,
+            "offset": 28,
+          },
+          "incomplete": false,
+          "name": {
+            "end": {
+              "column": 21,
+              "line": 0,
+              "offset": 21,
+            },
+            "start": {
+              "column": 19,
+              "line": 0,
+              "offset": 19,
+            },
+            "value": "as",
+          },
+          "param": {
+            "end": {
+              "column": 28,
+              "line": 0,
+              "offset": 28,
+            },
+            "start": {
+              "column": 23,
+              "line": 0,
+              "offset": 23,
+            },
+            "value": "'bar'",
+          },
+          "start": {
+            "column": 19,
+            "line": 0,
+            "offset": 19,
+          },
+        },
+      ],
+      "children": [],
+      "end": {
+        "column": 44,
+        "line": 0,
+        "offset": 44,
+      },
+      "endComment": {
+        "content": " /ko ",
+        "end": {
+          "column": 44,
+          "line": 0,
+          "offset": 44,
+        },
+        "start": {
+          "column": 32,
+          "line": 0,
+          "offset": 32,
+        },
+        "type": "comment",
+      },
+      "expression": {
+        "end": {
+          "column": 28,
+          "line": 0,
+          "offset": 28,
+        },
+        "start": {
+          "column": 8,
+          "line": 0,
+          "offset": 8,
+        },
+        "value": "with: foo, as: 'bar'",
+      },
+      "inner": {
+        "end": {
+          "column": 32,
+          "line": 0,
+          "offset": 32,
+        },
+        "start": {
+          "column": 32,
+          "line": 0,
+          "offset": 32,
+        },
+      },
+      "namespace": {
+        "end": {
+          "column": 7,
+          "line": 0,
+          "offset": 7,
+        },
+        "start": {
+          "column": 5,
+          "line": 0,
+          "offset": 5,
+        },
+        "value": "ko",
+      },
+      "start": {
+        "column": 0,
+        "line": 0,
+        "offset": 0,
+      },
+      "startComment": {
+        "content": " ko with: foo, as: 'bar' ",
+        "end": {
+          "column": 32,
+          "line": 0,
+          "offset": 32,
+        },
+        "start": {
+          "column": 0,
+          "line": 0,
+          "offset": 0,
+        },
+        "type": "comment",
+      },
+      "type": "virtual-element",
+    },
+  ],
+  "end": {
+    "column": 44,
+    "line": 0,
+    "offset": 44,
   },
   "start": {
     "column": 0,

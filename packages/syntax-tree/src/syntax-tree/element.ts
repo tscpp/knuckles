@@ -1,7 +1,17 @@
-import type { Binding } from "./binding.js";
-import { type Node, ParentNode, type ParentNodeInit } from "./node.js";
-import type { Identifier, StringLiteral } from "./primitives.js";
-import { Range } from "@knuckles/location";
+import type { Binding, RawBinding } from "./binding.js";
+import {
+  type Node,
+  ParentNode,
+  type ParentNodeInit,
+  type RawParentNode,
+} from "./node.js";
+import type {
+  Identifier,
+  RawIdentifier,
+  RawStringLiteral,
+  StringLiteral,
+} from "./primitives.js";
+import { Range, type RawRange } from "@knuckles/location";
 
 export interface ElementInit extends ParentNodeInit {
   tagName: Identifier;
@@ -9,6 +19,14 @@ export interface ElementInit extends ParentNodeInit {
   bindings: Iterable<Binding>;
   children: Iterable<Node>;
   inner: Range;
+}
+
+export interface RawElement extends RawParentNode {
+  type: "element";
+  tagName: RawIdentifier;
+  attributes: RawAttribute[];
+  bindings: RawBinding[];
+  inner: RawRange;
 }
 
 export class Element extends ParentNode {
@@ -24,6 +42,17 @@ export class Element extends ParentNode {
     this.bindings = Array.from(init.bindings);
     this.inner = init.inner;
   }
+
+  override toJSON(): RawElement {
+    return {
+      ...super.toJSON(),
+      type: "element",
+      tagName: this.tagName.toJSON(),
+      attributes: this.attributes.map((attribute) => attribute.toJSON()),
+      bindings: this.bindings.map((binding) => binding.toJSON()),
+      inner: this.inner.toJSON(),
+    };
+  }
 }
 
 export interface AttributeInit {
@@ -36,6 +65,13 @@ export interface AttributeInit {
 }
 
 export type Quotation = "single" | "double";
+
+export interface RawAttribute extends RawRange {
+  name: RawIdentifier;
+  value: RawStringLiteral;
+  namespace: string | null;
+  prefix: string | null;
+}
 
 export class Attribute extends Range {
   name: Identifier;
@@ -51,5 +87,15 @@ export class Attribute extends Range {
     this.namespace = init.namespace ?? null;
     this.prefix = init.prefix ?? null;
     this.parent = init.parent;
+  }
+
+  override toJSON(): RawAttribute {
+    return {
+      ...super.toJSON(),
+      name: this.name.toJSON(),
+      value: this.value.toJSON(),
+      namespace: this.namespace,
+      prefix: this.prefix,
+    };
   }
 }

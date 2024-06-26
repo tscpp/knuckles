@@ -279,8 +279,8 @@ class Renderer {
         return this.#renderKoVirtualElement(node);
       }
 
-      if (node instanceof ko.WithVirtualElement) {
-        return this.#renderWithVirtualElement(node);
+      if (node instanceof ko.OkVirtualElement) {
+        return this.#renderOkVirtualElement(node);
       }
     }
 
@@ -291,36 +291,46 @@ class Renderer {
     return ["if", "ifnot"].includes(binding.name.value);
   }
 
-  #renderWithVirtualElement(node: ko.WithVirtualElement): Chunk {
-    const childContext = new Chunk()
-      .append(`${ns}.hints.with(${ns}.type<`)
-      .while(
-        (chunk) =>
-          chunk
-            .append("typeof import(")
-            .append(node.import.module.text, { mirror: node.import.module })
-            .append(")")
-            .if(node.import.identifier.value !== "*", (chunk) =>
-              chunk.while(
-                (chunk) =>
-                  chunk
-                    .append('["')
-                    .append(quote(node.import.identifier.value).slice(1, -1), {
-                      mirror: node.import.identifier,
-                    })
-                    .append('"]'),
-                { blame: node.import.identifier },
+  #renderOkVirtualElement(node: ko.OkVirtualElement): Chunk | undefined {
+    if (node.name.value === "with" || node.name.value === "using") {
+      const childContext = new Chunk()
+        .append(`${ns}.hints.with(${ns}.type<`)
+        .while(
+          (chunk) =>
+            chunk
+              .append("typeof import(")
+              .append(node.import!.module.text, { mirror: node.import!.module })
+              .append(")")
+              .if(node.import!.identifier.value !== "*", (chunk) =>
+                chunk.while(
+                  (chunk) =>
+                    chunk
+                      .append('["')
+                      .append(
+                        quote(node.import!.identifier.value).slice(1, -1),
+                        {
+                          mirror: node.import!.identifier,
+                        },
+                      )
+                      .append('"]'),
+                  { blame: node.import!.identifier },
+                ),
               ),
-            ),
-        { blame: node.import },
-      )
-      .append(">(), $context)");
+          { blame: node.import! },
+        )
+        .append(">(), $context)");
 
-    return this.#renderClosure(this.#renderNodes(node.children), childContext);
+      return this.#renderClosure(
+        this.#renderNodes(node.children),
+        childContext,
+      );
+    }
+
+    return undefined;
   }
 
   #renderKoVirtualElement(node: ko.KoVirtualElement): Chunk {
-    return this.#renderParent([node.binding], node.children);
+    return this.#renderParent(node.bindings, node.children);
   }
 
   #renderElement(node: ko.Element): Chunk {

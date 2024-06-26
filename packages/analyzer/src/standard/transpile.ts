@@ -34,7 +34,9 @@ export function transpile(document: Document) {
 
   document.visit(
     (node) => {
-      render(node.binding);
+      for (const binding of node.bindings) {
+        render(binding);
+      }
     },
     { filter: KoVirtualElement },
   );
