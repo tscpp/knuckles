@@ -1,7 +1,6 @@
 {
   "extends": "./node.json",
   "compilerOptions": {
-    "types": ["jest", "node"],
     "verbatimModuleSyntax": false,
     "moduleDetection": "force",
     "moduleResolution": "Bundler",

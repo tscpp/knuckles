@@ -1,4 +1,5 @@
 import { html, render } from "./common.js";
+import { test, describe } from "@jest/globals";
 import assert from "node:assert/strict";
 
 describe("binding context", () => {

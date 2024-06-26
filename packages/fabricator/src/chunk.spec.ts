@@ -1,4 +1,5 @@
 import { Chunk } from "./chunk.js";
+import { it, describe, expect } from "@jest/globals";
 import { Range } from "@knuckles/location";
 
 describe("Chunk", () => {

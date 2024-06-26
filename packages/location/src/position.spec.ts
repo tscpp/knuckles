@@ -1,4 +1,5 @@
 import Position from "./position.js";
+import { it, describe, expect } from "@jest/globals";
 
 describe("Position", () => {
   it("Converts offset to position using LF", () => {

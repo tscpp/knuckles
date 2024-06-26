@@ -1,4 +1,5 @@
 import { parse } from "./parse.js";
+import { test, describe, expect } from "@jest/globals";
 
 describe("parser", () => {
   test("Deep virtual elements", () => {
