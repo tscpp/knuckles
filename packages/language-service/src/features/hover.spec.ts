@@ -1,4 +1,5 @@
 import { LanguageService } from "../index.js";
+import { describe, beforeAll, it, expect } from "@jest/globals";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
