@@ -1,4 +1,5 @@
-import type { LanguageService } from "./language-service.js";
+import type { LanguageServiceWorker } from "../private.js";
+import type { Document } from "./document.js";
 import {
   Analyzer,
   type AnalyzerFlags,
@@ -11,37 +12,30 @@ import {
   defaultConfig,
 } from "@knuckles/config";
 import type { Snapshot } from "@knuckles/fabricator";
-import type { Document } from "@knuckles/syntax-tree";
+import type { SyntaxTree } from "@knuckles/syntax-tree";
 import analyzerTypeScriptPlugin from "@knuckles/typescript/analyzer";
 import assert from "node:assert";
 import { normalize } from "node:path";
-import { fileURLToPath } from "node:url";
 import * as morph from "ts-morph";
 import { ts } from "ts-morph";
-import type { TextDocument } from "vscode-languageserver-textdocument";
-import * as vscode from "vscode-languageserver/node.js";
-
-const POLLING_DELAY = 250;
 
 export type DocumentState = (
   | {
       broken: true;
       snapshot?: undefined;
-      sourceFile?: undefined;
-      service?: undefined;
-      checker?: undefined;
+      tsSourceFile?: undefined;
+      tsProject?: undefined;
       syntaxTree?: undefined;
     }
   | {
       broken: false;
       snapshot: Snapshot;
-      sourceFile: morph.SourceFile;
-      service: morph.LanguageService;
-      checker: morph.TypeChecker;
-      syntaxTree: Document;
+      tsSourceFile: morph.SourceFile;
+      tsProject: morph.Project;
+      syntaxTree: SyntaxTree;
     }
 ) & {
-  document: TextDocument;
+  document: Document;
   issues: AnalyzerIssue[];
 };
 
@@ -50,43 +44,47 @@ export class DocumentStateProvider {
   #state: Promise<DocumentState>;
 
   constructor(
-    readonly document: TextDocument,
+    protected service: LanguageServiceWorker,
+    readonly document: Document,
     programProvider: ProgramProvider,
   ) {
     this.#programProvider = programProvider;
-    this.#state = this.#refresh();
+    this.#state = Promise.resolve({
+      broken: true,
+      document: document,
+      issues: [],
+    });
   }
 
   async #refresh(): Promise<DocumentState> {
     const startTime = performance.now();
+    this.service.logger.info("Analyzing...");
 
-    const path = fileURLToPath(this.document.uri);
-
-    const program = await this.#programProvider.getProject(path);
+    const program = await this.#programProvider.getProject(this.document.path);
     const analyzer = await program.getAnalyzer();
-    const result = await analyzer.analyze(path, this.document.getText());
+    const result = await analyzer.analyze(
+      this.document.path,
+      this.document.text,
+    );
+
+    const endTime = performance.now();
+    const deltaTime = endTime - startTime;
+    this.service.logger.info(`Analyze took ${deltaTime.toFixed(0)}ms`);
 
     const snapshot = result.snapshots.typescript;
 
     if (result.document && snapshot) {
-      const sourceFile = result.metadata["tsSourceFile"];
-      assert(sourceFile instanceof morph.SourceFile);
+      const tsSourceFile = result.metadata["tsSourceFile"];
+      assert(tsSourceFile instanceof morph.SourceFile);
 
-      const project = sourceFile.getProject();
-      const service = project.getLanguageService();
-      const checker = project.getTypeChecker();
-
-      const endTime = performance.now();
-      const deltaTime = endTime - startTime;
-      console.log(`Analyze took ${deltaTime.toFixed(2)}ms`);
+      const tsProject = tsSourceFile.getProject();
 
       return {
         broken: false,
         document: this.document,
         snapshot,
-        sourceFile,
-        service,
-        checker,
+        tsSourceFile: tsSourceFile,
+        tsProject,
         issues: result.issues,
         syntaxTree: result.document,
       };
@@ -99,24 +97,8 @@ export class DocumentStateProvider {
     }
   }
 
-  #debounce = false;
-
   touch() {
-    if (!this.#debounce) {
-      this.#debounce = true;
-      this.#state = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          this.#refresh()
-            .then(resolve)
-            .catch(reject)
-            .finally(() => {
-              this.#debounce = false;
-            });
-        }, POLLING_DELAY);
-      });
-    }
-
-    return this.#state;
+    return (this.#state = this.#refresh());
   }
 
   get() {
@@ -145,21 +127,21 @@ export class ConfigProvider {
     }
   }
 
-  #invalidate(path: string) {
-    this.#cache.delete(path);
-  }
+  // #invalidate(path: string) {
+  //   this.#cache.delete(path);
+  // }
 
-  listen(service: LanguageService) {
-    // Invalidate config cache when config file content is changed.
-    return service.connection.onDidChangeWatchedFiles((event) => {
-      const documents = new Set(event.changes.map((change) => change.uri));
+  // listen(service: LanguageService) {
+  //   // Invalidate config cache when config file content is changed.
+  //   return service.connection.onDidChangeWatchedFiles((event) => {
+  //     const documents = new Set(event.changes.map((change) => change.uri));
 
-      for (const uri of documents) {
-        const path = fileURLToPath(uri);
-        this.#invalidate(path);
-      }
-    });
-  }
+  //     for (const uri of documents) {
+  //       const path = fileURLToPath(uri);
+  //       this.#invalidate(path);
+  //     }
+  //   });
+  // }
 }
 
 export class Program {
@@ -245,29 +227,29 @@ export class ProgramProvider {
     return instance;
   }
 
-  listen(service: LanguageService) {
-    const disposables = [
-      this.#configProvider.listen(service),
+  // listen(service: LanguageService) {
+  //   const disposables = [
+  //     this.#configProvider.listen(service),
 
-      // Dispose dangling programs
-      service.documents.onDidClose((event) => {
-        const path = fileURLToPath(event.document.uri);
+  //     // Dispose dangling programs
+  //     service.documents.onDidClose((event) => {
+  //       const path = fileURLToPath(event.document.uri);
 
-        for (const instance of this.#instances) {
-          instance.openDocuments.delete(path);
+  //       for (const instance of this.#instances) {
+  //         instance.openDocuments.delete(path);
 
-          if (instance.openDocuments.size === 0) {
-            instance.dispose();
-            this.#instances.delete(instance);
-          }
-        }
-      }),
-    ];
+  //         if (instance.openDocuments.size === 0) {
+  //           instance.dispose();
+  //           this.#instances.delete(instance);
+  //         }
+  //       }
+  //     }),
+  //   ];
 
-    return vscode.Disposable.create(() => {
-      for (const disposable of disposables) {
-        disposable.dispose();
-      }
-    });
-  }
+  //   return vscode.Disposable.create(() => {
+  //     for (const disposable of disposables) {
+  //       disposable.dispose();
+  //     }
+  //   });
+  // }
 }

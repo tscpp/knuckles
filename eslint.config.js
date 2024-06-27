@@ -20,6 +20,7 @@ export default config([
       "**/vite.config.*",
       "**/jest.config.ts",
       "**/coverage/",
+      "**/__fixtures__/",
 
       // documentation
       "docs/**/*",

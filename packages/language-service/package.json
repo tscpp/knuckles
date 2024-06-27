@@ -1,7 +1,7 @@
 {
-  "name": "@knuckles/language-server",
+  "name": "@knuckles/language-service",
   "version": "0.13.1",
-  "description": "Implements the language service protocol (LSP) for Knuckles.",
+  "description": "The language service for Knuckles.",
   "repository": {
     "type": "git",
     "url": "https://github.com/tscpp/knuckles",
@@ -9,8 +9,12 @@
   },
   "license": "MIT",
   "type": "module",
-  "exports": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./worker": "./src/worker.ts"
+  },
   "dependencies": {
+    "@eliassko/logger": "^1.1.0",
     "@knuckles/analyzer": "workspace:~",
     "@knuckles/config": "workspace:~",
     "@knuckles/fabricator": "workspace:~",
@@ -19,9 +23,7 @@
     "@knuckles/syntax-tree": "workspace:~",
     "@knuckles/typescript": "workspace:~",
     "minimatch": "^9.0.4",
-    "ts-morph": "^22.0.0",
-    "vscode-languageserver": "^9.0.1",
-    "vscode-languageserver-textdocument": "^1.0.11"
+    "ts-morph": "^22.0.0"
   },
   "devDependencies": {
     "typescript": "^5.4.5"

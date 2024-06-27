@@ -1,12 +1,12 @@
 <!--
 ---
-name: language-server
+name: language-service
 ---
 -->
 
 # Language Server
 
-<!-- @include docs/parts/packages/language-server/description.md-->
+<!-- @include docs/parts/packages/language-service/description.md-->
 
 Implements a language server according to the [Language Server Protocol] (LSP) to provide language features for [Knockout] views.
 
@@ -14,7 +14,7 @@ Implements a language server according to the [Language Server Protocol] (LSP) t
 
 <!-- @include docs/parts/package-nav.md -->
 
-[**Documentation**](https://knuckles.elsk.dev) | [Package (npm)](https://npmjs.com/package/@knuckles/language-server) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/language-server)
+[**Documentation**](https://knuckles.elsk.dev) | [Package (npm)](https://npmjs.com/package/@knuckles/language-service) | [Repository](https://github.com/tscpp/knuckles) | [Source Code](https://github.com/tscpp/knuckles/tree/main/packages/language-service)
 
 <!-- /include -->
 

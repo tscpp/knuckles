@@ -1,0 +1,21 @@
+{
+  "name": "@knuckles/language-service",
+  "projectType": "library",
+  "sourceRoot": "{projectRoot}/src",
+  "targets": {
+    "build": {
+      "options": {
+        "entry": {
+          "index": "{projectRoot}/src/index.ts",
+          "worker": "{projectRoot}/src/worker.ts"
+        },
+        "package": {
+          ".": "./index.js",
+          "./worker": "./worker.js"
+        }
+      }
+    },
+    "test": {},
+    "lint": {}
+  }
+}

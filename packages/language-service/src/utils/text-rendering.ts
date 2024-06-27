@@ -157,7 +157,6 @@ export function documentationToMarkdown(
  * Convert `@link` inline tags to markdown links
  */
 function convertLinkTags(parts: readonly ts.SymbolDisplayPart[]): string {
-  console.dir(parts, { depth: 100 });
   const out: string[] = [];
 
   let currentLink:
@@ -257,6 +256,5 @@ export function quickInfoToMarkdown(quickInfo: ts.QuickInfo): string {
   ]
     .filter((v) => !!v)
     .join("\n\n");
-  console.log(l);
   return l;
 }

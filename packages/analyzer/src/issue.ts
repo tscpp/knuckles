@@ -1,4 +1,4 @@
-import type { Position } from "@knuckles/location";
+import type { Position, Range } from "@knuckles/location";
 
 export enum AnalyzerSeverity {
   Error = "error",
@@ -11,4 +11,15 @@ export interface AnalyzerIssue {
   message: string;
   start: Position | undefined;
   end: Position | undefined;
+  quickFix?: AnalyzerQuickFix | undefined;
+}
+
+export interface AnalyzerQuickFix {
+  label?: string | undefined;
+  edits: AnalyzerQuickFixEdit[];
+}
+
+export interface AnalyzerQuickFixEdit {
+  range: Range;
+  text: string;
 }

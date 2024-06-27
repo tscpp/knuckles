@@ -1,23 +1,30 @@
-import type { LanguageService } from "../language-service.js";
+import type { LanguageServiceWorker } from "../private.js";
+import { toPosition, type ProtocolPosition } from "../utils/position.js";
 import { quickInfoToMarkdown } from "../utils/text-rendering.js";
 import { Position } from "@knuckles/location";
 import { Element } from "@knuckles/syntax-tree";
 import assert from "node:assert/strict";
-import type * as vscode from "vscode-languageserver/node.js";
+
+export interface HoverParams {
+  fileName: string;
+  position: ProtocolPosition;
+}
+
+export interface Hover {
+  documentation: string;
+}
 
 export default async function getHover(
-  service: LanguageService,
-  params: vscode.HoverParams,
-): Promise<vscode.Hover | null> {
-  const state = await service.getState(params.textDocument);
+  this: LanguageServiceWorker,
+  params: HoverParams,
+): Promise<Hover | null> {
+  const state = await this.getDocumentState(params.fileName);
   if (state.broken) return null;
 
+  const tsService = state.tsProject.getLanguageService();
+
   // Translate to position in generated snapshot.
-  const originalPosition = Position.fromLineAndColumn(
-    params.position.line,
-    params.position.character,
-    state.snapshot.original,
-  );
+  const originalPosition = toPosition(params.position, state.document.text);
   const generatedPosition = state.snapshot.mirror({
     original: originalPosition,
   });
@@ -32,12 +39,12 @@ export default async function getHover(
       : undefined;
 
   const quickInfo = definition
-    ? state.service.compilerObject.getQuickInfoAtPosition(
+    ? tsService.compilerObject.getQuickInfoAtPosition(
         definition.getSourceFile().getFilePath(),
         definition.getTextSpan().getStart(),
       )
-    : state.service.compilerObject.getQuickInfoAtPosition(
-        state.sourceFile.getFilePath(),
+    : tsService.compilerObject.getQuickInfoAtPosition(
+        state.tsSourceFile.getFilePath(),
         generatedPosition.offset,
       );
 
@@ -50,24 +57,21 @@ export default async function getHover(
   }
 
   return {
-    contents: {
-      kind: "markdown",
-      value: quickInfoToMarkdown(quickInfo),
-    },
+    documentation: quickInfoToMarkdown(quickInfo),
   };
 
   function getAbsoluteDefinitionAt(position: Position) {
     assert(!state.broken);
 
-    const [definition] = state.service.getDefinitionsAtPosition(
-      state.sourceFile,
+    const [definition] = tsService.getDefinitionsAtPosition(
+      state.tsSourceFile,
       position.offset,
     );
     if (definition) {
       const node = definition.getNode();
 
       if (
-        node.getSourceFile().getFilePath() === state.sourceFile.getFilePath()
+        node.getSourceFile().getFilePath() === state.tsSourceFile.getFilePath()
       ) {
         const generatedStartOffset = node.getStart();
         const generatedPosition = Position.fromOffset(
@@ -79,7 +83,7 @@ export default async function getHover(
         });
 
         if (!originalPosition) {
-          const [definition] = state.service.getDefinitions(node);
+          const [definition] = tsService.getDefinitions(node);
 
           if (definition) {
             return definition;

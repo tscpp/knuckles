@@ -10,9 +10,8 @@ export default {
   check({ report, document }) {
     document.visit(
       (node): void => {
-        const regex = new RegExp(
-          `\\/ko\\s+${escapeStringRegexp(node.binding.name.value)}`,
-        );
+        const bindingName = node.binding.name.value;
+        const regex = new RegExp(`\\/ko\\s+${escapeStringRegexp(bindingName)}`);
 
         if (!regex.test(node.endComment.content)) {
           report({
@@ -21,6 +20,15 @@ export default {
             severity: this.severity,
             start: node.endComment.start,
             end: node.endComment.end,
+            quickFix: {
+              label: "Add notation",
+              edits: [
+                {
+                  range: node.endComment,
+                  text: `<!-- /ko ${bindingName} -->`,
+                },
+              ],
+            },
           });
         }
       },
