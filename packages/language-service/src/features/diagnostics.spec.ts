@@ -21,7 +21,6 @@ describe("diagnostics", () => {
   });
 
   it("provides standard diagnostics", async () => {
-    console.dir(diagnostics, { depth: null });
     const diagnostic = diagnostics.find(
       (diagnostic) => diagnostic.code === "virtual-element-end-notation",
     );
