@@ -5,7 +5,6 @@
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},
     "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/shyim/devcontainers-features/bun:0": {},
     "ghcr.io/devcontainers/features/node:1": {}
   },
   "onCreateCommand": [".devcontainer/hooks/create"],
@@ -17,7 +16,6 @@
         "esbenp.prettier-vscode",
         "redhat.vscode-yaml",
         "yzhang.markdown-all-in-one",
-        "oven.bun-vscode",
         "ms-playwright.playwright",
         "ms-vscode.extension-test-runner",
         "github.vscode-github-actions",
