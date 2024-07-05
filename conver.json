@@ -24,7 +24,7 @@
     "@knuckles/config": "minor",
     "@knuckles/eslint": "minor",
     "@knuckles/fabricator": "minor",
-    "@knuckles/language-server": "minor",
+    "@knuckles/language-service": "minor",
     "@knuckles/location": "minor",
     "@knuckles/parser": "minor",
     "@knuckles/ssr": "minor",

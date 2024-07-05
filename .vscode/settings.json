@@ -47,5 +47,7 @@
     "editor.wordWrapColumn": 100,
     "editor.rulers": [100]
   },
-  "todo-tree.highlights.enabled": false
+  "todo-tree.highlights.enabled": false,
+  "jestrunner.jestCommand": "clear; node --no-warnings --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+  "jestrunner.changeDirectoryToWorkspaceRoot": false
 }
