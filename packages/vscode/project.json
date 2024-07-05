@@ -14,7 +14,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "bun ./scripts/build.js",
+        "command": "node ./scripts/build.js",
         "cwd": "{projectRoot}"
       },
       "outputs": ["{projectRoot}/dist"]

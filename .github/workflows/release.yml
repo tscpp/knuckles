@@ -34,11 +34,6 @@ jobs:
         with:
           node-version: 20.x
 
-      - name: Setup Bun 1.x
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: 1
-
       - name: Install
         run: pnpm install --frozen-lockfile
 
@@ -87,11 +82,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20.x
-
-      - name: Setup Bun 1.x
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: 1
 
       - name: Authenticate NPM
         run: npm config set "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}"

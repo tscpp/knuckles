@@ -12,7 +12,7 @@ export default defineConfig({
     baseURL: `http://localhost:${port}`,
   },
   webServer: {
-    command: `bun --bun vite e2e/frontend --port ${port}`,
+    command: `pnpm tsx ./node_modules/vite/bin/vite.js e2e/frontend --port ${port}`,
     port: port,
     reuseExistingServer: !isCI,
   },
